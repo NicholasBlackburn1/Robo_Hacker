@@ -240,7 +240,7 @@ public class MainMenuScreen extends Screen {
             RenderSystem.popMatrix();
          }
 
-         String s = "Minecraft " + SharedConstants.getVersion().getName();
+         String s = "Blackburn 1.16.5";
          if (this.minecraft.isDemo()) {
             s = s + " Demo";
          } else {
@@ -252,7 +252,7 @@ public class MainMenuScreen extends Screen {
          }
 
          drawString(matrixStack, this.font, s, 2, this.height - 10, 16777215 | l);
-         drawString(matrixStack, this.font, "Copyright Mojang AB. Do not distribute!", this.widthCopyrightRest, this.height - 10, 16777215 | l);
+         drawString(matrixStack, this.font, "Copyright Nicholas Blackburn UwU!", this.widthCopyrightRest, this.height - 10, 16777215 | l);
          if (mouseX > this.widthCopyrightRest && mouseX < this.widthCopyrightRest + this.widthCopyright && mouseY > this.height - 10 && mouseY < this.height) {
             fill(matrixStack, this.widthCopyrightRest, this.height - 1, this.widthCopyrightRest + this.widthCopyright, this.height, 16777215 | l);
          }
