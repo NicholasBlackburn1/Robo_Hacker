@@ -184,28 +184,23 @@ public class MainMenuScreen extends Screen {
       float f1 = this.showFadeInAnimation ? MathHelper.clamp(f - 1.0F, 0.0F, 1.0F) : 1.0F;
       int l = MathHelper.ceil(f1 * 255.0F) << 24;
       if ((l & -67108864) != 0) {
-         this.minecraft.getTextureManager().bindTexture(MINECRAFT_TITLE_TEXTURES);
+         this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/clintcraft.png"));
          RenderSystem.color4f(1.0F, 1.0F, 1.0F, f1);
          if (this.showTitleWronglySpelled) {
-            this.blitBlackOutline(j, 30, (p_238660_2_, p_238660_3_) -> {
-               this.blit(matrixStack, p_238660_2_ + 0, p_238660_3_, 0, 0, 99, 44);
-               this.blit(matrixStack, p_238660_2_ + 99, p_238660_3_, 129, 0, 27, 44);
-               this.blit(matrixStack, p_238660_2_ + 99 + 26, p_238660_3_, 126, 0, 3, 44);
-               this.blit(matrixStack, p_238660_2_ + 99 + 26 + 3, p_238660_3_, 99, 0, 26, 44);
-               this.blit(matrixStack, p_238660_2_ + 155, p_238660_3_, 0, 45, 155, 44);
-            });
+            
+            }
          } else {
-            this.blitBlackOutline(j, 30, (p_238657_2_, p_238657_3_) -> {
+            this.blitBlackOutline(j- 100, 30, (p_238657_2_, p_238657_3_) -> {
                this.blit(matrixStack, p_238657_2_ + 0, p_238657_3_, 0, 0, 155, 44);
                this.blit(matrixStack, p_238657_2_ + 155, p_238657_3_, 0, 45, 155, 44);
             });
          }
 
          this.minecraft.getTextureManager().bindTexture(MINECRAFT_TITLE_EDITION);
-         blit(matrixStack, j + 88, 67, 0.0F, 0.0F, 98, 14, 128, 16);
+         blit(matrixStack, j - 50, 67, 0.0F, 0.0F, 98, 14, 128, 16);
          if (this.splashText != null) {
             RenderSystem.pushMatrix();
-            RenderSystem.translatef((float)(this.width / 2 + 90), 70.0F, 0.0F);
+            RenderSystem.translatef((float)(this.width / 2 - 100), 70.0F, 0.0F);
             RenderSystem.rotatef(-20.0F, 0.0F, 0.0F, 1.0F);
             float f2 = 1.8F - MathHelper.abs(MathHelper.sin((float)(Util.milliTime() % 1000L) / 1000.0F * ((float)Math.PI * 2F)) * 0.1F);
             f2 = f2 * 100.0F / (float)(this.font.getStringWidth(this.splashText) + 32);
@@ -241,7 +236,7 @@ public class MainMenuScreen extends Screen {
          }
 
       }
-   }
+   
 
    public boolean mouseClicked(double mouseX, double mouseY, int button) {
       if (super.mouseClicked(mouseX, mouseY, button)) {
