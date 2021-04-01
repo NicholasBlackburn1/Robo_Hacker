@@ -105,16 +105,16 @@ public class MainMenuScreen extends Screen {
          this.addSingleplayerMultiplayerButtons(j, 24);
       }
 
-      this.addButton(new ImageButton(this.width / 2 - 124, j + 72 + 12, 20, 20, 0, 106, 20, Button.WIDGETS_LOCATION, 256, 256, (p_213090_1_) -> {
+      this.addButton(new ImageButton(this.width / 2 - 200, j + 72 + 12, 20, 20, 0, 106, 20, Button.WIDGETS_LOCATION, 256, 256, (p_213090_1_) -> {
          this.minecraft.displayGuiScreen(new LanguageScreen(this, this.minecraft.gameSettings, this.minecraft.getLanguageManager()));
       }, new TranslationTextComponent("narrator.button.language")));
-      this.addButton(new Button(this.width / 2 - 100, j + 72 + 12, 98, 20, new TranslationTextComponent("menu.options"), (p_213096_1_) -> {
+      this.addButton(new Button(this.width / 2 - 200, j+72, 100, 20, new TranslationTextComponent("menu.options"), (p_213096_1_) -> {
          this.minecraft.displayGuiScreen(new OptionsScreen(this, this.minecraft.gameSettings));
       }));
-      this.addButton(new Button(this.width / 2 + 2, j + 72 + 12, 98, 20, new TranslationTextComponent("menu.quit"), (p_213094_1_) -> {
+      this.addButton(new Button(this.width / 2 - 200, j + 72+ 42, 100, 20, new TranslationTextComponent("menu.quit"), (p_213094_1_) -> {
          this.minecraft.shutdown();
       }));
-      this.addButton(new ImageButton(this.width / 2 + 104, j + 72 + 12, 20, 20, 0, 0, 20, ACCESSIBILITY_TEXTURES, 32, 64, (p_213088_1_) -> {
+      this.addButton(new ImageButton(this.width / 2 - 200, j + 72 + 12, 20, 20, 0, 0, 20, ACCESSIBILITY_TEXTURES, 32, 64, (p_213088_1_) -> {
          this.minecraft.displayGuiScreen(new AccessibilityScreen(this, this.minecraft.gameSettings));
       }, new TranslationTextComponent("narrator.button.accessibility")));
       this.minecraft.setConnectedToRealms(false);
@@ -131,7 +131,7 @@ public class MainMenuScreen extends Screen {
    }
 
    private void addSingleplayerMultiplayerButtons(int yIn, int rowHeightIn) {
-      this.addButton(new Button(this.width / 2 - 100, yIn, 200, 20, new TranslationTextComponent("menu.singleplayer"), (p_213089_1_) -> {
+      this.addButton(new Button(this.width / 2 - 200, yIn, 100, 20, new TranslationTextComponent("menu.singleplayer"), (p_213089_1_) -> {
          this.minecraft.displayGuiScreen(new WorldSelectionScreen(this));
       }));
       boolean flag = this.minecraft.isMultiplayerEnabled();
@@ -141,18 +141,18 @@ public class MainMenuScreen extends Screen {
          }
 
       };
-      (this.addButton(new Button(this.width / 2 - 100, yIn + rowHeightIn * 1, 200, 20, new TranslationTextComponent("menu.multiplayer"), (p_213095_1_) -> {
+      (this.addButton(new Button(this.width / 2 - 200, yIn + rowHeightIn * 1, 100, 20, new TranslationTextComponent("menu.multiplayer"), (p_213095_1_) -> {
          Screen screen = (Screen)(this.minecraft.gameSettings.skipMultiplayerWarning ? new MultiplayerScreen(this) : new MultiplayerWarningScreen(this));
          this.minecraft.displayGuiScreen(screen);
       }, button$itooltip))).active = flag;
-      (this.addButton(new Button(this.width / 2 - 100, yIn + rowHeightIn * 2, 200, 20, new TranslationTextComponent("menu.online"), (p_238661_1_) -> {
+      (this.addButton(new Button(this.width / 2 - 200, yIn + rowHeightIn * 2, 100, 20, new TranslationTextComponent("menu.online"), (p_238661_1_) -> {
          this.switchToRealms();
       }, button$itooltip))).active = flag;
    }
 
    private void addDemoButtons(int yIn, int rowHeightIn) {
       boolean flag = this.func_243319_k();
-      this.addButton(new Button(this.width / 2 - 100, yIn, 200, 20, new TranslationTextComponent("menu.playdemo"), (p_213091_2_) -> {
+      this.addButton(new Button(this.width / 2 - 100, yIn, 100, 20, new TranslationTextComponent("menu.playdemo"), (p_213091_2_) -> {
          if (flag) {
             this.minecraft.loadWorld("Demo_World");
          } else {
@@ -161,7 +161,7 @@ public class MainMenuScreen extends Screen {
          }
 
       }));
-      this.buttonResetDemo = this.addButton(new Button(this.width / 2 - 100, yIn + rowHeightIn * 1, 200, 20, new TranslationTextComponent("menu.resetdemo"), (p_238658_1_) -> {
+      this.buttonResetDemo = this.addButton(new Button(this.width / 2 - 100, yIn + rowHeightIn * 1, 100, 20, new TranslationTextComponent("menu.resetdemo"), (p_238658_1_) -> {
          SaveFormat saveformat = this.minecraft.getSaveLoader();
 
          try (SaveFormat.LevelSave saveformat$levelsave = saveformat.getLevelSave("Demo_World")) {
