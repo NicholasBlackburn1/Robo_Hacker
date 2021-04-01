@@ -147,30 +147,7 @@ public class MainMenuScreen extends Screen {
 
    private void addDemoButtons(int yIn, int rowHeightIn) {
       boolean flag = this.func_243319_k();
-      this.addButton(new Button(this.width / 2 - 100, yIn, 100, 20, new TranslationTextComponent("menu.playdemo"), (p_213091_2_) -> {
-         if (flag) {
-            this.minecraft.loadWorld("Demo_World");
-         } else {
-            DynamicRegistries.Impl dynamicregistries$impl = DynamicRegistries.func_239770_b_();
-            this.minecraft.createWorld("Demo_World", MinecraftServer.DEMO_WORLD_SETTINGS, dynamicregistries$impl, DimensionGeneratorSettings.func_242752_a(dynamicregistries$impl));
-         }
-
-      }));
-      this.buttonResetDemo = this.addButton(new Button(this.width / 2 - 100, yIn + rowHeightIn * 1, 100, 20, new TranslationTextComponent("menu.resetdemo"), (p_238658_1_) -> {
-         SaveFormat saveformat = this.minecraft.getSaveLoader();
-
-         try (SaveFormat.LevelSave saveformat$levelsave = saveformat.getLevelSave("Demo_World")) {
-            WorldSummary worldsummary = saveformat$levelsave.readWorldSummary();
-            if (worldsummary != null) {
-               this.minecraft.displayGuiScreen(new ConfirmScreen(this::deleteDemoWorld, new TranslationTextComponent("selectWorld.deleteQuestion"), new TranslationTextComponent("selectWorld.deleteWarning", worldsummary.getDisplayName()), new TranslationTextComponent("selectWorld.deleteButton"), DialogTexts.GUI_CANCEL));
-            }
-         } catch (IOException ioexception) {
-            SystemToast.func_238535_a_(this.minecraft, "Demo_World");
-            field_238656_b_.warn("Failed to access demo world", (Throwable)ioexception);
-         }
-
-      }));
-      this.buttonResetDemo.active = flag;
+      
    }
 
    private boolean func_243319_k() {
