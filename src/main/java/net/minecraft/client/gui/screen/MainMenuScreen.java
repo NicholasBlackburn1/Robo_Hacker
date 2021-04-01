@@ -105,18 +105,13 @@ public class MainMenuScreen extends Screen {
          this.addSingleplayerMultiplayerButtons(j, 24);
       }
 
-      this.addButton(new ImageButton(this.width / 2 - 200, j + 72 + 12, 20, 20, 0, 106, 20, Button.WIDGETS_LOCATION, 256, 256, (p_213090_1_) -> {
-         this.minecraft.displayGuiScreen(new LanguageScreen(this, this.minecraft.gameSettings, this.minecraft.getLanguageManager()));
-      }, new TranslationTextComponent("narrator.button.language")));
       this.addButton(new Button(this.width / 2 - 200, j+72, 100, 20, new TranslationTextComponent("menu.options"), (p_213096_1_) -> {
          this.minecraft.displayGuiScreen(new OptionsScreen(this, this.minecraft.gameSettings));
       }));
       this.addButton(new Button(this.width / 2 - 200, j + 72+ 25, 100, 20, new TranslationTextComponent("menu.quit"), (p_213094_1_) -> {
          this.minecraft.shutdown();
       }));
-      this.addButton(new ImageButton(this.width / 2 - 200, j + 72 + 12, 20, 20, 0, 0, 20, ACCESSIBILITY_TEXTURES, 32, 64, (p_213088_1_) -> {
-         this.minecraft.displayGuiScreen(new AccessibilityScreen(this, this.minecraft.gameSettings));
-      }, new TranslationTextComponent("narrator.button.accessibility")));
+      
       this.minecraft.setConnectedToRealms(false);
       if (this.minecraft.gameSettings.realmsNotifications && !this.hasCheckedForRealmsNotification) {
          RealmsBridgeScreen realmsbridgescreen = new RealmsBridgeScreen();
