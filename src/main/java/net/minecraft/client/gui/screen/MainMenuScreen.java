@@ -197,14 +197,14 @@ public class MainMenuScreen extends Screen {
          }
 
          this.minecraft.getTextureManager().bindTexture(MINECRAFT_TITLE_EDITION);
-         blit(matrixStack, j - 50, 67, 0.0F, 0.0F, 98, 14, 128, 16);
+         blit(matrixStack, j - 60, 50, 0.0F, 0.0F, 98, 14, 128, 16);
          if (this.splashText != null) {
             RenderSystem.pushMatrix();
             RenderSystem.translatef((float)(this.width / 2 - 100), 70.0F, 0.0F);
             RenderSystem.rotatef(-20.0F, 0.0F, 0.0F, 1.0F);
             float f2 = 1.8F - MathHelper.abs(MathHelper.sin((float)(Util.milliTime() % 1000L) / 1000.0F * ((float)Math.PI * 2F)) * 0.1F);
             f2 = f2 * 100.0F / (float)(this.font.getStringWidth(this.splashText) + 32);
-            RenderSystem.scalef(f2, f2, f2);
+            RenderSystem.scalef(f2, f2, f1);
             drawCenteredString(matrixStack, this.font, this.splashText, 0, -8, 16776960 | l);
             RenderSystem.popMatrix();
          }
