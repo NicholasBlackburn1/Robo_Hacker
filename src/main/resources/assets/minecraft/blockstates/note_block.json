@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/note_block"
+    "variants": {
+        "": { "model": "block/note_block" }
     }
-  }
 }

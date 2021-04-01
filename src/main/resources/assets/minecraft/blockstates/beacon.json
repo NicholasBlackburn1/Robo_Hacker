@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/beacon"
+    "variants": {
+        "": { "model": "block/beacon" }
     }
-  }
 }

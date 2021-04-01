@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/brown_wool"
+    "variants": {
+        "": { "model": "block/brown_wool" }
     }
-  }
 }

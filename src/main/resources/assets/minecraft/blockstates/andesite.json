@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/andesite"
+    "variants": {
+        "": { "model": "block/andesite" }
     }
-  }
 }

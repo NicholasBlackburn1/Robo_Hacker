@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/air"
+    "variants": {
+        "": { "model": "block/air" }
     }
-  }
 }

@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/jungle_sign"
+    "variants": {
+        "": { "model": "block/jungle_sign" }
     }
-  }
 }

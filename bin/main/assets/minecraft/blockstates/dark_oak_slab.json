@@ -1,13 +1,7 @@
 {
-  "variants": {
-    "type=bottom": {
-      "model": "minecraft:block/dark_oak_slab"
-    },
-    "type=double": {
-      "model": "minecraft:block/dark_oak_planks"
-    },
-    "type=top": {
-      "model": "minecraft:block/dark_oak_slab_top"
+    "variants": {
+        "type=bottom": { "model": "block/dark_oak_slab" },
+        "type=top": { "model": "block/dark_oak_slab_top" },
+        "type=double": { "model": "block/dark_oak_planks" }
     }
-  }
 }

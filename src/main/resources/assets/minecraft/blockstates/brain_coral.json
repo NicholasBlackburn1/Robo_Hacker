@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/brain_coral"
+    "variants": {
+        "": { "model": "block/brain_coral" }
     }
-  }
 }

@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/lime_concrete"
+    "variants": {
+        "": { "model": "block/lime_concrete" }
     }
-  }
 }

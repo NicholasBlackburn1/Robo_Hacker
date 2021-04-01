@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/potted_bamboo"
+    "variants": {
+        "": { "model": "block/potted_bamboo" }
     }
-  }
 }

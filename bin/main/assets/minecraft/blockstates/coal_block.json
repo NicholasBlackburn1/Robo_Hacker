@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/coal_block"
+    "variants": {
+        "": { "model": "block/coal_block" }
     }
-  }
 }

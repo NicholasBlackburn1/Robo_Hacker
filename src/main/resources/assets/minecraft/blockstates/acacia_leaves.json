@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/acacia_leaves"
+    "variants": {
+        "": { "model": "block/acacia_leaves" }
     }
-  }
 }

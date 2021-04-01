@@ -1,10 +1,6 @@
 {
-  "variants": {
-    "axis=x": {
-      "model": "minecraft:block/nether_portal_ns"
-    },
-    "axis=z": {
-      "model": "minecraft:block/nether_portal_ew"
+    "variants": {
+        "axis=z": { "model": "block/nether_portal_ew" },
+        "axis=x": { "model": "block/nether_portal_ns" }
     }
-  }
 }

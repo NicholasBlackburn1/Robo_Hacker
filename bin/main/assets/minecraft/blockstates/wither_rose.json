@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/wither_rose"
+    "variants": {
+        "": { "model": "block/wither_rose" }
     }
-  }
 }

@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/orange_terracotta"
+    "variants": {
+        "": { "model": "block/orange_terracotta" }
     }
-  }
 }

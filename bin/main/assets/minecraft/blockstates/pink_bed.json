@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/bed"
+    "variants": {
+        "": { "model": "block/bed" }
     }
-  }
 }

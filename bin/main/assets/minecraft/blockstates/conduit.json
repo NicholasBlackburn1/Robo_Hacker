@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/conduit"
+    "variants": {
+        "": { "model": "block/conduit" }
     }
-  }
 }

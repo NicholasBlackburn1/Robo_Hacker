@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/tube_coral"
+    "variants": {
+        "": { "model": "block/tube_coral" }
     }
-  }
 }

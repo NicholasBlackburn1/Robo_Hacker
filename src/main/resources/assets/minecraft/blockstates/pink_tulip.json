@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/pink_tulip"
+    "variants": {
+        "": { "model": "block/pink_tulip" }
     }
-  }
 }

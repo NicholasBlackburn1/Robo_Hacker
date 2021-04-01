@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/torch"
+    "variants": {
+        "": { "model": "block/torch" }
     }
-  }
 }

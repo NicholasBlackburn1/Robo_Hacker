@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/acacia_sign"
+    "variants": {
+        "": { "model": "block/acacia_sign" }
     }
-  }
 }

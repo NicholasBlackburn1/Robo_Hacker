@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/dark_prismarine"
+    "variants": {
+        "": { "model": "block/dark_prismarine" }
     }
-  }
 }

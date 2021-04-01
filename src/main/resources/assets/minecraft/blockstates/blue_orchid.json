@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/blue_orchid"
+    "variants": {
+        "": { "model": "block/blue_orchid" }
     }
-  }
 }

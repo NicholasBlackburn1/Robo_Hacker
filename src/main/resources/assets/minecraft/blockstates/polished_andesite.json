@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/polished_andesite"
+    "variants": {
+        "": { "model": "block/polished_andesite" }
     }
-  }
 }

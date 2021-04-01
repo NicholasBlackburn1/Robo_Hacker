@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/polished_diorite"
+    "variants": {
+        "": { "model": "block/polished_diorite" }
     }
-  }
 }

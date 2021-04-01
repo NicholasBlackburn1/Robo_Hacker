@@ -63,6 +63,8 @@ public class MainMenuScreen extends Screen {
       super(new TranslationTextComponent("narrator.screen.title"));
       this.showFadeInAnimation = fadeIn;
       this.showTitleWronglySpelled = (double)(new Random()).nextFloat() < 1.0E-4D;
+
+      
    }
 
    private boolean areRealmsNotificationsEnabled() {
@@ -93,7 +95,7 @@ public class MainMenuScreen extends Screen {
          this.splashText = this.minecraft.getSplashes().getSplashText();
       }
 
-      this.widthCopyright = this.font.getStringWidth("Copyright Mojang AB. Do not distribute!");
+      this.widthCopyright = this.font.getStringWidth("Copyright Nicholas Blackburn UWU!");
       this.widthCopyrightRest = this.width - this.widthCopyright - 2;
       int i = 24;
       int j = this.height / 4 + 48;
@@ -202,7 +204,7 @@ public class MainMenuScreen extends Screen {
       int i = 274;
       int j = this.width / 2 - 137;
       int k = 30;
-      this.minecraft.getTextureManager().bindTexture(PANORAMA_OVERLAY_TEXTURES);
+      this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/customfurry.png"));
       RenderSystem.enableBlend();
       RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
       RenderSystem.color4f(1.0F, 1.0F, 1.0F, this.showFadeInAnimation ? (float)MathHelper.ceil(MathHelper.clamp(f, 0.0F, 1.0F)) : 1.0F);

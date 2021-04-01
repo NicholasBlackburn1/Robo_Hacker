@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/lapis_ore"
+    "variants": {
+        "": { "model": "block/lapis_ore" }
     }
-  }
 }

@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/banner"
+    "variants": {
+        "": { "model": "block/banner" }
     }
-  }
 }

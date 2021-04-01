@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/birch_planks"
+    "variants": {
+        "": { "model": "block/birch_planks" }
     }
-  }
 }

@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/end_stone"
+    "variants": {
+        "": { "model": "block/end_stone" }
     }
-  }
 }

@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/fire_coral_block"
+    "variants": {
+        "": { "model": "block/fire_coral_block" }
     }
-  }
 }

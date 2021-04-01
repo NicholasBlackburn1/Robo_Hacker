@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/enchanting_table"
+    "variants": {
+        "": { "model": "block/enchanting_table" }
     }
-  }
 }

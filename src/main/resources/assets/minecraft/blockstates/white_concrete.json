@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/white_concrete"
+    "variants": {
+        "": { "model": "block/white_concrete" }
     }
-  }
 }

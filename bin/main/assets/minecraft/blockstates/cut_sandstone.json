@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/cut_sandstone"
+    "variants": {
+        "": { "model": "block/cut_sandstone" }
     }
-  }
 }

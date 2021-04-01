@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/cartography_table"
+    "variants": {
+        "": { "model": "block/cartography_table" }
     }
-  }
 }

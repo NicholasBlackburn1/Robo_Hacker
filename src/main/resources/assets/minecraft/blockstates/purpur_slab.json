@@ -1,13 +1,7 @@
 {
-  "variants": {
-    "type=bottom": {
-      "model": "minecraft:block/purpur_slab"
-    },
-    "type=double": {
-      "model": "minecraft:block/purpur_block"
-    },
-    "type=top": {
-      "model": "minecraft:block/purpur_slab_top"
+    "variants": {
+        "type=bottom": { "model": "block/purpur_slab" },
+        "type=top": { "model": "block/purpur_slab_top" },
+        "type=double": { "model": "block/purpur_block" }
     }
-  }
 }

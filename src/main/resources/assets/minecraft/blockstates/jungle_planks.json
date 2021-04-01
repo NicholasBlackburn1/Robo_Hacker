@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/jungle_planks"
+    "variants": {
+        "": { "model": "block/jungle_planks" }
     }
-  }
 }

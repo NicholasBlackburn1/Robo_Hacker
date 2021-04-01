@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/bamboo_sapling"
+    "variants": {
+        "": { "model": "block/bamboo_sapling" }
     }
-  }
 }

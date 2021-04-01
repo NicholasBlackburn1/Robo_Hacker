@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/diamond_ore"
+    "variants": {
+        "": { "model": "block/diamond_ore" }
     }
-  }
 }

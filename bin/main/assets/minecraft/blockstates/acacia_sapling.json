@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/acacia_sapling"
+    "variants": {
+        "": { "model": "block/acacia_sapling" }
     }
-  }
 }

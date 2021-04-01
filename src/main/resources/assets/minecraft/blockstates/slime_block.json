@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/slime_block"
+    "variants": {
+        "": { "model": "block/slime_block" }
     }
-  }
 }

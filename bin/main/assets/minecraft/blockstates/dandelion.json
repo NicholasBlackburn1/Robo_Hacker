@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/dandelion"
+    "variants": {
+        "": { "model": "block/dandelion" }
     }
-  }
 }

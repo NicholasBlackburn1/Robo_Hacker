@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/barrier"
+    "variants": {
+        "": { "model": "block/barrier" }
     }
-  }
 }

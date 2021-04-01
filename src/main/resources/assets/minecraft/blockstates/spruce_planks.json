@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/spruce_planks"
+    "variants": {
+        "": { "model": "block/spruce_planks" }
     }
-  }
 }

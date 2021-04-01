@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/lava"
+    "variants": {
+        "": { "model": "block/lava" }
     }
-  }
 }

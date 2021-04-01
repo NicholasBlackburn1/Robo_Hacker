@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/emerald_block"
+    "variants": {
+        "": { "model": "block/emerald_block" }
     }
-  }
 }

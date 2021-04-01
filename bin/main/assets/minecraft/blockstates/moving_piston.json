@@ -1,7 +1,5 @@
 {
-  "variants": {
-    "": {
-      "model": "minecraft:block/moving_piston"
+    "variants": {
+        "": { "model": "block/moving_piston" }
     }
-  }
 }
