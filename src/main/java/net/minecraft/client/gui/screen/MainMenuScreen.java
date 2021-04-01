@@ -176,7 +176,7 @@ public class MainMenuScreen extends Screen {
       int i = 274;
       int j = this.width / 2 - 137;
       int k = 30;
-      this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/customfurry.png"));
+      this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/background.png"));
       RenderSystem.enableBlend();
       RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
       RenderSystem.color4f(1.0F, 1.0F, 1.0F, this.showFadeInAnimation ? (float)MathHelper.ceil(MathHelper.clamp(f, 0.0F, 1.0F)) : 1.0F);
