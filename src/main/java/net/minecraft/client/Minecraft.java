@@ -69,7 +69,7 @@ import net.minecraft.client.gui.screen.DeathScreen;
 import net.minecraft.client.gui.screen.DirtMessageScreen;
 import net.minecraft.client.gui.screen.EditWorldScreen;
 import net.minecraft.client.gui.screen.IngameMenuScreen;
-import mods.gui.MainMenuScreen;
+import net.minecraft.client.gui.screen.MainMenuScreen;
 import net.minecraft.client.gui.screen.MemoryErrorScreen;
 import net.minecraft.client.gui.screen.MultiplayerScreen;
 import net.minecraft.client.gui.screen.Screen;
@@ -276,7 +276,7 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
    public final MouseHelper mouseHelper;
    public final KeyboardListener keyboardListener;
    public final File gameDir;
-   private final String launchedVersion = "Blackburn 1.16.5";
+   private final String launchedVersion;
    private final String versionType;
    private final Proxy proxy;
    private final SaveFormat saveFormat;
@@ -371,6 +371,7 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
       this.gameDir = gameConfig.folderInfo.gameDir;
       File file1 = gameConfig.folderInfo.assetsDir;
       this.fileResourcepacks = gameConfig.folderInfo.resourcePacksDir;
+      this.launchedVersion = gameConfig.gameInfo.version;
       this.versionType = gameConfig.gameInfo.versionType;
       this.profileProperties = gameConfig.userInfo.profileProperties;
       this.packFinder = new DownloadingPackFinder(new File(this.gameDir, "server-resource-packs"), gameConfig.folderInfo.getAssetsIndex());
@@ -519,7 +520,7 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
    private String getWindowTitle() {
       StringBuilder stringbuilder = new StringBuilder("Minecraft");
       if (this.isModdedClient()) {
-         stringbuilder.append("Robo_Hacker");
+         stringbuilder.append("*");
       }
 
       stringbuilder.append(" ");

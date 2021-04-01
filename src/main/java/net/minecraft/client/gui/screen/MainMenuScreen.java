@@ -1,4 +1,4 @@
-package  mods.gui;
+package net.minecraft.client.gui.screen;
 
 import com.google.common.util.concurrent.Runnables;
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -240,9 +240,18 @@ public class MainMenuScreen extends Screen {
             RenderSystem.popMatrix();
          }
 
-        
+         String s = "Minecraft " + SharedConstants.getVersion().getName();
+         if (this.minecraft.isDemo()) {
+            s = s + " Demo";
+         } else {
+            s = s + ("release".equalsIgnoreCase(this.minecraft.getVersionType()) ? "" : "/" + this.minecraft.getVersionType());
+         }
 
-         drawString(matrixStack, this.font,  setVersionOfScreen("Blackburn 1.16.5"), 2, this.height - 10, 16777215 | l);
+         if (this.minecraft.isModdedClient()) {
+            s = s + I18n.format("menu.modded");
+         }
+
+         drawString(matrixStack, this.font, s, 2, this.height - 10, 16777215 | l);
          drawString(matrixStack, this.font, "Copyright Mojang AB. Do not distribute!", this.widthCopyrightRest, this.height - 10, 16777215 | l);
          if (mouseX > this.widthCopyrightRest && mouseX < this.widthCopyrightRest + this.widthCopyright && mouseY > this.height - 10 && mouseY < this.height) {
             fill(matrixStack, this.widthCopyrightRest, this.height - 1, this.widthCopyrightRest + this.widthCopyright, this.height, 16777215 | l);
@@ -292,21 +301,5 @@ public class MainMenuScreen extends Screen {
       }
 
       this.minecraft.displayGuiScreen(this);
-   }
-
-   public String setVersionOfScreen(String Version){
-
-      String s = "Minecraft " + Version; 
-      if (this.minecraft.isDemo()) {
-         s = s + " Demo";
-      } else {
-         s = s + ("release".equalsIgnoreCase(this.minecraft.getVersionType()) ? "" : "/" + this.minecraft.getVersionType());
-      }
-
-      if (this.minecraft.isModdedClient()) {
-         s = s + I18n.format("menu.modded");
-      }
-      
-      return s;
    }
 }
