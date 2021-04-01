@@ -5,6 +5,8 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -166,6 +168,7 @@ public class MainMenuScreen extends Screen {
    }
 
    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+      //TODO: ADD DATE SWICHING FOR BACKGROUND IMAGE
       if (this.firstRenderTime == 0L && this.showFadeInAnimation) {
          this.firstRenderTime = Util.milliTime();
       }
@@ -176,6 +179,10 @@ public class MainMenuScreen extends Screen {
       int i = 274;
       int j = this.width / 2 - 137;
       int k = 30;
+
+      // this one will be for playing  between 12 am and 3 am
+      //this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/1413249501665.png"));
+
       this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/background.png"));
       RenderSystem.enableBlend();
       RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
