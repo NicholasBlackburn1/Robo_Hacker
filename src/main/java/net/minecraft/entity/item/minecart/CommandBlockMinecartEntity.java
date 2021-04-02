@@ -17,104 +17,142 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class CommandBlockMinecartEntity extends AbstractMinecartEntity {
-   private static final DataParameter<String> COMMAND = EntityDataManager.createKey(CommandBlockMinecartEntity.class, DataSerializers.STRING);
-   private static final DataParameter<ITextComponent> LAST_OUTPUT = EntityDataManager.createKey(CommandBlockMinecartEntity.class, DataSerializers.TEXT_COMPONENT);
-   private final CommandBlockLogic commandBlockLogic = new CommandBlockMinecartEntity.MinecartCommandLogic();
-   private int activatorRailCooldown;
+public class CommandBlockMinecartEntity extends AbstractMinecartEntity
+{
+    private static final DataParameter<String> COMMAND = EntityDataManager.createKey(CommandBlockMinecartEntity.class, DataSerializers.STRING);
+    private static final DataParameter<ITextComponent> LAST_OUTPUT = EntityDataManager.createKey(CommandBlockMinecartEntity.class, DataSerializers.TEXT_COMPONENT);
+    private final CommandBlockLogic commandBlockLogic = new CommandBlockMinecartEntity.MinecartCommandLogic();
 
-   public CommandBlockMinecartEntity(EntityType<? extends CommandBlockMinecartEntity> type, World world) {
-      super(type, world);
-   }
+    /** Cooldown before command block logic runs again in ticks */
+    private int activatorRailCooldown;
 
-   public CommandBlockMinecartEntity(World worldIn, double x, double y, double z) {
-      super(EntityType.COMMAND_BLOCK_MINECART, worldIn, x, y, z);
-   }
+    public CommandBlockMinecartEntity(EntityType <? extends CommandBlockMinecartEntity > type, World world)
+    {
+        super(type, world);
+    }
 
-   protected void registerData() {
-      super.registerData();
-      this.getDataManager().register(COMMAND, "");
-      this.getDataManager().register(LAST_OUTPUT, StringTextComponent.EMPTY);
-   }
+    public CommandBlockMinecartEntity(World worldIn, double x, double y, double z)
+    {
+        super(EntityType.COMMAND_BLOCK_MINECART, worldIn, x, y, z);
+    }
 
-   protected void readAdditional(CompoundNBT compound) {
-      super.readAdditional(compound);
-      this.commandBlockLogic.read(compound);
-      this.getDataManager().set(COMMAND, this.getCommandBlockLogic().getCommand());
-      this.getDataManager().set(LAST_OUTPUT, this.getCommandBlockLogic().getLastOutput());
-   }
+    protected void registerData()
+    {
+        super.registerData();
+        this.getDataManager().register(COMMAND, "");
+        this.getDataManager().register(LAST_OUTPUT, StringTextComponent.EMPTY);
+    }
 
-   protected void writeAdditional(CompoundNBT compound) {
-      super.writeAdditional(compound);
-      this.commandBlockLogic.write(compound);
-   }
+    /**
+     * (abstract) Protected helper method to read subclass entity data from NBT.
+     */
+    protected void readAdditional(CompoundNBT compound)
+    {
+        super.readAdditional(compound);
+        this.commandBlockLogic.read(compound);
+        this.getDataManager().set(COMMAND, this.getCommandBlockLogic().getCommand());
+        this.getDataManager().set(LAST_OUTPUT, this.getCommandBlockLogic().getLastOutput());
+    }
 
-   public AbstractMinecartEntity.Type getMinecartType() {
-      return AbstractMinecartEntity.Type.COMMAND_BLOCK;
-   }
+    protected void writeAdditional(CompoundNBT compound)
+    {
+        super.writeAdditional(compound);
+        this.commandBlockLogic.write(compound);
+    }
 
-   public BlockState getDefaultDisplayTile() {
-      return Blocks.COMMAND_BLOCK.getDefaultState();
-   }
+    public AbstractMinecartEntity.Type getMinecartType()
+    {
+        return AbstractMinecartEntity.Type.COMMAND_BLOCK;
+    }
 
-   public CommandBlockLogic getCommandBlockLogic() {
-      return this.commandBlockLogic;
-   }
+    public BlockState getDefaultDisplayTile()
+    {
+        return Blocks.COMMAND_BLOCK.getDefaultState();
+    }
 
-   public void onActivatorRailPass(int x, int y, int z, boolean receivingPower) {
-      if (receivingPower && this.ticksExisted - this.activatorRailCooldown >= 4) {
-         this.getCommandBlockLogic().trigger(this.world);
-         this.activatorRailCooldown = this.ticksExisted;
-      }
+    public CommandBlockLogic getCommandBlockLogic()
+    {
+        return this.commandBlockLogic;
+    }
 
-   }
+    /**
+     * Called every tick the minecart is on an activator rail.
+     */
+    public void onActivatorRailPass(int x, int y, int z, boolean receivingPower)
+    {
+        if (receivingPower && this.ticksExisted - this.activatorRailCooldown >= 4)
+        {
+            this.getCommandBlockLogic().trigger(this.world);
+            this.activatorRailCooldown = this.ticksExisted;
+        }
+    }
 
-   public ActionResultType processInitialInteract(PlayerEntity player, Hand hand) {
-      return this.commandBlockLogic.tryOpenEditCommandBlock(player);
-   }
+    public ActionResultType processInitialInteract(PlayerEntity player, Hand hand)
+    {
+        return this.commandBlockLogic.tryOpenEditCommandBlock(player);
+    }
 
-   public void notifyDataManagerChange(DataParameter<?> key) {
-      super.notifyDataManagerChange(key);
-      if (LAST_OUTPUT.equals(key)) {
-         try {
-            this.commandBlockLogic.setLastOutput(this.getDataManager().get(LAST_OUTPUT));
-         } catch (Throwable throwable) {
-         }
-      } else if (COMMAND.equals(key)) {
-         this.commandBlockLogic.setCommand(this.getDataManager().get(COMMAND));
-      }
+    public void notifyDataManagerChange(DataParameter<?> key)
+    {
+        super.notifyDataManagerChange(key);
 
-   }
+        if (LAST_OUTPUT.equals(key))
+        {
+            try
+            {
+                this.commandBlockLogic.setLastOutput(this.getDataManager().get(LAST_OUTPUT));
+            }
+            catch (Throwable throwable)
+            {
+            }
+        }
+        else if (COMMAND.equals(key))
+        {
+            this.commandBlockLogic.setCommand(this.getDataManager().get(COMMAND));
+        }
+    }
 
-   public boolean ignoreItemEntityData() {
-      return true;
-   }
+    /**
+     * Checks if players can use this entity to access operator (permission level 2) commands either directly or
+     * indirectly, such as give or setblock. A similar method exists for entities at {@link
+     * net.minecraft.tileentity.TileEntity#onlyOpsCanSetNbt()}.<p>For example, {@link
+     * net.minecraft.entity.item.EntityMinecartCommandBlock#ignoreItemEntityData() command block minecarts} and {@link
+     * net.minecraft.entity.item.EntityMinecartMobSpawner#ignoreItemEntityData() mob spawner minecarts} (spawning
+     * command block minecarts or drops) are considered accessible.</p>@return true if this entity offers ways for
+     * unauthorized players to use restricted commands
+     */
+    public boolean ignoreItemEntityData()
+    {
+        return true;
+    }
 
-   public class MinecartCommandLogic extends CommandBlockLogic {
-      public ServerWorld getWorld() {
-         return (ServerWorld)CommandBlockMinecartEntity.this.world;
-      }
+    public class MinecartCommandLogic extends CommandBlockLogic
+    {
+        public ServerWorld getWorld()
+        {
+            return (ServerWorld)CommandBlockMinecartEntity.this.world;
+        }
 
-      public void updateCommand() {
-         CommandBlockMinecartEntity.this.getDataManager().set(CommandBlockMinecartEntity.COMMAND, this.getCommand());
-         CommandBlockMinecartEntity.this.getDataManager().set(CommandBlockMinecartEntity.LAST_OUTPUT, this.getLastOutput());
-      }
+        public void updateCommand()
+        {
+            CommandBlockMinecartEntity.this.getDataManager().set(CommandBlockMinecartEntity.COMMAND, this.getCommand());
+            CommandBlockMinecartEntity.this.getDataManager().set(CommandBlockMinecartEntity.LAST_OUTPUT, this.getLastOutput());
+        }
 
-      @OnlyIn(Dist.CLIENT)
-      public Vector3d getPositionVector() {
-         return CommandBlockMinecartEntity.this.getPositionVec();
-      }
+        public Vector3d getPositionVector()
+        {
+            return CommandBlockMinecartEntity.this.getPositionVec();
+        }
 
-      @OnlyIn(Dist.CLIENT)
-      public CommandBlockMinecartEntity getMinecart() {
-         return CommandBlockMinecartEntity.this;
-      }
+        public CommandBlockMinecartEntity getMinecart()
+        {
+            return CommandBlockMinecartEntity.this;
+        }
 
-      public CommandSource getCommandSource() {
-         return new CommandSource(this, CommandBlockMinecartEntity.this.getPositionVec(), CommandBlockMinecartEntity.this.getPitchYaw(), this.getWorld(), 2, this.getName().getString(), CommandBlockMinecartEntity.this.getDisplayName(), this.getWorld().getServer(), CommandBlockMinecartEntity.this);
-      }
-   }
+        public CommandSource getCommandSource()
+        {
+            return new CommandSource(this, CommandBlockMinecartEntity.this.getPositionVec(), CommandBlockMinecartEntity.this.getPitchYaw(), this.getWorld(), 2, this.getName().getString(), CommandBlockMinecartEntity.this.getDisplayName(), this.getWorld().getServer(), CommandBlockMinecartEntity.this);
+        }
+    }
 }

@@ -9,37 +9,48 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.memory.MemoryModuleType;
 import net.minecraft.world.server.ServerWorld;
 
-public class GolemLastSeenSensor extends Sensor<LivingEntity> {
-   public GolemLastSeenSensor() {
-      this(200);
-   }
+public class GolemLastSeenSensor extends Sensor<LivingEntity>
+{
+    public GolemLastSeenSensor()
+    {
+        this(200);
+    }
 
-   public GolemLastSeenSensor(int interval) {
-      super(interval);
-   }
+    public GolemLastSeenSensor(int interval)
+    {
+        super(interval);
+    }
 
-   protected void update(ServerWorld worldIn, LivingEntity entityIn) {
-      update(entityIn);
-   }
+    protected void update(ServerWorld worldIn, LivingEntity entityIn)
+    {
+        update(entityIn);
+    }
 
-   public Set<MemoryModuleType<?>> getUsedMemories() {
-      return ImmutableSet.of(MemoryModuleType.MOBS);
-   }
+    public Set < MemoryModuleType<? >> getUsedMemories()
+    {
+        return ImmutableSet.of(MemoryModuleType.MOBS);
+    }
 
-   public static void update(LivingEntity livingEntity) {
-      Optional<List<LivingEntity>> optional = livingEntity.getBrain().getMemory(MemoryModuleType.MOBS);
-      if (optional.isPresent()) {
-         boolean flag = optional.get().stream().anyMatch((p_223546_0_) -> {
-            return p_223546_0_.getType().equals(EntityType.IRON_GOLEM);
-         });
-         if (flag) {
-            reset(livingEntity);
-         }
+    public static void update(LivingEntity livingEntity)
+    {
+        Optional<List<LivingEntity>> optional = livingEntity.getBrain().getMemory(MemoryModuleType.MOBS);
 
-      }
-   }
+        if (optional.isPresent())
+        {
+            boolean flag = optional.get().stream().anyMatch((entity) ->
+            {
+                return entity.getType().equals(EntityType.IRON_GOLEM);
+            });
 
-   public static void reset(LivingEntity livingEntity) {
-      livingEntity.getBrain().replaceMemory(MemoryModuleType.GOLEM_DETECTED_RECENTLY, true, 600L);
-   }
+            if (flag)
+            {
+                reset(livingEntity);
+            }
+        }
+    }
+
+    public static void reset(LivingEntity livingEntity)
+    {
+        livingEntity.getBrain().replaceMemory(MemoryModuleType.GOLEM_DETECTED_RECENTLY, true, 600L);
+    }
 }

@@ -3,32 +3,36 @@ package net.minecraft.world.biome;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockDisplayReader;
 import net.minecraft.world.level.ColorResolver;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
-public class BiomeColors {
-   public static final ColorResolver GRASS_COLOR = Biome::getGrassColor;
-   public static final ColorResolver FOLIAGE_COLOR = (p_228362_0_, p_228362_1_, p_228362_3_) -> {
-      return p_228362_0_.getFoliageColor();
-   };
-   public static final ColorResolver WATER_COLOR = (p_228360_0_, p_228360_1_, p_228360_3_) -> {
-      return p_228360_0_.getWaterColor();
-   };
+public class BiomeColors
+{
+    public static final ColorResolver GRASS_COLOR = Biome::getGrassColor;
+    public static final ColorResolver FOLIAGE_COLOR = (biome, x, z) ->
+    {
+        return biome.getFoliageColor();
+    };
+    public static final ColorResolver WATER_COLOR = (biome, x, z) ->
+    {
+        return biome.getWaterColor();
+    };
 
-   private static int getBlockColor(IBlockDisplayReader worldIn, BlockPos blockPosIn, ColorResolver colorResolverIn) {
-      return worldIn.getBlockColor(blockPosIn, colorResolverIn);
-   }
+    private static int getBlockColor(IBlockDisplayReader worldIn, BlockPos blockPosIn, ColorResolver colorResolverIn)
+    {
+        return worldIn.getBlockColor(blockPosIn, colorResolverIn);
+    }
 
-   public static int getGrassColor(IBlockDisplayReader worldIn, BlockPos blockPosIn) {
-      return getBlockColor(worldIn, blockPosIn, GRASS_COLOR);
-   }
+    public static int getGrassColor(IBlockDisplayReader worldIn, BlockPos blockPosIn)
+    {
+        return getBlockColor(worldIn, blockPosIn, GRASS_COLOR);
+    }
 
-   public static int getFoliageColor(IBlockDisplayReader worldIn, BlockPos blockPosIn) {
-      return getBlockColor(worldIn, blockPosIn, FOLIAGE_COLOR);
-   }
+    public static int getFoliageColor(IBlockDisplayReader worldIn, BlockPos blockPosIn)
+    {
+        return getBlockColor(worldIn, blockPosIn, FOLIAGE_COLOR);
+    }
 
-   public static int getWaterColor(IBlockDisplayReader worldIn, BlockPos blockPosIn) {
-      return getBlockColor(worldIn, blockPosIn, WATER_COLOR);
-   }
+    public static int getWaterColor(IBlockDisplayReader worldIn, BlockPos blockPosIn)
+    {
+        return getBlockColor(worldIn, blockPosIn, WATER_COLOR);
+    }
 }

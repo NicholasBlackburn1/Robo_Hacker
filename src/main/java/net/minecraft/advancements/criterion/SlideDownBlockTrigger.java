@@ -12,73 +12,96 @@ import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 
-public class SlideDownBlockTrigger extends AbstractCriterionTrigger<SlideDownBlockTrigger.Instance> {
-   private static final ResourceLocation ID = new ResourceLocation("slide_down_block");
+public class SlideDownBlockTrigger extends AbstractCriterionTrigger<SlideDownBlockTrigger.Instance>
+{
+    private static final ResourceLocation ID = new ResourceLocation("slide_down_block");
 
-   public ResourceLocation getId() {
-      return ID;
-   }
+    public ResourceLocation getId()
+    {
+        return ID;
+    }
 
-   public SlideDownBlockTrigger.Instance deserializeTrigger(JsonObject json, EntityPredicate.AndPredicate entityPredicate, ConditionArrayParser conditionsParser) {
-      Block block = deserializeBlock(json);
-      StatePropertiesPredicate statepropertiespredicate = StatePropertiesPredicate.deserializeProperties(json.get("state"));
-      if (block != null) {
-         statepropertiespredicate.forEachNotPresent(block.getStateContainer(), (p_227148_1_) -> {
-            throw new JsonSyntaxException("Block " + block + " has no property " + p_227148_1_);
-         });
-      }
+    public SlideDownBlockTrigger.Instance deserializeTrigger(JsonObject json, EntityPredicate.AndPredicate entityPredicate, ConditionArrayParser conditionsParser)
+    {
+        Block block = deserializeBlock(json);
+        StatePropertiesPredicate statepropertiespredicate = StatePropertiesPredicate.deserializeProperties(json.get("state"));
 
-      return new SlideDownBlockTrigger.Instance(entityPredicate, block, statepropertiespredicate);
-   }
+        if (block != null)
+        {
+            statepropertiespredicate.forEachNotPresent(block.getStateContainer(), (property) ->
+            {
+                throw new JsonSyntaxException("Block " + block + " has no property " + property);
+            });
+        }
 
-   @Nullable
-   private static Block deserializeBlock(JsonObject object) {
-      if (object.has("block")) {
-         ResourceLocation resourcelocation = new ResourceLocation(JSONUtils.getString(object, "block"));
-         return Registry.BLOCK.getOptional(resourcelocation).orElseThrow(() -> {
-            return new JsonSyntaxException("Unknown block type '" + resourcelocation + "'");
-         });
-      } else {
-         return null;
-      }
-   }
+        return new SlideDownBlockTrigger.Instance(entityPredicate, block, statepropertiespredicate);
+    }
 
-   public void test(ServerPlayerEntity player, BlockState state) {
-      this.triggerListeners(player, (p_227149_1_) -> {
-         return p_227149_1_.test(state);
-      });
-   }
+    @Nullable
+    private static Block deserializeBlock(JsonObject object)
+    {
+        if (object.has("block"))
+        {
+            ResourceLocation resourcelocation = new ResourceLocation(JSONUtils.getString(object, "block"));
+            return Registry.BLOCK.getOptional(resourcelocation).orElseThrow(() ->
+            {
+                return new JsonSyntaxException("Unknown block type '" + resourcelocation + "'");
+            });
+        }
+        else
+        {
+            return null;
+        }
+    }
 
-   public static class Instance extends CriterionInstance {
-      private final Block block;
-      private final StatePropertiesPredicate stateCondition;
+    public void test(ServerPlayerEntity player, BlockState state)
+    {
+        this.triggerListeners(player, (instance) ->
+        {
+            return instance.test(state);
+        });
+    }
 
-      public Instance(EntityPredicate.AndPredicate player, @Nullable Block block, StatePropertiesPredicate stateCondition) {
-         super(SlideDownBlockTrigger.ID, player);
-         this.block = block;
-         this.stateCondition = stateCondition;
-      }
+    public static class Instance extends CriterionInstance
+    {
+        private final Block block;
+        private final StatePropertiesPredicate stateCondition;
 
-      public static SlideDownBlockTrigger.Instance create(Block block) {
-         return new SlideDownBlockTrigger.Instance(EntityPredicate.AndPredicate.ANY_AND, block, StatePropertiesPredicate.EMPTY);
-      }
+        public Instance(EntityPredicate.AndPredicate player, @Nullable Block block, StatePropertiesPredicate stateCondition)
+        {
+            super(SlideDownBlockTrigger.ID, player);
+            this.block = block;
+            this.stateCondition = stateCondition;
+        }
 
-      public JsonObject serialize(ConditionArraySerializer conditions) {
-         JsonObject jsonobject = super.serialize(conditions);
-         if (this.block != null) {
-            jsonobject.addProperty("block", Registry.BLOCK.getKey(this.block).toString());
-         }
+        public static SlideDownBlockTrigger.Instance create(Block block)
+        {
+            return new SlideDownBlockTrigger.Instance(EntityPredicate.AndPredicate.ANY_AND, block, StatePropertiesPredicate.EMPTY);
+        }
 
-         jsonobject.add("state", this.stateCondition.toJsonElement());
-         return jsonobject;
-      }
+        public JsonObject serialize(ConditionArraySerializer conditions)
+        {
+            JsonObject jsonobject = super.serialize(conditions);
 
-      public boolean test(BlockState state) {
-         if (this.block != null && !state.isIn(this.block)) {
-            return false;
-         } else {
-            return this.stateCondition.matches(state);
-         }
-      }
-   }
+            if (this.block != null)
+            {
+                jsonobject.addProperty("block", Registry.BLOCK.getKey(this.block).toString());
+            }
+
+            jsonobject.add("state", this.stateCondition.toJsonElement());
+            return jsonobject;
+        }
+
+        public boolean test(BlockState state)
+        {
+            if (this.block != null && !state.isIn(this.block))
+            {
+                return false;
+            }
+            else
+            {
+                return this.stateCondition.matches(state);
+            }
+        }
+    }
 }

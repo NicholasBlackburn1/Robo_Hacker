@@ -13,39 +13,54 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
-public class CustomNameStringToComponentItem extends DataFix {
-   public CustomNameStringToComponentItem(Schema outputSchema, boolean changesType) {
-      super(outputSchema, changesType);
-   }
+public class CustomNameStringToComponentItem extends DataFix
+{
+    public CustomNameStringToComponentItem(Schema outputSchema, boolean changesType)
+    {
+        super(outputSchema, changesType);
+    }
 
-   private Dynamic<?> fixTag(Dynamic<?> p_209621_1_) {
-      Optional<? extends Dynamic<?>> optional = p_209621_1_.get("display").result();
-      if (optional.isPresent()) {
-         Dynamic<?> dynamic = optional.get();
-         Optional<String> optional1 = dynamic.get("Name").asString().result();
-         if (optional1.isPresent()) {
-            dynamic = dynamic.set("Name", dynamic.createString(ITextComponent.Serializer.toJson(new StringTextComponent(optional1.get()))));
-         } else {
-            Optional<String> optional2 = dynamic.get("LocName").asString().result();
-            if (optional2.isPresent()) {
-               dynamic = dynamic.set("Name", dynamic.createString(ITextComponent.Serializer.toJson(new TranslationTextComponent(optional2.get()))));
-               dynamic = dynamic.remove("LocName");
+    private Dynamic<?> fixTag(Dynamic<?> p_209621_1_)
+    {
+        Optional <? extends Dynamic<? >> optional = p_209621_1_.get("display").result();
+
+        if (optional.isPresent())
+        {
+            Dynamic<?> dynamic = optional.get();
+            Optional<String> optional1 = dynamic.get("Name").asString().result();
+
+            if (optional1.isPresent())
+            {
+                dynamic = dynamic.set("Name", dynamic.createString(ITextComponent.Serializer.toJson(new StringTextComponent(optional1.get()))));
             }
-         }
+            else
+            {
+                Optional<String> optional2 = dynamic.get("LocName").asString().result();
 
-         return p_209621_1_.set("display", dynamic);
-      } else {
-         return p_209621_1_;
-      }
-   }
+                if (optional2.isPresent())
+                {
+                    dynamic = dynamic.set("Name", dynamic.createString(ITextComponent.Serializer.toJson(new TranslationTextComponent(optional2.get()))));
+                    dynamic = dynamic.remove("LocName");
+                }
+            }
 
-   public TypeRewriteRule makeRule() {
-      Type<?> type = this.getInputSchema().getType(TypeReferences.ITEM_STACK);
-      OpticFinder<?> opticfinder = type.findField("tag");
-      return this.fixTypeEverywhereTyped("ItemCustomNameToComponentFix", type, (p_207467_2_) -> {
-         return p_207467_2_.updateTyped(opticfinder, (p_207469_1_) -> {
-            return p_207469_1_.update(DSL.remainderFinder(), this::fixTag);
-         });
-      });
-   }
+            return p_209621_1_.set("display", dynamic);
+        }
+        else
+        {
+            return p_209621_1_;
+        }
+    }
+
+    public TypeRewriteRule makeRule()
+    {
+        Type<?> type = this.getInputSchema().getType(TypeReferences.ITEM_STACK);
+        OpticFinder<?> opticfinder = type.findField("tag");
+        return this.fixTypeEverywhereTyped("ItemCustomNameToComponentFix", type, (p_207467_2_) ->
+        {
+            return p_207467_2_.updateTyped(opticfinder, (p_207469_1_) -> {
+                return p_207469_1_.update(DSL.remainderFinder(), this::fixTag);
+            });
+        });
+    }
 }

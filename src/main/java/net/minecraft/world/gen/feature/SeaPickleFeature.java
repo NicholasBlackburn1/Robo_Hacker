@@ -10,27 +10,33 @@ import net.minecraft.world.ISeedReader;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.Heightmap;
 
-public class SeaPickleFeature extends Feature<FeatureSpreadConfig> {
-   public SeaPickleFeature(Codec<FeatureSpreadConfig> p_i231987_1_) {
-      super(p_i231987_1_);
-   }
+public class SeaPickleFeature extends Feature<FeatureSpreadConfig>
+{
+    public SeaPickleFeature(Codec<FeatureSpreadConfig> p_i231987_1_)
+    {
+        super(p_i231987_1_);
+    }
 
-   public boolean generate(ISeedReader reader, ChunkGenerator generator, Random rand, BlockPos pos, FeatureSpreadConfig config) {
-      int i = 0;
-      int j = config.func_242799_a().func_242259_a(rand);
+    public boolean func_241855_a(ISeedReader p_241855_1_, ChunkGenerator p_241855_2_, Random p_241855_3_, BlockPos p_241855_4_, FeatureSpreadConfig p_241855_5_)
+    {
+        int i = 0;
+        int j = p_241855_5_.func_242799_a().func_242259_a(p_241855_3_);
 
-      for(int k = 0; k < j; ++k) {
-         int l = rand.nextInt(8) - rand.nextInt(8);
-         int i1 = rand.nextInt(8) - rand.nextInt(8);
-         int j1 = reader.getHeight(Heightmap.Type.OCEAN_FLOOR, pos.getX() + l, pos.getZ() + i1);
-         BlockPos blockpos = new BlockPos(pos.getX() + l, j1, pos.getZ() + i1);
-         BlockState blockstate = Blocks.SEA_PICKLE.getDefaultState().with(SeaPickleBlock.PICKLES, Integer.valueOf(rand.nextInt(4) + 1));
-         if (reader.getBlockState(blockpos).isIn(Blocks.WATER) && blockstate.isValidPosition(reader, blockpos)) {
-            reader.setBlockState(blockpos, blockstate, 2);
-            ++i;
-         }
-      }
+        for (int k = 0; k < j; ++k)
+        {
+            int l = p_241855_3_.nextInt(8) - p_241855_3_.nextInt(8);
+            int i1 = p_241855_3_.nextInt(8) - p_241855_3_.nextInt(8);
+            int j1 = p_241855_1_.getHeight(Heightmap.Type.OCEAN_FLOOR, p_241855_4_.getX() + l, p_241855_4_.getZ() + i1);
+            BlockPos blockpos = new BlockPos(p_241855_4_.getX() + l, j1, p_241855_4_.getZ() + i1);
+            BlockState blockstate = Blocks.SEA_PICKLE.getDefaultState().with(SeaPickleBlock.PICKLES, Integer.valueOf(p_241855_3_.nextInt(4) + 1));
 
-      return i > 0;
-   }
+            if (p_241855_1_.getBlockState(blockpos).isIn(Blocks.WATER) && blockstate.isValidPosition(p_241855_1_, blockpos))
+            {
+                p_241855_1_.setBlockState(blockpos, blockstate, 2);
+                ++i;
+            }
+        }
+
+        return i > 0;
+    }
 }

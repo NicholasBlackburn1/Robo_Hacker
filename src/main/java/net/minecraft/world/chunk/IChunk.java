@@ -26,123 +26,146 @@ import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.gen.feature.structure.StructureStart;
 import org.apache.logging.log4j.LogManager;
 
-public interface IChunk extends IBlockReader, IStructureReader {
-   @Nullable
-   BlockState setBlockState(BlockPos pos, BlockState state, boolean isMoving);
+public interface IChunk extends IBlockReader, IStructureReader
+{
+    @Nullable
+    BlockState setBlockState(BlockPos pos, BlockState state, boolean isMoving);
 
-   void addTileEntity(BlockPos pos, TileEntity tileEntityIn);
+    void addTileEntity(BlockPos pos, TileEntity tileEntityIn);
 
-   void addEntity(Entity entityIn);
+    /**
+     * Adds an entity to the chunk.
+     */
+    void addEntity(Entity entityIn);
 
-   @Nullable
-   default ChunkSection getLastExtendedBlockStorage() {
-      ChunkSection[] achunksection = this.getSections();
+    @Nullable
 
-      for(int i = achunksection.length - 1; i >= 0; --i) {
-         ChunkSection chunksection = achunksection[i];
-         if (!ChunkSection.isEmpty(chunksection)) {
-            return chunksection;
-         }
-      }
+default ChunkSection getLastExtendedBlockStorage()
+    {
+        ChunkSection[] achunksection = this.getSections();
 
-      return null;
-   }
+        for (int i = achunksection.length - 1; i >= 0; --i)
+        {
+            ChunkSection chunksection = achunksection[i];
 
-   default int getTopFilledSegment() {
-      ChunkSection chunksection = this.getLastExtendedBlockStorage();
-      return chunksection == null ? 0 : chunksection.getYLocation();
-   }
+            if (!ChunkSection.isEmpty(chunksection))
+            {
+                return chunksection;
+            }
+        }
 
-   Set<BlockPos> getTileEntitiesPos();
+        return null;
+    }
 
-   ChunkSection[] getSections();
+default int getTopFilledSegment()
+    {
+        ChunkSection chunksection = this.getLastExtendedBlockStorage();
+        return chunksection == null ? 0 : chunksection.getYLocation();
+    }
 
-   Collection<Entry<Heightmap.Type, Heightmap>> getHeightmaps();
+    Set<BlockPos> getTileEntitiesPos();
 
-   void setHeightmap(Heightmap.Type type, long[] data);
+    ChunkSection[] getSections();
 
-   Heightmap getHeightmap(Heightmap.Type typeIn);
+    Collection<Entry<Heightmap.Type, Heightmap>> getHeightmaps();
 
-   int getTopBlockY(Heightmap.Type heightmapType, int x, int z);
+    void setHeightmap(Heightmap.Type type, long[] data);
 
-   ChunkPos getPos();
+    Heightmap getHeightmap(Heightmap.Type typeIn);
 
-   void setLastSaveTime(long saveTime);
+    int getTopBlockY(Heightmap.Type heightmapType, int x, int z);
 
-   Map<Structure<?>, StructureStart<?>> getStructureStarts();
+    /**
+     * Gets a {@link ChunkPos} representing the x and z coordinates of this chunk.
+     */
+    ChunkPos getPos();
 
-   void setStructureStarts(Map<Structure<?>, StructureStart<?>> structureStartsIn);
+    void setLastSaveTime(long saveTime);
 
-   default boolean isEmptyBetween(int startY, int endY) {
-      if (startY < 0) {
-         startY = 0;
-      }
+    Map < Structure<?>, StructureStart<? >> getStructureStarts();
 
-      if (endY >= 256) {
-         endY = 255;
-      }
+    void setStructureStarts(Map < Structure<?>, StructureStart<? >> structureStartsIn);
 
-      for(int i = startY; i <= endY; i += 16) {
-         if (!ChunkSection.isEmpty(this.getSections()[i >> 4])) {
-            return false;
-         }
-      }
+default boolean isEmptyBetween(int startY, int endY)
+    {
+        if (startY < 0)
+        {
+            startY = 0;
+        }
 
-      return true;
-   }
+        if (endY >= 256)
+        {
+            endY = 255;
+        }
 
-   @Nullable
-   BiomeContainer getBiomes();
+        for (int i = startY; i <= endY; i += 16)
+        {
+            if (!ChunkSection.isEmpty(this.getSections()[i >> 4]))
+            {
+                return false;
+            }
+        }
 
-   void setModified(boolean modified);
+        return true;
+    }
 
-   boolean isModified();
+    @Nullable
+    BiomeContainer getBiomes();
 
-   ChunkStatus getStatus();
+    void setModified(boolean modified);
 
-   void removeTileEntity(BlockPos pos);
+    boolean isModified();
 
-   default void markBlockForPostprocessing(BlockPos pos) {
-      LogManager.getLogger().warn("Trying to mark a block for PostProcessing @ {}, but this operation is not supported.", (Object)pos);
-   }
+    ChunkStatus getStatus();
 
-   ShortList[] getPackedPositions();
+    void removeTileEntity(BlockPos pos);
 
-   default void addPackedPosition(short packedPosition, int index) {
-      getList(this.getPackedPositions(), index).add(packedPosition);
-   }
+default void markBlockForPostprocessing(BlockPos pos)
+    {
+        LogManager.getLogger().warn("Trying to mark a block for PostProcessing @ {}, but this operation is not supported.", (Object)pos);
+    }
 
-   default void addTileEntity(CompoundNBT nbt) {
-      LogManager.getLogger().warn("Trying to set a BlockEntity, but this operation is not supported.");
-   }
+    ShortList[] getPackedPositions();
 
-   @Nullable
-   CompoundNBT getDeferredTileEntity(BlockPos pos);
+default void addPackedPosition(short packedPosition, int index)
+    {
+        getList(this.getPackedPositions(), index).add(packedPosition);
+    }
 
-   @Nullable
-   CompoundNBT getTileEntityNBT(BlockPos pos);
+default void addTileEntity(CompoundNBT nbt)
+    {
+        LogManager.getLogger().warn("Trying to set a BlockEntity, but this operation is not supported.");
+    }
 
-   Stream<BlockPos> getLightSources();
+    @Nullable
+    CompoundNBT getDeferredTileEntity(BlockPos pos);
 
-   ITickList<Block> getBlocksToBeTicked();
+    @Nullable
+    CompoundNBT getTileEntityNBT(BlockPos pos);
 
-   ITickList<Fluid> getFluidsToBeTicked();
+    Stream<BlockPos> getLightSources();
 
-   UpgradeData getUpgradeData();
+    ITickList<Block> getBlocksToBeTicked();
 
-   void setInhabitedTime(long newInhabitedTime);
+    ITickList<Fluid> getFluidsToBeTicked();
 
-   long getInhabitedTime();
+    UpgradeData getUpgradeData();
 
-   static ShortList getList(ShortList[] packedPositions, int index) {
-      if (packedPositions[index] == null) {
-         packedPositions[index] = new ShortArrayList();
-      }
+    void setInhabitedTime(long newInhabitedTime);
 
-      return packedPositions[index];
-   }
+    long getInhabitedTime();
 
-   boolean hasLight();
+    static ShortList getList(ShortList[] packedPositions, int index)
+    {
+        if (packedPositions[index] == null)
+        {
+            packedPositions[index] = new ShortArrayList();
+        }
 
-   void setLight(boolean lightCorrectIn);
+        return packedPositions[index];
+    }
+
+    boolean hasLight();
+
+    void setLight(boolean lightCorrectIn);
 }

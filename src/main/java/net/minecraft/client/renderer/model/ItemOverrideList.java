@@ -1,5 +1,6 @@
 package net.minecraft.client.renderer.model;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import java.util.Collections;
 import java.util.List;
@@ -7,52 +8,129 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.optifine.Config;
+import net.optifine.ItemOverrideCache;
 
-@OnlyIn(Dist.CLIENT)
-public class ItemOverrideList {
-   public static final ItemOverrideList EMPTY = new ItemOverrideList();
-   private final List<ItemOverride> overrides = Lists.newArrayList();
-   private final List<IBakedModel> overrideBakedModels;
+public class ItemOverrideList
+{
+    public static final ItemOverrideList EMPTY = new ItemOverrideList();
+    private final List<ItemOverride> overrides = Lists.newArrayList();
+    private final List<IBakedModel> overrideBakedModels;
+    private ItemOverrideCache itemOverrideCache;
+    public static ResourceLocation lastModelLocation = null;
 
-   private ItemOverrideList() {
-      this.overrideBakedModels = Collections.emptyList();
-   }
+    private ItemOverrideList()
+    {
+        this.overrideBakedModels = Collections.emptyList();
+    }
 
-   public ItemOverrideList(ModelBakery modelBakeryIn, BlockModel blockModelIn, Function<ResourceLocation, IUnbakedModel> modelGetter, List<ItemOverride> itemOverridesIn) {
-      this.overrideBakedModels = itemOverridesIn.stream().map((p_217649_3_) -> {
-         IUnbakedModel iunbakedmodel = modelGetter.apply(p_217649_3_.getLocation());
-         return Objects.equals(iunbakedmodel, blockModelIn) ? null : modelBakeryIn.bake(p_217649_3_.getLocation(), ModelRotation.X0_Y0);
-      }).collect(Collectors.toList());
-      Collections.reverse(this.overrideBakedModels);
+    public ItemOverrideList(ModelBakery modelBakeryIn, BlockModel blockModelIn, Function<ResourceLocation, IUnbakedModel> modelGetter, List<ItemOverride> itemOverridesIn)
+    {
+        this(modelBakeryIn, blockModelIn, modelGetter, modelBakeryIn.getSpriteMap()::getSprite, itemOverridesIn);
+    }
 
-      for(int i = itemOverridesIn.size() - 1; i >= 0; --i) {
-         this.overrides.add(itemOverridesIn.get(i));
-      }
+    public ItemOverrideList(ModelBakery p_i242112_1_, IUnbakedModel p_i242112_2_, Function<ResourceLocation, IUnbakedModel> p_i242112_3_, Function<RenderMaterial, TextureAtlasSprite> p_i242112_4_, List<ItemOverride> p_i242112_5_)
+    {
+        this.overrideBakedModels = p_i242112_5_.stream().map((p_lambda$new$0_4_) ->
+        {
+            IUnbakedModel iunbakedmodel = p_i242112_3_.apply(p_lambda$new$0_4_.getLocation());
+            return Objects.equals(iunbakedmodel, p_i242112_2_) ? null : p_i242112_1_.getBakedModel(p_lambda$new$0_4_.getLocation(), ModelRotation.X0_Y0, p_i242112_4_);
+        }).collect(Collectors.toList());
+        Collections.reverse(this.overrideBakedModels);
 
-   }
+        for (int i = p_i242112_5_.size() - 1; i >= 0; --i)
+        {
+            this.overrides.add(p_i242112_5_.get(i));
+        }
 
-   @Nullable
-   public IBakedModel getOverrideModel(IBakedModel model, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity livingEntity) {
-      if (!this.overrides.isEmpty()) {
-         for(int i = 0; i < this.overrides.size(); ++i) {
-            ItemOverride itemoverride = this.overrides.get(i);
-            if (itemoverride.matchesOverride(stack, world, livingEntity)) {
-               IBakedModel ibakedmodel = this.overrideBakedModels.get(i);
-               if (ibakedmodel == null) {
-                  return model;
-               }
+        if (this.overrides.size() > 65)
+        {
+            this.itemOverrideCache = ItemOverrideCache.make(this.overrides);
+        }
+    }
 
-               return ibakedmodel;
+    @Nullable
+    public IBakedModel getOverrideModel(IBakedModel model, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity livingEntity)
+    {
+        boolean flag = Config.isCustomItems();
+
+        if (flag)
+        {
+            lastModelLocation = null;
+        }
+
+        if (!this.overrides.isEmpty())
+        {
+            if (this.itemOverrideCache != null)
+            {
+                Integer integer = this.itemOverrideCache.getModelIndex(stack, world, livingEntity);
+
+                if (integer != null)
+                {
+                    int j = integer;
+
+                    if (j >= 0 && j < this.overrideBakedModels.size())
+                    {
+                        if (flag)
+                        {
+                            lastModelLocation = this.overrides.get(j).getLocation();
+                        }
+
+                        IBakedModel ibakedmodel1 = this.overrideBakedModels.get(j);
+
+                        if (ibakedmodel1 != null)
+                        {
+                            return ibakedmodel1;
+                        }
+                    }
+
+                    return model;
+                }
             }
-         }
-      }
 
-      return model;
-   }
+            for (int i = 0; i < this.overrides.size(); ++i)
+            {
+                ItemOverride itemoverride = this.overrides.get(i);
+
+                if (itemoverride.matchesOverride(stack, world, livingEntity))
+                {
+                    IBakedModel ibakedmodel = this.overrideBakedModels.get(i);
+
+                    if (flag)
+                    {
+                        lastModelLocation = itemoverride.getLocation();
+                    }
+
+                    if (this.itemOverrideCache != null)
+                    {
+                        this.itemOverrideCache.putModelIndex(stack, world, livingEntity, i);
+                    }
+
+                    if (ibakedmodel == null)
+                    {
+                        return model;
+                    }
+
+                    return ibakedmodel;
+                }
+            }
+
+            if (this.itemOverrideCache != null)
+            {
+                this.itemOverrideCache.putModelIndex(stack, world, livingEntity, ItemOverrideCache.INDEX_NONE);
+            }
+        }
+
+        return model;
+    }
+
+    public ImmutableList<ItemOverride> getOverrides()
+    {
+        return ImmutableList.copyOf(this.overrides);
+    }
 }

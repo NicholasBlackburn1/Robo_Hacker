@@ -1,25 +1,24 @@
 package net.minecraft.client.util;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+public interface ITooltipFlag
+{
+    boolean isAdvanced();
 
-@OnlyIn(Dist.CLIENT)
-public interface ITooltipFlag {
-   boolean isAdvanced();
+    public static enum TooltipFlags implements ITooltipFlag
+    {
+        NORMAL(false),
+        ADVANCED(true);
 
-   @OnlyIn(Dist.CLIENT)
-   public static enum TooltipFlags implements ITooltipFlag {
-      NORMAL(false),
-      ADVANCED(true);
+        private final boolean isAdvanced;
 
-      private final boolean isAdvanced;
+        private TooltipFlags(boolean advanced)
+        {
+            this.isAdvanced = advanced;
+        }
 
-      private TooltipFlags(boolean advanced) {
-         this.isAdvanced = advanced;
-      }
-
-      public boolean isAdvanced() {
-         return this.isAdvanced;
-      }
-   }
+        public boolean isAdvanced()
+        {
+            return this.isAdvanced;
+        }
+    }
 }

@@ -6,8 +6,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 
-public interface ILiquidContainer {
-   boolean canContainFluid(IBlockReader worldIn, BlockPos pos, BlockState state, Fluid fluidIn);
+public interface ILiquidContainer
+{
+    boolean canContainFluid(IBlockReader worldIn, BlockPos pos, BlockState state, Fluid fluidIn);
 
-   boolean receiveFluid(IWorld worldIn, BlockPos pos, BlockState state, FluidState fluidStateIn);
+    boolean receiveFluid(IWorld worldIn, BlockPos pos, BlockState state, FluidState fluidStateIn);
 }

@@ -7,63 +7,102 @@ import net.minecraft.client.resources.data.AnimationFrame;
 import net.minecraft.client.resources.data.AnimationMetadataSection;
 import net.minecraft.util.LazyValue;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
-public final class MissingTextureSprite extends TextureAtlasSprite {
-   private static final ResourceLocation LOCATION = new ResourceLocation("missingno");
-   @Nullable
-   private static DynamicTexture dynamicTexture;
-   private static final LazyValue<NativeImage> IMAGE = new LazyValue<>(() -> {
-      NativeImage nativeimage = new NativeImage(16, 16, false);
-      int i = -16777216;
-      int j = -524040;
+public final class MissingTextureSprite extends TextureAtlasSprite
+{
+    private static final ResourceLocation LOCATION = new ResourceLocation("missingno");
+    @Nullable
+    private static DynamicTexture dynamicTexture;
+    private static final LazyValue<NativeImage> IMAGE = new LazyValue<>(() ->
+    {
+        NativeImage nativeimage = new NativeImage(16, 16, false);
+        int i = -16777216;
+        int j = -524040;
 
-      for(int k = 0; k < 16; ++k) {
-         for(int l = 0; l < 16; ++l) {
-            if (k < 8 ^ l < 8) {
-               nativeimage.setPixelRGBA(l, k, -524040);
-            } else {
-               nativeimage.setPixelRGBA(l, k, -16777216);
+        for (int k = 0; k < 16; ++k)
+        {
+            for (int l = 0; l < 16; ++l)
+            {
+                if (k < 8 ^ l < 8)
+                {
+                    nativeimage.setPixelRGBA(l, k, -524040);
+                }
+                else
+                {
+                    nativeimage.setPixelRGBA(l, k, -16777216);
+                }
             }
-         }
-      }
+        }
 
-      nativeimage.untrack();
-      return nativeimage;
-   });
-   private static final TextureAtlasSprite.Info spriteInfo = new TextureAtlasSprite.Info(LOCATION, 16, 16, new AnimationMetadataSection(Lists.newArrayList(new AnimationFrame(0, -1)), 16, 16, 1, false));
+        nativeimage.untrack();
+        return nativeimage;
+    });
+    private static final TextureAtlasSprite.Info spriteInfo = new TextureAtlasSprite.Info(LOCATION, 16, 16, new AnimationMetadataSection(Lists.newArrayList(new AnimationFrame(0, -1)), 16, 16, 1, false));
 
-   private MissingTextureSprite(AtlasTexture atlasTextureIn, int mipmapLevelIn, int atlasWidthIn, int atlasHeightIn, int xIn, int yIn) {
-      super(atlasTextureIn, spriteInfo, mipmapLevelIn, atlasWidthIn, atlasHeightIn, xIn, yIn, IMAGE.getValue());
-   }
+    public MissingTextureSprite(AtlasTexture p_i242119_1_, TextureAtlasSprite.Info p_i242119_2_, int p_i242119_3_, int p_i242119_4_, int p_i242119_5_, int p_i242119_6_, int p_i242119_7_)
+    {
+        super(p_i242119_1_, p_i242119_2_, p_i242119_3_, p_i242119_4_, p_i242119_5_, p_i242119_6_, p_i242119_7_, makeMissingImage(p_i242119_2_.getSpriteWidth(), p_i242119_2_.getSpriteHeight()));
+    }
 
-   public static MissingTextureSprite create(AtlasTexture atlasTextureIn, int mipmapLevelIn, int atlasWidthIn, int atlasHeightIn, int xIn, int yIn) {
-      return new MissingTextureSprite(atlasTextureIn, mipmapLevelIn, atlasWidthIn, atlasHeightIn, xIn, yIn);
-   }
+    private MissingTextureSprite(AtlasTexture atlasTextureIn, int mipmapLevelIn, int atlasWidthIn, int atlasHeightIn, int xIn, int yIn)
+    {
+        super(atlasTextureIn, spriteInfo, mipmapLevelIn, atlasWidthIn, atlasHeightIn, xIn, yIn, IMAGE.getValue());
+    }
 
-   public static ResourceLocation getLocation() {
-      return LOCATION;
-   }
+    public static MissingTextureSprite create(AtlasTexture atlasTextureIn, int mipmapLevelIn, int atlasWidthIn, int atlasHeightIn, int xIn, int yIn)
+    {
+        return new MissingTextureSprite(atlasTextureIn, mipmapLevelIn, atlasWidthIn, atlasHeightIn, xIn, yIn);
+    }
 
-   public static TextureAtlasSprite.Info getSpriteInfo() {
-      return spriteInfo;
-   }
+    public static ResourceLocation getLocation()
+    {
+        return LOCATION;
+    }
 
-   public void close() {
-      for(int i = 1; i < this.frames.length; ++i) {
-         this.frames[i].close();
-      }
+    public static TextureAtlasSprite.Info getSpriteInfo()
+    {
+        return spriteInfo;
+    }
 
-   }
+    public void close()
+    {
+        super.close();
+    }
 
-   public static DynamicTexture getDynamicTexture() {
-      if (dynamicTexture == null) {
-         dynamicTexture = new DynamicTexture(IMAGE.getValue());
-         Minecraft.getInstance().getTextureManager().loadTexture(LOCATION, dynamicTexture);
-      }
+    public static DynamicTexture getDynamicTexture()
+    {
+        if (dynamicTexture == null)
+        {
+            dynamicTexture = new DynamicTexture(IMAGE.getValue());
+            Minecraft.getInstance().getTextureManager().loadTexture(LOCATION, dynamicTexture);
+        }
 
-      return dynamicTexture;
-   }
+        return dynamicTexture;
+    }
+
+    private static NativeImage makeMissingImage(int p_makeMissingImage_0_, int p_makeMissingImage_1_)
+    {
+        int i = p_makeMissingImage_0_ / 2;
+        int j = p_makeMissingImage_1_ / 2;
+        NativeImage nativeimage = new NativeImage(p_makeMissingImage_0_, p_makeMissingImage_1_, false);
+        int k = -16777216;
+        int l = -524040;
+
+        for (int i1 = 0; i1 < p_makeMissingImage_1_; ++i1)
+        {
+            for (int j1 = 0; j1 < p_makeMissingImage_0_; ++j1)
+            {
+                if (i1 < j ^ j1 < i)
+                {
+                    nativeimage.setPixelRGBA(j1, i1, l);
+                }
+                else
+                {
+                    nativeimage.setPixelRGBA(j1, i1, k);
+                }
+            }
+        }
+
+        return nativeimage;
+    }
 }

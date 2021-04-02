@@ -1,15 +1,12 @@
 package net.minecraft.client.shader;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+public interface IShaderManager
+{
+    int getProgram();
 
-@OnlyIn(Dist.CLIENT)
-public interface IShaderManager {
-   int getProgram();
+    void markDirty();
 
-   void markDirty();
+    ShaderLoader getVertexShaderLoader();
 
-   ShaderLoader getVertexShaderLoader();
-
-   ShaderLoader getFragmentShaderLoader();
+    ShaderLoader getFragmentShaderLoader();
 }

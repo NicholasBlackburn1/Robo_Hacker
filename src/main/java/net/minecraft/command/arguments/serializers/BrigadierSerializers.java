@@ -9,34 +9,42 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import net.minecraft.command.arguments.ArgumentSerializer;
 import net.minecraft.command.arguments.ArgumentTypes;
 
-public class BrigadierSerializers {
-   public static void registerArgumentTypes() {
-      ArgumentTypes.register("brigadier:bool", BoolArgumentType.class, new ArgumentSerializer<>(BoolArgumentType::bool));
-      ArgumentTypes.register("brigadier:float", FloatArgumentType.class, new FloatArgumentSerializer());
-      ArgumentTypes.register("brigadier:double", DoubleArgumentType.class, new DoubleArgumentSerializer());
-      ArgumentTypes.register("brigadier:integer", IntegerArgumentType.class, new IntArgumentSerializer());
-      ArgumentTypes.register("brigadier:long", LongArgumentType.class, new LongArgumentSerializer());
-      ArgumentTypes.register("brigadier:string", StringArgumentType.class, new StringArgumentSerializer());
-   }
+public class BrigadierSerializers
+{
+    public static void registerArgumentTypes()
+    {
+        ArgumentTypes.register("brigadier:bool", BoolArgumentType.class, new ArgumentSerializer<>(BoolArgumentType::bool));
+        ArgumentTypes.register("brigadier:float", FloatArgumentType.class, new FloatArgumentSerializer());
+        ArgumentTypes.register("brigadier:double", DoubleArgumentType.class, new DoubleArgumentSerializer());
+        ArgumentTypes.register("brigadier:integer", IntegerArgumentType.class, new IntArgumentSerializer());
+        ArgumentTypes.register("brigadier:long", LongArgumentType.class, new LongArgumentSerializer());
+        ArgumentTypes.register("brigadier:string", StringArgumentType.class, new StringArgumentSerializer());
+    }
 
-   public static byte minMaxFlags(boolean min, boolean max) {
-      byte b0 = 0;
-      if (min) {
-         b0 = (byte)(b0 | 1);
-      }
+    public static byte minMaxFlags(boolean min, boolean max)
+    {
+        byte b0 = 0;
 
-      if (max) {
-         b0 = (byte)(b0 | 2);
-      }
+        if (min)
+        {
+            b0 = (byte)(b0 | 1);
+        }
 
-      return b0;
-   }
+        if (max)
+        {
+            b0 = (byte)(b0 | 2);
+        }
 
-   public static boolean hasMin(byte flags) {
-      return (flags & 1) != 0;
-   }
+        return b0;
+    }
 
-   public static boolean hasMax(byte flags) {
-      return (flags & 2) != 0;
-   }
+    public static boolean hasMin(byte flags)
+    {
+        return (flags & 1) != 0;
+    }
+
+    public static boolean hasMax(byte flags)
+    {
+        return (flags & 2) != 0;
+    }
 }

@@ -10,163 +10,279 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.GameType;
 import net.minecraft.world.border.WorldBorder;
 
-public class DerivedWorldInfo implements IServerWorldInfo {
-   private final IServerConfiguration configuration;
-   private final IServerWorldInfo delegate;
+public class DerivedWorldInfo implements IServerWorldInfo
+{
+    private final IServerConfiguration configuration;
+    private final IServerWorldInfo delegate;
 
-   public DerivedWorldInfo(IServerConfiguration configuration, IServerWorldInfo delegate) {
-      this.configuration = configuration;
-      this.delegate = delegate;
-   }
+    public DerivedWorldInfo(IServerConfiguration configuration, IServerWorldInfo delegate)
+    {
+        this.configuration = configuration;
+        this.delegate = delegate;
+    }
 
-   public int getSpawnX() {
-      return this.delegate.getSpawnX();
-   }
+    /**
+     * Returns the x spawn position
+     */
+    public int getSpawnX()
+    {
+        return this.delegate.getSpawnX();
+    }
 
-   public int getSpawnY() {
-      return this.delegate.getSpawnY();
-   }
+    /**
+     * Return the Y axis spawning point of the player.
+     */
+    public int getSpawnY()
+    {
+        return this.delegate.getSpawnY();
+    }
 
-   public int getSpawnZ() {
-      return this.delegate.getSpawnZ();
-   }
+    /**
+     * Returns the z spawn position
+     */
+    public int getSpawnZ()
+    {
+        return this.delegate.getSpawnZ();
+    }
 
-   public float getSpawnAngle() {
-      return this.delegate.getSpawnAngle();
-   }
+    public float getSpawnAngle()
+    {
+        return this.delegate.getSpawnAngle();
+    }
 
-   public long getGameTime() {
-      return this.delegate.getGameTime();
-   }
+    public long getGameTime()
+    {
+        return this.delegate.getGameTime();
+    }
 
-   public long getDayTime() {
-      return this.delegate.getDayTime();
-   }
+    /**
+     * Get current world time
+     */
+    public long getDayTime()
+    {
+        return this.delegate.getDayTime();
+    }
 
-   public String getWorldName() {
-      return this.configuration.getWorldName();
-   }
+    /**
+     * Get current world name
+     */
+    public String getWorldName()
+    {
+        return this.configuration.getWorldName();
+    }
 
-   public int getClearWeatherTime() {
-      return this.delegate.getClearWeatherTime();
-   }
+    public int getClearWeatherTime()
+    {
+        return this.delegate.getClearWeatherTime();
+    }
 
-   public void setClearWeatherTime(int time) {
-   }
+    public void setClearWeatherTime(int time)
+    {
+    }
 
-   public boolean isThundering() {
-      return this.delegate.isThundering();
-   }
+    /**
+     * Returns true if it is thundering, false otherwise.
+     */
+    public boolean isThundering()
+    {
+        return this.delegate.isThundering();
+    }
 
-   public int getThunderTime() {
-      return this.delegate.getThunderTime();
-   }
+    /**
+     * Returns the number of ticks until next thunderbolt.
+     */
+    public int getThunderTime()
+    {
+        return this.delegate.getThunderTime();
+    }
 
-   public boolean isRaining() {
-      return this.delegate.isRaining();
-   }
+    /**
+     * Returns true if it is raining, false otherwise.
+     */
+    public boolean isRaining()
+    {
+        return this.delegate.isRaining();
+    }
 
-   public int getRainTime() {
-      return this.delegate.getRainTime();
-   }
+    /**
+     * Return the number of ticks until rain.
+     */
+    public int getRainTime()
+    {
+        return this.delegate.getRainTime();
+    }
 
-   public GameType getGameType() {
-      return this.configuration.getGameType();
-   }
+    /**
+     * Gets the GameType.
+     */
+    public GameType getGameType()
+    {
+        return this.configuration.getGameType();
+    }
 
-   public void setSpawnX(int x) {
-   }
+    /**
+     * Set the x spawn position to the passed in value
+     */
+    public void setSpawnX(int x)
+    {
+    }
 
-   public void setSpawnY(int y) {
-   }
+    /**
+     * Sets the y spawn position
+     */
+    public void setSpawnY(int y)
+    {
+    }
 
-   public void setSpawnZ(int z) {
-   }
+    /**
+     * Set the z spawn position to the passed in value
+     */
+    public void setSpawnZ(int z)
+    {
+    }
 
-   public void setSpawnAngle(float angle) {
-   }
+    public void setSpawnAngle(float angle)
+    {
+    }
 
-   public void setGameTime(long time) {
-   }
+    public void setGameTime(long time)
+    {
+    }
 
-   public void setDayTime(long time) {
-   }
+    /**
+     * Set current world time
+     */
+    public void setDayTime(long time)
+    {
+    }
 
-   public void setSpawn(BlockPos spawnPoint, float angle) {
-   }
+    public void setSpawn(BlockPos spawnPoint, float angle)
+    {
+    }
 
-   public void setThundering(boolean thunderingIn) {
-   }
+    /**
+     * Sets whether it is thundering or not.
+     */
+    public void setThundering(boolean thunderingIn)
+    {
+    }
 
-   public void setThunderTime(int time) {
-   }
+    /**
+     * Defines the number of ticks until next thunderbolt.
+     */
+    public void setThunderTime(int time)
+    {
+    }
 
-   public void setRaining(boolean isRaining) {
-   }
+    /**
+     * Sets whether it is raining or not.
+     */
+    public void setRaining(boolean isRaining)
+    {
+    }
 
-   public void setRainTime(int time) {
-   }
+    /**
+     * Sets the number of ticks until rain.
+     */
+    public void setRainTime(int time)
+    {
+    }
 
-   public void setGameType(GameType type) {
-   }
+    public void setGameType(GameType type)
+    {
+    }
 
-   public boolean isHardcore() {
-      return this.configuration.isHardcore();
-   }
+    /**
+     * Returns true if hardcore mode is enabled, otherwise false
+     */
+    public boolean isHardcore()
+    {
+        return this.configuration.isHardcore();
+    }
 
-   public boolean areCommandsAllowed() {
-      return this.configuration.areCommandsAllowed();
-   }
+    /**
+     * Returns true if commands are allowed on this World.
+     */
+    public boolean areCommandsAllowed()
+    {
+        return this.configuration.areCommandsAllowed();
+    }
 
-   public boolean isInitialized() {
-      return this.delegate.isInitialized();
-   }
+    /**
+     * Returns true if the World is initialized.
+     */
+    public boolean isInitialized()
+    {
+        return this.delegate.isInitialized();
+    }
 
-   public void setInitialized(boolean initializedIn) {
-   }
+    /**
+     * Sets the initialization status of the World.
+     */
+    public void setInitialized(boolean initializedIn)
+    {
+    }
 
-   public GameRules getGameRulesInstance() {
-      return this.configuration.getGameRulesInstance();
-   }
+    /**
+     * Gets the GameRules class Instance.
+     */
+    public GameRules getGameRulesInstance()
+    {
+        return this.configuration.getGameRulesInstance();
+    }
 
-   public WorldBorder.Serializer getWorldBorderSerializer() {
-      return this.delegate.getWorldBorderSerializer();
-   }
+    public WorldBorder.Serializer getWorldBorderSerializer()
+    {
+        return this.delegate.getWorldBorderSerializer();
+    }
 
-   public void setWorldBorderSerializer(WorldBorder.Serializer serializer) {
-   }
+    public void setWorldBorderSerializer(WorldBorder.Serializer serializer)
+    {
+    }
 
-   public Difficulty getDifficulty() {
-      return this.configuration.getDifficulty();
-   }
+    public Difficulty getDifficulty()
+    {
+        return this.configuration.getDifficulty();
+    }
 
-   public boolean isDifficultyLocked() {
-      return this.configuration.isDifficultyLocked();
-   }
+    public boolean isDifficultyLocked()
+    {
+        return this.configuration.isDifficultyLocked();
+    }
 
-   public TimerCallbackManager<MinecraftServer> getScheduledEvents() {
-      return this.delegate.getScheduledEvents();
-   }
+    public TimerCallbackManager<MinecraftServer> getScheduledEvents()
+    {
+        return this.delegate.getScheduledEvents();
+    }
 
-   public int getWanderingTraderSpawnDelay() {
-      return 0;
-   }
+    public int getWanderingTraderSpawnDelay()
+    {
+        return 0;
+    }
 
-   public void setWanderingTraderSpawnDelay(int delay) {
-   }
+    public void setWanderingTraderSpawnDelay(int delay)
+    {
+    }
 
-   public int getWanderingTraderSpawnChance() {
-      return 0;
-   }
+    public int getWanderingTraderSpawnChance()
+    {
+        return 0;
+    }
 
-   public void setWanderingTraderSpawnChance(int chance) {
-   }
+    public void setWanderingTraderSpawnChance(int chance)
+    {
+    }
 
-   public void setWanderingTraderID(UUID id) {
-   }
+    public void setWanderingTraderID(UUID id)
+    {
+    }
 
-   public void addToCrashReport(CrashReportCategory category) {
-      category.addDetail("Derived", true);
-      this.delegate.addToCrashReport(category);
-   }
+    /**
+     * Adds this WorldInfo instance to the crash report.
+     */
+    public void addToCrashReport(CrashReportCategory category)
+    {
+        category.addDetail("Derived", true);
+        this.delegate.addToCrashReport(category);
+    }
 }

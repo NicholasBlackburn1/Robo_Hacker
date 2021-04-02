@@ -12,64 +12,80 @@ import net.minecraft.loot.ConditionArraySerializer;
 import net.minecraft.loot.LootContext;
 import net.minecraft.util.ResourceLocation;
 
-public class ChanneledLightningTrigger extends AbstractCriterionTrigger<ChanneledLightningTrigger.Instance> {
-   private static final ResourceLocation ID = new ResourceLocation("channeled_lightning");
+public class ChanneledLightningTrigger extends AbstractCriterionTrigger<ChanneledLightningTrigger.Instance>
+{
+    private static final ResourceLocation ID = new ResourceLocation("channeled_lightning");
 
-   public ResourceLocation getId() {
-      return ID;
-   }
+    public ResourceLocation getId()
+    {
+        return ID;
+    }
 
-   public ChanneledLightningTrigger.Instance deserializeTrigger(JsonObject json, EntityPredicate.AndPredicate entityPredicate, ConditionArrayParser conditionsParser) {
-      EntityPredicate.AndPredicate[] aentitypredicate$andpredicate = EntityPredicate.AndPredicate.deserialize(json, "victims", conditionsParser);
-      return new ChanneledLightningTrigger.Instance(entityPredicate, aentitypredicate$andpredicate);
-   }
+    public ChanneledLightningTrigger.Instance deserializeTrigger(JsonObject json, EntityPredicate.AndPredicate entityPredicate, ConditionArrayParser conditionsParser)
+    {
+        EntityPredicate.AndPredicate[] aentitypredicate$andpredicate = EntityPredicate.AndPredicate.deserialize(json, "victims", conditionsParser);
+        return new ChanneledLightningTrigger.Instance(entityPredicate, aentitypredicate$andpredicate);
+    }
 
-   public void trigger(ServerPlayerEntity player, Collection<? extends Entity> entityTriggered) {
-      List<LootContext> list = entityTriggered.stream().map((p_233674_1_) -> {
-         return EntityPredicate.getLootContext(player, p_233674_1_);
-      }).collect(Collectors.toList());
-      this.triggerListeners(player, (p_233673_1_) -> {
-         return p_233673_1_.test(list);
-      });
-   }
+    public void trigger(ServerPlayerEntity player, Collection <? extends Entity > entityTriggered)
+    {
+        List<LootContext> list = entityTriggered.stream().map((entity) ->
+        {
+            return EntityPredicate.getLootContext(player, entity);
+        }).collect(Collectors.toList());
+        this.triggerListeners(player, (instance) ->
+        {
+            return instance.test(list);
+        });
+    }
 
-   public static class Instance extends CriterionInstance {
-      private final EntityPredicate.AndPredicate[] victims;
+    public static class Instance extends CriterionInstance
+    {
+        private final EntityPredicate.AndPredicate[] victims;
 
-      public Instance(EntityPredicate.AndPredicate player, EntityPredicate.AndPredicate[] victims) {
-         super(ChanneledLightningTrigger.ID, player);
-         this.victims = victims;
-      }
+        public Instance(EntityPredicate.AndPredicate player, EntityPredicate.AndPredicate[] victims)
+        {
+            super(ChanneledLightningTrigger.ID, player);
+            this.victims = victims;
+        }
 
-      public static ChanneledLightningTrigger.Instance channeledLightning(EntityPredicate... victims) {
-         return new ChanneledLightningTrigger.Instance(EntityPredicate.AndPredicate.ANY_AND, Stream.of(victims).map(EntityPredicate.AndPredicate::createAndFromEntityCondition).toArray((p_233675_0_) -> {
-            return new EntityPredicate.AndPredicate[p_233675_0_];
-         }));
-      }
+        public static ChanneledLightningTrigger.Instance channeledLightning(EntityPredicate... victims)
+        {
+            return new ChanneledLightningTrigger.Instance(EntityPredicate.AndPredicate.ANY_AND, Stream.of(victims).map(EntityPredicate.AndPredicate::createAndFromEntityCondition).toArray((entityCount) ->
+            {
+                return new EntityPredicate.AndPredicate[entityCount];
+            }));
+        }
 
-      public boolean test(Collection<? extends LootContext> victims) {
-         for(EntityPredicate.AndPredicate entitypredicate$andpredicate : this.victims) {
-            boolean flag = false;
+        public boolean test(Collection <? extends LootContext > victims)
+        {
+            for (EntityPredicate.AndPredicate entitypredicate$andpredicate : this.victims)
+            {
+                boolean flag = false;
 
-            for(LootContext lootcontext : victims) {
-               if (entitypredicate$andpredicate.testContext(lootcontext)) {
-                  flag = true;
-                  break;
-               }
+                for (LootContext lootcontext : victims)
+                {
+                    if (entitypredicate$andpredicate.testContext(lootcontext))
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+
+                if (!flag)
+                {
+                    return false;
+                }
             }
 
-            if (!flag) {
-               return false;
-            }
-         }
+            return true;
+        }
 
-         return true;
-      }
-
-      public JsonObject serialize(ConditionArraySerializer conditions) {
-         JsonObject jsonobject = super.serialize(conditions);
-         jsonobject.add("victims", EntityPredicate.AndPredicate.serializeConditionsIn(this.victims, conditions));
-         return jsonobject;
-      }
-   }
+        public JsonObject serialize(ConditionArraySerializer conditions)
+        {
+            JsonObject jsonobject = super.serialize(conditions);
+            jsonobject.add("victims", EntityPredicate.AndPredicate.serializeConditionsIn(this.victims, conditions));
+            return jsonobject;
+        }
+    }
 }

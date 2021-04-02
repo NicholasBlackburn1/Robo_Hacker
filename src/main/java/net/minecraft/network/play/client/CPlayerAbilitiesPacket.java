@@ -6,35 +6,53 @@ import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.IServerPlayNetHandler;
 
-public class CPlayerAbilitiesPacket implements IPacket<IServerPlayNetHandler> {
-   private boolean flying;
+public class CPlayerAbilitiesPacket implements IPacket<IServerPlayNetHandler>
+{
+    private boolean flying;
 
-   public CPlayerAbilitiesPacket() {
-   }
+    public CPlayerAbilitiesPacket()
+    {
+    }
 
-   public CPlayerAbilitiesPacket(PlayerAbilities capabilities) {
-      this.flying = capabilities.isFlying;
-   }
+    public CPlayerAbilitiesPacket(PlayerAbilities capabilities)
+    {
+        this.flying = capabilities.isFlying;
+    }
 
-   public void readPacketData(PacketBuffer buf) throws IOException {
-      byte b0 = buf.readByte();
-      this.flying = (b0 & 2) != 0;
-   }
+    /**
+     * Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(PacketBuffer buf) throws IOException
+    {
+        byte b0 = buf.readByte();
+        this.flying = (b0 & 2) != 0;
+    }
 
-   public void writePacketData(PacketBuffer buf) throws IOException {
-      byte b0 = 0;
-      if (this.flying) {
-         b0 = (byte)(b0 | 2);
-      }
+    /**
+     * Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(PacketBuffer buf) throws IOException
+    {
+        byte b0 = 0;
 
-      buf.writeByte(b0);
-   }
+        if (this.flying)
+        {
+            b0 = (byte)(b0 | 2);
+        }
 
-   public void processPacket(IServerPlayNetHandler handler) {
-      handler.processPlayerAbilities(this);
-   }
+        buf.writeByte(b0);
+    }
 
-   public boolean isFlying() {
-      return this.flying;
-   }
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(IServerPlayNetHandler handler)
+    {
+        handler.processPlayerAbilities(this);
+    }
+
+    public boolean isFlying()
+    {
+        return this.flying;
+    }
 }

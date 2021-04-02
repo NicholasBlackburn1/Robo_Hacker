@@ -12,25 +12,32 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
 
-public class RingBellTask extends Task<LivingEntity> {
-   public RingBellTask() {
-      super(ImmutableMap.of(MemoryModuleType.MEETING_POINT, MemoryModuleStatus.VALUE_PRESENT));
-   }
+public class RingBellTask extends Task<LivingEntity>
+{
+    public RingBellTask()
+    {
+        super(ImmutableMap.of(MemoryModuleType.MEETING_POINT, MemoryModuleStatus.VALUE_PRESENT));
+    }
 
-   protected boolean shouldExecute(ServerWorld worldIn, LivingEntity owner) {
-      return worldIn.rand.nextFloat() > 0.95F;
-   }
+    protected boolean shouldExecute(ServerWorld worldIn, LivingEntity owner)
+    {
+        return worldIn.rand.nextFloat() > 0.95F;
+    }
 
-   protected void startExecuting(ServerWorld worldIn, LivingEntity entityIn, long gameTimeIn) {
-      Brain<?> brain = entityIn.getBrain();
-      BlockPos blockpos = brain.getMemory(MemoryModuleType.MEETING_POINT).get().getPos();
-      if (blockpos.withinDistance(entityIn.getPosition(), 3.0D)) {
-         BlockState blockstate = worldIn.getBlockState(blockpos);
-         if (blockstate.isIn(Blocks.BELL)) {
-            BellBlock bellblock = (BellBlock)blockstate.getBlock();
-            bellblock.ring(worldIn, blockpos, (Direction)null);
-         }
-      }
+    protected void startExecuting(ServerWorld worldIn, LivingEntity entityIn, long gameTimeIn)
+    {
+        Brain<?> brain = entityIn.getBrain();
+        BlockPos blockpos = brain.getMemory(MemoryModuleType.MEETING_POINT).get().getPos();
 
-   }
+        if (blockpos.withinDistance(entityIn.getPosition(), 3.0D))
+        {
+            BlockState blockstate = worldIn.getBlockState(blockpos);
+
+            if (blockstate.isIn(Blocks.BELL))
+            {
+                BellBlock bellblock = (BellBlock)blockstate.getBlock();
+                bellblock.ring(worldIn, blockpos, (Direction)null);
+            }
+        }
+    }
 }

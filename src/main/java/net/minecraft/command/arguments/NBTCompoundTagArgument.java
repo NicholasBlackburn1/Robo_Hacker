@@ -9,25 +9,31 @@ import java.util.Collection;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.JsonToNBT;
 
-public class NBTCompoundTagArgument implements ArgumentType<CompoundNBT> {
-   private static final Collection<String> EXAMPLES = Arrays.asList("{}", "{foo=bar}");
+public class NBTCompoundTagArgument implements ArgumentType<CompoundNBT>
+{
+    private static final Collection<String> EXAMPLES = Arrays.asList("{}", "{foo=bar}");
 
-   private NBTCompoundTagArgument() {
-   }
+    private NBTCompoundTagArgument()
+    {
+    }
 
-   public static NBTCompoundTagArgument nbt() {
-      return new NBTCompoundTagArgument();
-   }
+    public static NBTCompoundTagArgument nbt()
+    {
+        return new NBTCompoundTagArgument();
+    }
 
-   public static <S> CompoundNBT getNbt(CommandContext<S> context, String name) {
-      return context.getArgument(name, CompoundNBT.class);
-   }
+    public static <S> CompoundNBT getNbt(CommandContext<S> context, String name)
+    {
+        return context.getArgument(name, CompoundNBT.class);
+    }
 
-   public CompoundNBT parse(StringReader p_parse_1_) throws CommandSyntaxException {
-      return (new JsonToNBT(p_parse_1_)).readStruct();
-   }
+    public CompoundNBT parse(StringReader p_parse_1_) throws CommandSyntaxException
+    {
+        return (new JsonToNBT(p_parse_1_)).readStruct();
+    }
 
-   public Collection<String> getExamples() {
-      return EXAMPLES;
-   }
+    public Collection<String> getExamples()
+    {
+        return EXAMPLES;
+    }
 }

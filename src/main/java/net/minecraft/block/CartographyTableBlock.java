@@ -15,27 +15,35 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
-public class CartographyTableBlock extends Block {
-   private static final ITextComponent CONTAINER_NAME = new TranslationTextComponent("container.cartography_table");
+public class CartographyTableBlock extends Block
+{
+    private static final ITextComponent CONTAINER_NAME = new TranslationTextComponent("container.cartography_table");
 
-   protected CartographyTableBlock(AbstractBlock.Properties properties) {
-      super(properties);
-   }
+    protected CartographyTableBlock(AbstractBlock.Properties properties)
+    {
+        super(properties);
+    }
 
-   public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-      if (worldIn.isRemote) {
-         return ActionResultType.SUCCESS;
-      } else {
-         player.openContainer(state.getContainer(worldIn, pos));
-         player.addStat(Stats.INTERACT_WITH_CARTOGRAPHY_TABLE);
-         return ActionResultType.CONSUME;
-      }
-   }
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
+    {
+        if (worldIn.isRemote)
+        {
+            return ActionResultType.SUCCESS;
+        }
+        else
+        {
+            player.openContainer(state.getContainer(worldIn, pos));
+            player.addStat(Stats.INTERACT_WITH_CARTOGRAPHY_TABLE);
+            return ActionResultType.CONSUME;
+        }
+    }
 
-   @Nullable
-   public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos) {
-      return new SimpleNamedContainerProvider((p_220267_2_, p_220267_3_, p_220267_4_) -> {
-         return new CartographyContainer(p_220267_2_, p_220267_3_, IWorldPosCallable.of(worldIn, pos));
-      }, CONTAINER_NAME);
-   }
+    @Nullable
+    public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos)
+    {
+        return new SimpleNamedContainerProvider((id, inventory, player) ->
+        {
+            return new CartographyContainer(id, inventory, IWorldPosCallable.of(worldIn, pos));
+        }, CONTAINER_NAME);
+    }
 }

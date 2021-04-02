@@ -8,98 +8,135 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class BookCloningRecipe extends SpecialRecipe {
-   public BookCloningRecipe(ResourceLocation idIn) {
-      super(idIn);
-   }
+public class BookCloningRecipe extends SpecialRecipe
+{
+    public BookCloningRecipe(ResourceLocation idIn)
+    {
+        super(idIn);
+    }
 
-   public boolean matches(CraftingInventory inv, World worldIn) {
-      int i = 0;
-      ItemStack itemstack = ItemStack.EMPTY;
+    /**
+     * Used to check if a recipe matches current crafting inventory
+     */
+    public boolean matches(CraftingInventory inv, World worldIn)
+    {
+        int i = 0;
+        ItemStack itemstack = ItemStack.EMPTY;
 
-      for(int j = 0; j < inv.getSizeInventory(); ++j) {
-         ItemStack itemstack1 = inv.getStackInSlot(j);
-         if (!itemstack1.isEmpty()) {
-            if (itemstack1.getItem() == Items.WRITTEN_BOOK) {
-               if (!itemstack.isEmpty()) {
-                  return false;
-               }
+        for (int j = 0; j < inv.getSizeInventory(); ++j)
+        {
+            ItemStack itemstack1 = inv.getStackInSlot(j);
 
-               itemstack = itemstack1;
-            } else {
-               if (itemstack1.getItem() != Items.WRITABLE_BOOK) {
-                  return false;
-               }
+            if (!itemstack1.isEmpty())
+            {
+                if (itemstack1.getItem() == Items.WRITTEN_BOOK)
+                {
+                    if (!itemstack.isEmpty())
+                    {
+                        return false;
+                    }
 
-               ++i;
+                    itemstack = itemstack1;
+                }
+                else
+                {
+                    if (itemstack1.getItem() != Items.WRITABLE_BOOK)
+                    {
+                        return false;
+                    }
+
+                    ++i;
+                }
             }
-         }
-      }
+        }
 
-      return !itemstack.isEmpty() && itemstack.hasTag() && i > 0;
-   }
+        return !itemstack.isEmpty() && itemstack.hasTag() && i > 0;
+    }
 
-   public ItemStack getCraftingResult(CraftingInventory inv) {
-      int i = 0;
-      ItemStack itemstack = ItemStack.EMPTY;
+    /**
+     * Returns an Item that is the result of this recipe
+     */
+    public ItemStack getCraftingResult(CraftingInventory inv)
+    {
+        int i = 0;
+        ItemStack itemstack = ItemStack.EMPTY;
 
-      for(int j = 0; j < inv.getSizeInventory(); ++j) {
-         ItemStack itemstack1 = inv.getStackInSlot(j);
-         if (!itemstack1.isEmpty()) {
-            if (itemstack1.getItem() == Items.WRITTEN_BOOK) {
-               if (!itemstack.isEmpty()) {
-                  return ItemStack.EMPTY;
-               }
+        for (int j = 0; j < inv.getSizeInventory(); ++j)
+        {
+            ItemStack itemstack1 = inv.getStackInSlot(j);
 
-               itemstack = itemstack1;
-            } else {
-               if (itemstack1.getItem() != Items.WRITABLE_BOOK) {
-                  return ItemStack.EMPTY;
-               }
+            if (!itemstack1.isEmpty())
+            {
+                if (itemstack1.getItem() == Items.WRITTEN_BOOK)
+                {
+                    if (!itemstack.isEmpty())
+                    {
+                        return ItemStack.EMPTY;
+                    }
 
-               ++i;
+                    itemstack = itemstack1;
+                }
+                else
+                {
+                    if (itemstack1.getItem() != Items.WRITABLE_BOOK)
+                    {
+                        return ItemStack.EMPTY;
+                    }
+
+                    ++i;
+                }
             }
-         }
-      }
+        }
 
-      if (!itemstack.isEmpty() && itemstack.hasTag() && i >= 1 && WrittenBookItem.getGeneration(itemstack) < 2) {
-         ItemStack itemstack2 = new ItemStack(Items.WRITTEN_BOOK, i);
-         CompoundNBT compoundnbt = itemstack.getTag().copy();
-         compoundnbt.putInt("generation", WrittenBookItem.getGeneration(itemstack) + 1);
-         itemstack2.setTag(compoundnbt);
-         return itemstack2;
-      } else {
-         return ItemStack.EMPTY;
-      }
-   }
+        if (!itemstack.isEmpty() && itemstack.hasTag() && i >= 1 && WrittenBookItem.getGeneration(itemstack) < 2)
+        {
+            ItemStack itemstack2 = new ItemStack(Items.WRITTEN_BOOK, i);
+            CompoundNBT compoundnbt = itemstack.getTag().copy();
+            compoundnbt.putInt("generation", WrittenBookItem.getGeneration(itemstack) + 1);
+            itemstack2.setTag(compoundnbt);
+            return itemstack2;
+        }
+        else
+        {
+            return ItemStack.EMPTY;
+        }
+    }
 
-   public NonNullList<ItemStack> getRemainingItems(CraftingInventory inv) {
-      NonNullList<ItemStack> nonnulllist = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
+    public NonNullList<ItemStack> getRemainingItems(CraftingInventory inv)
+    {
+        NonNullList<ItemStack> nonnulllist = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
 
-      for(int i = 0; i < nonnulllist.size(); ++i) {
-         ItemStack itemstack = inv.getStackInSlot(i);
-         if (itemstack.getItem().hasContainerItem()) {
-            nonnulllist.set(i, new ItemStack(itemstack.getItem().getContainerItem()));
-         } else if (itemstack.getItem() instanceof WrittenBookItem) {
-            ItemStack itemstack1 = itemstack.copy();
-            itemstack1.setCount(1);
-            nonnulllist.set(i, itemstack1);
-            break;
-         }
-      }
+        for (int i = 0; i < nonnulllist.size(); ++i)
+        {
+            ItemStack itemstack = inv.getStackInSlot(i);
 
-      return nonnulllist;
-   }
+            if (itemstack.getItem().hasContainerItem())
+            {
+                nonnulllist.set(i, new ItemStack(itemstack.getItem().getContainerItem()));
+            }
+            else if (itemstack.getItem() instanceof WrittenBookItem)
+            {
+                ItemStack itemstack1 = itemstack.copy();
+                itemstack1.setCount(1);
+                nonnulllist.set(i, itemstack1);
+                break;
+            }
+        }
 
-   public IRecipeSerializer<?> getSerializer() {
-      return IRecipeSerializer.CRAFTING_SPECIAL_BOOKCLONING;
-   }
+        return nonnulllist;
+    }
 
-   @OnlyIn(Dist.CLIENT)
-   public boolean canFit(int width, int height) {
-      return width >= 3 && height >= 3;
-   }
+    public IRecipeSerializer<?> getSerializer()
+    {
+        return IRecipeSerializer.CRAFTING_SPECIAL_BOOKCLONING;
+    }
+
+    /**
+     * Used to determine if this recipe can fit in a grid of the given width/height
+     */
+    public boolean canFit(int width, int height)
+    {
+        return width >= 3 && height >= 3;
+    }
 }

@@ -9,44 +9,61 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ISeedReader;
 import net.minecraft.world.gen.ChunkGenerator;
 
-public class GlowstoneBlobFeature extends Feature<NoFeatureConfig> {
-   public GlowstoneBlobFeature(Codec<NoFeatureConfig> p_i231956_1_) {
-      super(p_i231956_1_);
-   }
+public class GlowstoneBlobFeature extends Feature<NoFeatureConfig>
+{
+    public GlowstoneBlobFeature(Codec<NoFeatureConfig> p_i231956_1_)
+    {
+        super(p_i231956_1_);
+    }
 
-   public boolean generate(ISeedReader reader, ChunkGenerator generator, Random rand, BlockPos pos, NoFeatureConfig config) {
-      if (!reader.isAirBlock(pos)) {
-         return false;
-      } else {
-         BlockState blockstate = reader.getBlockState(pos.up());
-         if (!blockstate.isIn(Blocks.NETHERRACK) && !blockstate.isIn(Blocks.BASALT) && !blockstate.isIn(Blocks.BLACKSTONE)) {
+    public boolean func_241855_a(ISeedReader p_241855_1_, ChunkGenerator p_241855_2_, Random p_241855_3_, BlockPos p_241855_4_, NoFeatureConfig p_241855_5_)
+    {
+        if (!p_241855_1_.isAirBlock(p_241855_4_))
+        {
             return false;
-         } else {
-            reader.setBlockState(pos, Blocks.GLOWSTONE.getDefaultState(), 2);
+        }
+        else
+        {
+            BlockState blockstate = p_241855_1_.getBlockState(p_241855_4_.up());
 
-            for(int i = 0; i < 1500; ++i) {
-               BlockPos blockpos = pos.add(rand.nextInt(8) - rand.nextInt(8), -rand.nextInt(12), rand.nextInt(8) - rand.nextInt(8));
-               if (reader.getBlockState(blockpos).isAir()) {
-                  int j = 0;
-
-                  for(Direction direction : Direction.values()) {
-                     if (reader.getBlockState(blockpos.offset(direction)).isIn(Blocks.GLOWSTONE)) {
-                        ++j;
-                     }
-
-                     if (j > 1) {
-                        break;
-                     }
-                  }
-
-                  if (j == 1) {
-                     reader.setBlockState(blockpos, Blocks.GLOWSTONE.getDefaultState(), 2);
-                  }
-               }
+            if (!blockstate.isIn(Blocks.NETHERRACK) && !blockstate.isIn(Blocks.BASALT) && !blockstate.isIn(Blocks.BLACKSTONE))
+            {
+                return false;
             }
+            else
+            {
+                p_241855_1_.setBlockState(p_241855_4_, Blocks.GLOWSTONE.getDefaultState(), 2);
 
-            return true;
-         }
-      }
-   }
+                for (int i = 0; i < 1500; ++i)
+                {
+                    BlockPos blockpos = p_241855_4_.add(p_241855_3_.nextInt(8) - p_241855_3_.nextInt(8), -p_241855_3_.nextInt(12), p_241855_3_.nextInt(8) - p_241855_3_.nextInt(8));
+
+                    if (p_241855_1_.getBlockState(blockpos).isAir())
+                    {
+                        int j = 0;
+
+                        for (Direction direction : Direction.values())
+                        {
+                            if (p_241855_1_.getBlockState(blockpos.offset(direction)).isIn(Blocks.GLOWSTONE))
+                            {
+                                ++j;
+                            }
+
+                            if (j > 1)
+                            {
+                                break;
+                            }
+                        }
+
+                        if (j == 1)
+                        {
+                            p_241855_1_.setBlockState(blockpos, Blocks.GLOWSTONE.getDefaultState(), 2);
+                        }
+                    }
+                }
+
+                return true;
+            }
+        }
+    }
 }

@@ -15,147 +15,179 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class FallbackResourceManager implements IResourceManager {
-   private static final Logger LOGGER = LogManager.getLogger();
-   protected final List<IResourcePack> resourcePacks = Lists.newArrayList();
-   private final ResourcePackType type;
-   private final String namespace;
+public class FallbackResourceManager implements IResourceManager
+{
+    private static final Logger LOGGER = LogManager.getLogger();
+    protected final List<IResourcePack> resourcePacks = Lists.newArrayList();
+    private final ResourcePackType type;
+    private final String namespace;
 
-   public FallbackResourceManager(ResourcePackType p_i226096_1_, String p_i226096_2_) {
-      this.type = p_i226096_1_;
-      this.namespace = p_i226096_2_;
-   }
+    public FallbackResourceManager(ResourcePackType p_i226096_1_, String p_i226096_2_)
+    {
+        this.type = p_i226096_1_;
+        this.namespace = p_i226096_2_;
+    }
 
-   public void addResourcePack(IResourcePack resourcePack) {
-      this.resourcePacks.add(resourcePack);
-   }
+    public void addResourcePack(IResourcePack resourcePack)
+    {
+        this.resourcePacks.add(resourcePack);
+    }
 
-   @OnlyIn(Dist.CLIENT)
-   public Set<String> getResourceNamespaces() {
-      return ImmutableSet.of(this.namespace);
-   }
+    public Set<String> getResourceNamespaces()
+    {
+        return ImmutableSet.of(this.namespace);
+    }
 
-   public IResource getResource(ResourceLocation resourceLocationIn) throws IOException {
-      this.checkResourcePath(resourceLocationIn);
-      IResourcePack iresourcepack = null;
-      ResourceLocation resourcelocation = getLocationMcmeta(resourceLocationIn);
+    public IResource getResource(ResourceLocation resourceLocationIn) throws IOException
+    {
+        this.checkResourcePath(resourceLocationIn);
+        IResourcePack iresourcepack = null;
+        ResourceLocation resourcelocation = getLocationMcmeta(resourceLocationIn);
 
-      for(int i = this.resourcePacks.size() - 1; i >= 0; --i) {
-         IResourcePack iresourcepack1 = this.resourcePacks.get(i);
-         if (iresourcepack == null && iresourcepack1.resourceExists(this.type, resourcelocation)) {
-            iresourcepack = iresourcepack1;
-         }
+        for (int i = this.resourcePacks.size() - 1; i >= 0; --i)
+        {
+            IResourcePack iresourcepack1 = this.resourcePacks.get(i);
 
-         if (iresourcepack1.resourceExists(this.type, resourceLocationIn)) {
-            InputStream inputstream = null;
-            if (iresourcepack != null) {
-               inputstream = this.getInputStream(resourcelocation, iresourcepack);
+            if (iresourcepack == null && iresourcepack1.resourceExists(this.type, resourcelocation))
+            {
+                iresourcepack = iresourcepack1;
             }
 
-            return new SimpleResource(iresourcepack1.getName(), resourceLocationIn, this.getInputStream(resourceLocationIn, iresourcepack1), inputstream);
-         }
-      }
+            if (iresourcepack1.resourceExists(this.type, resourceLocationIn))
+            {
+                InputStream inputstream = null;
 
-      throw new FileNotFoundException(resourceLocationIn.toString());
-   }
+                if (iresourcepack != null)
+                {
+                    inputstream = this.getInputStream(resourcelocation, iresourcepack);
+                }
 
-   @OnlyIn(Dist.CLIENT)
-   public boolean hasResource(ResourceLocation path) {
-      if (!this.func_219541_f(path)) {
-         return false;
-      } else {
-         for(int i = this.resourcePacks.size() - 1; i >= 0; --i) {
-            IResourcePack iresourcepack = this.resourcePacks.get(i);
-            if (iresourcepack.resourceExists(this.type, path)) {
-               return true;
+                return new SimpleResource(iresourcepack1.getName(), resourceLocationIn, this.getInputStream(resourceLocationIn, iresourcepack1), inputstream);
             }
-         }
+        }
 
-         return false;
-      }
-   }
+        throw new FileNotFoundException(resourceLocationIn.toString());
+    }
 
-   protected InputStream getInputStream(ResourceLocation location, IResourcePack resourcePack) throws IOException {
-      InputStream inputstream = resourcePack.getResourceStream(this.type, location);
-      return (InputStream)(LOGGER.isDebugEnabled() ? new FallbackResourceManager.LeakComplainerInputStream(inputstream, location, resourcePack.getName()) : inputstream);
-   }
+    public boolean hasResource(ResourceLocation path)
+    {
+        if (!this.func_219541_f(path))
+        {
+            return false;
+        }
+        else
+        {
+            for (int i = this.resourcePacks.size() - 1; i >= 0; --i)
+            {
+                IResourcePack iresourcepack = this.resourcePacks.get(i);
 
-   private void checkResourcePath(ResourceLocation location) throws IOException {
-      if (!this.func_219541_f(location)) {
-         throw new IOException("Invalid relative path to resource: " + location);
-      }
-   }
+                if (iresourcepack.resourceExists(this.type, path))
+                {
+                    return true;
+                }
+            }
 
-   private boolean func_219541_f(ResourceLocation p_219541_1_) {
-      return !p_219541_1_.getPath().contains("..");
-   }
+            return false;
+        }
+    }
 
-   public List<IResource> getAllResources(ResourceLocation resourceLocationIn) throws IOException {
-      this.checkResourcePath(resourceLocationIn);
-      List<IResource> list = Lists.newArrayList();
-      ResourceLocation resourcelocation = getLocationMcmeta(resourceLocationIn);
+    protected InputStream getInputStream(ResourceLocation location, IResourcePack resourcePack) throws IOException
+    {
+        InputStream inputstream = resourcePack.getResourceStream(this.type, location);
+        return (InputStream)(LOGGER.isDebugEnabled() ? new FallbackResourceManager.LeakComplainerInputStream(inputstream, location, resourcePack.getName()) : inputstream);
+    }
 
-      for(IResourcePack iresourcepack : this.resourcePacks) {
-         if (iresourcepack.resourceExists(this.type, resourceLocationIn)) {
-            InputStream inputstream = iresourcepack.resourceExists(this.type, resourcelocation) ? this.getInputStream(resourcelocation, iresourcepack) : null;
-            list.add(new SimpleResource(iresourcepack.getName(), resourceLocationIn, this.getInputStream(resourceLocationIn, iresourcepack), inputstream));
-         }
-      }
+    private void checkResourcePath(ResourceLocation location) throws IOException
+    {
+        if (!this.func_219541_f(location))
+        {
+            throw new IOException("Invalid relative path to resource: " + location);
+        }
+    }
 
-      if (list.isEmpty()) {
-         throw new FileNotFoundException(resourceLocationIn.toString());
-      } else {
-         return list;
-      }
-   }
+    private boolean func_219541_f(ResourceLocation p_219541_1_)
+    {
+        return !p_219541_1_.getPath().contains("..");
+    }
 
-   public Collection<ResourceLocation> getAllResourceLocations(String pathIn, Predicate<String> filter) {
-      List<ResourceLocation> list = Lists.newArrayList();
+    public List<IResource> getAllResources(ResourceLocation resourceLocationIn) throws IOException
+    {
+        this.checkResourcePath(resourceLocationIn);
+        List<IResource> list = Lists.newArrayList();
+        ResourceLocation resourcelocation = getLocationMcmeta(resourceLocationIn);
 
-      for(IResourcePack iresourcepack : this.resourcePacks) {
-         list.addAll(iresourcepack.getAllResourceLocations(this.type, this.namespace, pathIn, Integer.MAX_VALUE, filter));
-      }
+        for (IResourcePack iresourcepack : this.resourcePacks)
+        {
+            if (iresourcepack.resourceExists(this.type, resourceLocationIn))
+            {
+                InputStream inputstream = iresourcepack.resourceExists(this.type, resourcelocation) ? this.getInputStream(resourcelocation, iresourcepack) : null;
+                list.add(new SimpleResource(iresourcepack.getName(), resourceLocationIn, this.getInputStream(resourceLocationIn, iresourcepack), inputstream));
+            }
+        }
 
-      Collections.sort(list);
-      return list;
-   }
+        if (list.isEmpty())
+        {
+            throw new FileNotFoundException(resourceLocationIn.toString());
+        }
+        else
+        {
+            return list;
+        }
+    }
 
-   @OnlyIn(Dist.CLIENT)
-   public Stream<IResourcePack> getResourcePackStream() {
-      return this.resourcePacks.stream();
-   }
+    public Collection<ResourceLocation> getAllResourceLocations(String pathIn, Predicate<String> filter)
+    {
+        List<ResourceLocation> list = Lists.newArrayList();
 
-   static ResourceLocation getLocationMcmeta(ResourceLocation location) {
-      return new ResourceLocation(location.getNamespace(), location.getPath() + ".mcmeta");
-   }
+        for (IResourcePack iresourcepack : this.resourcePacks)
+        {
+            list.addAll(iresourcepack.getAllResourceLocations(this.type, this.namespace, pathIn, Integer.MAX_VALUE, filter));
+        }
 
-   static class LeakComplainerInputStream extends FilterInputStream {
-      private final String message;
-      private boolean isClosed;
+        Collections.sort(list);
+        return list;
+    }
 
-      public LeakComplainerInputStream(InputStream inputStreamIn, ResourceLocation location, String resourcePack) {
-         super(inputStreamIn);
-         ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
-         (new Exception()).printStackTrace(new PrintStream(bytearrayoutputstream));
-         this.message = "Leaked resource: '" + location + "' loaded from pack: '" + resourcePack + "'\n" + bytearrayoutputstream;
-      }
+    public Stream<IResourcePack> getResourcePackStream()
+    {
+        return this.resourcePacks.stream();
+    }
 
-      public void close() throws IOException {
-         super.close();
-         this.isClosed = true;
-      }
+    static ResourceLocation getLocationMcmeta(ResourceLocation location)
+    {
+        return new ResourceLocation(location.getNamespace(), location.getPath() + ".mcmeta");
+    }
 
-      protected void finalize() throws Throwable {
-         if (!this.isClosed) {
-            FallbackResourceManager.LOGGER.warn(this.message);
-         }
+    static class LeakComplainerInputStream extends FilterInputStream
+    {
+        private final String message;
+        private boolean isClosed;
 
-         super.finalize();
-      }
-   }
+        public LeakComplainerInputStream(InputStream inputStreamIn, ResourceLocation location, String resourcePack)
+        {
+            super(inputStreamIn);
+            ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
+            (new Exception()).printStackTrace(new PrintStream(bytearrayoutputstream));
+            this.message = "Leaked resource: '" + location + "' loaded from pack: '" + resourcePack + "'\n" + bytearrayoutputstream;
+        }
+
+        public void close() throws IOException
+        {
+            super.close();
+            this.isClosed = true;
+        }
+
+        protected void finalize() throws Throwable
+        {
+            if (!this.isClosed)
+            {
+                FallbackResourceManager.LOGGER.warn(this.message);
+            }
+
+            super.finalize();
+        }
+    }
 }

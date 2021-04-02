@@ -2,32 +2,33 @@ package net.minecraft.profiler;
 
 import java.io.File;
 import java.util.List;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-public interface IProfileResult {
-   @OnlyIn(Dist.CLIENT)
-   List<DataPoint> getDataPoints(String sectionPath);
+public interface IProfileResult
+{
+    List<DataPoint> getDataPoints(String sectionPath);
 
-   boolean writeToFile(File p_219919_1_);
+    boolean writeToFile(File p_219919_1_);
 
-   long timeStop();
+    long timeStop();
 
-   int ticksStop();
+    int ticksStop();
 
-   long timeStart();
+    long timeStart();
 
-   int ticksStart();
+    int ticksStart();
 
-   default long nanoTime() {
-      return this.timeStart() - this.timeStop();
-   }
+default long nanoTime()
+    {
+        return this.timeStart() - this.timeStop();
+    }
 
-   default int ticksSpend() {
-      return this.ticksStart() - this.ticksStop();
-   }
+default int ticksSpend()
+    {
+        return this.ticksStart() - this.ticksStop();
+    }
 
-   static String decodePath(String p_225434_0_) {
-      return p_225434_0_.replace('\u001e', '.');
-   }
+    static String decodePath(String p_225434_0_)
+    {
+        return p_225434_0_.replace('\u001e', '.');
+    }
 }

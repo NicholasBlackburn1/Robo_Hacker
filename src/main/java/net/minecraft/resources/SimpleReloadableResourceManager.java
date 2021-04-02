@@ -17,178 +17,212 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Unit;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class SimpleReloadableResourceManager implements IReloadableResourceManager {
-   private static final Logger LOGGER = LogManager.getLogger();
-   private final Map<String, FallbackResourceManager> namespaceResourceManagers = Maps.newHashMap();
-   private final List<IFutureReloadListener> reloadListeners = Lists.newArrayList();
-   private final List<IFutureReloadListener> initTaskQueue = Lists.newArrayList();
-   private final Set<String> resourceNamespaces = Sets.newLinkedHashSet();
-   private final List<IResourcePack> resourcePacks = Lists.newArrayList();
-   private final ResourcePackType type;
+public class SimpleReloadableResourceManager implements IReloadableResourceManager
+{
+    private static final Logger LOGGER = LogManager.getLogger();
+    private final Map<String, FallbackResourceManager> namespaceResourceManagers = Maps.newHashMap();
+    private final List<IFutureReloadListener> reloadListeners = Lists.newArrayList();
+    private final List<IFutureReloadListener> initTaskQueue = Lists.newArrayList();
+    private final Set<String> resourceNamespaces = Sets.newLinkedHashSet();
+    private final List<IResourcePack> resourcePacks = Lists.newArrayList();
+    private final ResourcePackType type;
 
-   public SimpleReloadableResourceManager(ResourcePackType type) {
-      this.type = type;
-   }
+    public SimpleReloadableResourceManager(ResourcePackType type)
+    {
+        this.type = type;
+    }
 
-   public void addResourcePack(IResourcePack resourcePack) {
-      this.resourcePacks.add(resourcePack);
+    public void addResourcePack(IResourcePack resourcePack)
+    {
+        this.resourcePacks.add(resourcePack);
 
-      for(String s : resourcePack.getResourceNamespaces(this.type)) {
-         this.resourceNamespaces.add(s);
-         FallbackResourceManager fallbackresourcemanager = this.namespaceResourceManagers.get(s);
-         if (fallbackresourcemanager == null) {
-            fallbackresourcemanager = new FallbackResourceManager(this.type, s);
-            this.namespaceResourceManagers.put(s, fallbackresourcemanager);
-         }
+        for (String s : resourcePack.getResourceNamespaces(this.type))
+        {
+            this.resourceNamespaces.add(s);
+            FallbackResourceManager fallbackresourcemanager = this.namespaceResourceManagers.get(s);
 
-         fallbackresourcemanager.addResourcePack(resourcePack);
-      }
+            if (fallbackresourcemanager == null)
+            {
+                fallbackresourcemanager = new FallbackResourceManager(this.type, s);
+                this.namespaceResourceManagers.put(s, fallbackresourcemanager);
+            }
 
-   }
+            fallbackresourcemanager.addResourcePack(resourcePack);
+        }
+    }
 
-   @OnlyIn(Dist.CLIENT)
-   public Set<String> getResourceNamespaces() {
-      return this.resourceNamespaces;
-   }
+    public Set<String> getResourceNamespaces()
+    {
+        return this.resourceNamespaces;
+    }
 
-   public IResource getResource(ResourceLocation resourceLocationIn) throws IOException {
-      IResourceManager iresourcemanager = this.namespaceResourceManagers.get(resourceLocationIn.getNamespace());
-      if (iresourcemanager != null) {
-         return iresourcemanager.getResource(resourceLocationIn);
-      } else {
-         throw new FileNotFoundException(resourceLocationIn.toString());
-      }
-   }
+    public IResource getResource(ResourceLocation resourceLocationIn) throws IOException
+    {
+        IResourceManager iresourcemanager = this.namespaceResourceManagers.get(resourceLocationIn.getNamespace());
 
-   @OnlyIn(Dist.CLIENT)
-   public boolean hasResource(ResourceLocation path) {
-      IResourceManager iresourcemanager = this.namespaceResourceManagers.get(path.getNamespace());
-      return iresourcemanager != null ? iresourcemanager.hasResource(path) : false;
-   }
+        if (iresourcemanager != null)
+        {
+            return iresourcemanager.getResource(resourceLocationIn);
+        }
+        else
+        {
+            throw new FileNotFoundException(resourceLocationIn.toString());
+        }
+    }
 
-   public List<IResource> getAllResources(ResourceLocation resourceLocationIn) throws IOException {
-      IResourceManager iresourcemanager = this.namespaceResourceManagers.get(resourceLocationIn.getNamespace());
-      if (iresourcemanager != null) {
-         return iresourcemanager.getAllResources(resourceLocationIn);
-      } else {
-         throw new FileNotFoundException(resourceLocationIn.toString());
-      }
-   }
+    public boolean hasResource(ResourceLocation path)
+    {
+        IResourceManager iresourcemanager = this.namespaceResourceManagers.get(path.getNamespace());
+        return iresourcemanager != null ? iresourcemanager.hasResource(path) : false;
+    }
 
-   public Collection<ResourceLocation> getAllResourceLocations(String pathIn, Predicate<String> filter) {
-      Set<ResourceLocation> set = Sets.newHashSet();
+    public List<IResource> getAllResources(ResourceLocation resourceLocationIn) throws IOException
+    {
+        IResourceManager iresourcemanager = this.namespaceResourceManagers.get(resourceLocationIn.getNamespace());
 
-      for(FallbackResourceManager fallbackresourcemanager : this.namespaceResourceManagers.values()) {
-         set.addAll(fallbackresourcemanager.getAllResourceLocations(pathIn, filter));
-      }
+        if (iresourcemanager != null)
+        {
+            return iresourcemanager.getAllResources(resourceLocationIn);
+        }
+        else
+        {
+            throw new FileNotFoundException(resourceLocationIn.toString());
+        }
+    }
 
-      List<ResourceLocation> list = Lists.newArrayList(set);
-      Collections.sort(list);
-      return list;
-   }
+    public Collection<ResourceLocation> getAllResourceLocations(String pathIn, Predicate<String> filter)
+    {
+        Set<ResourceLocation> set = Sets.newHashSet();
 
-   private void clearResourceNamespaces() {
-      this.namespaceResourceManagers.clear();
-      this.resourceNamespaces.clear();
-      this.resourcePacks.forEach(IResourcePack::close);
-      this.resourcePacks.clear();
-   }
+        for (FallbackResourceManager fallbackresourcemanager : this.namespaceResourceManagers.values())
+        {
+            set.addAll(fallbackresourcemanager.getAllResourceLocations(pathIn, filter));
+        }
 
-   public void close() {
-      this.clearResourceNamespaces();
-   }
+        List<ResourceLocation> list = Lists.newArrayList(set);
+        Collections.sort(list);
+        return list;
+    }
 
-   public void addReloadListener(IFutureReloadListener listener) {
-      this.reloadListeners.add(listener);
-      this.initTaskQueue.add(listener);
-   }
+    private void clearResourceNamespaces()
+    {
+        this.namespaceResourceManagers.clear();
+        this.resourceNamespaces.clear();
+        this.resourcePacks.forEach(IResourcePack::close);
+        this.resourcePacks.clear();
+    }
 
-   protected IAsyncReloader initializeAsyncReloader(Executor backgroundExecutor, Executor gameExecutor, List<IFutureReloadListener> listeners, CompletableFuture<Unit> waitingFor) {
-      IAsyncReloader iasyncreloader;
-      if (LOGGER.isDebugEnabled()) {
-         iasyncreloader = new DebugAsyncReloader(this, Lists.newArrayList(listeners), backgroundExecutor, gameExecutor, waitingFor);
-      } else {
-         iasyncreloader = AsyncReloader.create(this, Lists.newArrayList(listeners), backgroundExecutor, gameExecutor, waitingFor);
-      }
+    public void close()
+    {
+        this.clearResourceNamespaces();
+    }
 
-      this.initTaskQueue.clear();
-      return iasyncreloader;
-   }
+    public void addReloadListener(IFutureReloadListener listener)
+    {
+        this.reloadListeners.add(listener);
+        this.initTaskQueue.add(listener);
+    }
 
-   public IAsyncReloader reloadResources(Executor backgroundExecutor, Executor gameExecutor, CompletableFuture<Unit> waitingFor, List<IResourcePack> resourcePacks) {
-      this.clearResourceNamespaces();
-      LOGGER.info("Reloading ResourceManager: {}", () -> {
-         return resourcePacks.stream().map(IResourcePack::getName).collect(Collectors.joining(", "));
-      });
+    protected IAsyncReloader initializeAsyncReloader(Executor backgroundExecutor, Executor gameExecutor, List<IFutureReloadListener> listeners, CompletableFuture<Unit> waitingFor)
+    {
+        IAsyncReloader iasyncreloader;
 
-      for(IResourcePack iresourcepack : resourcePacks) {
-         try {
-            this.addResourcePack(iresourcepack);
-         } catch (Exception exception) {
-            LOGGER.error("Failed to add resource pack {}", iresourcepack.getName(), exception);
-            return new SimpleReloadableResourceManager.FailedPackReloader(new SimpleReloadableResourceManager.FailedPackException(iresourcepack, exception));
-         }
-      }
+        if (LOGGER.isDebugEnabled())
+        {
+            iasyncreloader = new DebugAsyncReloader(this, Lists.newArrayList(listeners), backgroundExecutor, gameExecutor, waitingFor);
+        }
+        else
+        {
+            iasyncreloader = AsyncReloader.create(this, Lists.newArrayList(listeners), backgroundExecutor, gameExecutor, waitingFor);
+        }
 
-      return this.initializeAsyncReloader(backgroundExecutor, gameExecutor, this.reloadListeners, waitingFor);
-   }
+        this.initTaskQueue.clear();
+        return iasyncreloader;
+    }
 
-   @OnlyIn(Dist.CLIENT)
-   public Stream<IResourcePack> getResourcePackStream() {
-      return this.resourcePacks.stream();
-   }
+    public IAsyncReloader reloadResources(Executor backgroundExecutor, Executor gameExecutor, CompletableFuture<Unit> waitingFor, List<IResourcePack> resourcePacks)
+    {
+        this.clearResourceNamespaces();
+        LOGGER.info("Reloading ResourceManager: {}", () ->
+        {
+            return resourcePacks.stream().map(IResourcePack::getName).collect(Collectors.joining(", "));
+        });
 
-   public static class FailedPackException extends RuntimeException {
-      private final IResourcePack pack;
+        for (IResourcePack iresourcepack : resourcePacks)
+        {
+            try
+            {
+                this.addResourcePack(iresourcepack);
+            }
+            catch (Exception exception)
+            {
+                LOGGER.error("Failed to add resource pack {}", iresourcepack.getName(), exception);
+                return new SimpleReloadableResourceManager.FailedPackReloader(new SimpleReloadableResourceManager.FailedPackException(iresourcepack, exception));
+            }
+        }
 
-      public FailedPackException(IResourcePack pack, Throwable throwable) {
-         super(pack.getName(), throwable);
-         this.pack = pack;
-      }
+        return this.initializeAsyncReloader(backgroundExecutor, gameExecutor, this.reloadListeners, waitingFor);
+    }
 
-      @OnlyIn(Dist.CLIENT)
-      public IResourcePack getPack() {
-         return this.pack;
-      }
-   }
+    public Stream<IResourcePack> getResourcePackStream()
+    {
+        return this.resourcePacks.stream();
+    }
 
-   static class FailedPackReloader implements IAsyncReloader {
-      private final SimpleReloadableResourceManager.FailedPackException exception;
-      private final CompletableFuture<Unit> onceDone;
+    public static class FailedPackException extends RuntimeException
+    {
+        private final IResourcePack pack;
 
-      public FailedPackReloader(SimpleReloadableResourceManager.FailedPackException exception) {
-         this.exception = exception;
-         this.onceDone = new CompletableFuture<>();
-         this.onceDone.completeExceptionally(exception);
-      }
+        public FailedPackException(IResourcePack pack, Throwable throwable)
+        {
+            super(pack.getName(), throwable);
+            this.pack = pack;
+        }
 
-      public CompletableFuture<Unit> onceDone() {
-         return this.onceDone;
-      }
+        public IResourcePack getPack()
+        {
+            return this.pack;
+        }
+    }
 
-      @OnlyIn(Dist.CLIENT)
-      public float estimateExecutionSpeed() {
-         return 0.0F;
-      }
+    static class FailedPackReloader implements IAsyncReloader
+    {
+        private final SimpleReloadableResourceManager.FailedPackException exception;
+        private final CompletableFuture<Unit> onceDone;
 
-      @OnlyIn(Dist.CLIENT)
-      public boolean asyncPartDone() {
-         return false;
-      }
+        public FailedPackReloader(SimpleReloadableResourceManager.FailedPackException exception)
+        {
+            this.exception = exception;
+            this.onceDone = new CompletableFuture<>();
+            this.onceDone.completeExceptionally(exception);
+        }
 
-      @OnlyIn(Dist.CLIENT)
-      public boolean fullyDone() {
-         return true;
-      }
+        public CompletableFuture<Unit> onceDone()
+        {
+            return this.onceDone;
+        }
 
-      @OnlyIn(Dist.CLIENT)
-      public void join() {
-         throw this.exception;
-      }
-   }
+        public float estimateExecutionSpeed()
+        {
+            return 0.0F;
+        }
+
+        public boolean asyncPartDone()
+        {
+            return false;
+        }
+
+        public boolean fullyDone()
+        {
+            return true;
+        }
+
+        public void join()
+        {
+            throw this.exception;
+        }
+    }
 }

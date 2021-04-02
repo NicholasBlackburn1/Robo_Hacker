@@ -27,93 +27,126 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class MovingPistonBlock extends ContainerBlock {
-   public static final DirectionProperty FACING = PistonHeadBlock.FACING;
-   public static final EnumProperty<PistonType> TYPE = PistonHeadBlock.TYPE;
+public class MovingPistonBlock extends ContainerBlock
+{
+    public static final DirectionProperty FACING = PistonHeadBlock.FACING;
+    public static final EnumProperty<PistonType> TYPE = PistonHeadBlock.TYPE;
 
-   public MovingPistonBlock(AbstractBlock.Properties properties) {
-      super(properties);
-      this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(TYPE, PistonType.DEFAULT));
-   }
+    public MovingPistonBlock(AbstractBlock.Properties properties)
+    {
+        super(properties);
+        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(TYPE, PistonType.DEFAULT));
+    }
 
-   @Nullable
-   public TileEntity createNewTileEntity(IBlockReader worldIn) {
-      return null;
-   }
+    @Nullable
+    public TileEntity createNewTileEntity(IBlockReader worldIn)
+    {
+        return null;
+    }
 
-   public static TileEntity createTilePiston(BlockState state, Direction direction, boolean extending, boolean shouldHeadBeRendered) {
-      return new PistonTileEntity(state, direction, extending, shouldHeadBeRendered);
-   }
+    public static TileEntity createTilePiston(BlockState state, Direction direction, boolean extending, boolean shouldHeadBeRendered)
+    {
+        return new PistonTileEntity(state, direction, extending, shouldHeadBeRendered);
+    }
 
-   public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-      if (!state.isIn(newState.getBlock())) {
-         TileEntity tileentity = worldIn.getTileEntity(pos);
-         if (tileentity instanceof PistonTileEntity) {
-            ((PistonTileEntity)tileentity).clearPistonTileEntity();
-         }
+    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving)
+    {
+        if (!state.isIn(newState.getBlock()))
+        {
+            TileEntity tileentity = worldIn.getTileEntity(pos);
 
-      }
-   }
+            if (tileentity instanceof PistonTileEntity)
+            {
+                ((PistonTileEntity)tileentity).clearPistonTileEntity();
+            }
+        }
+    }
 
-   public void onPlayerDestroy(IWorld worldIn, BlockPos pos, BlockState state) {
-      BlockPos blockpos = pos.offset(state.get(FACING).getOpposite());
-      BlockState blockstate = worldIn.getBlockState(blockpos);
-      if (blockstate.getBlock() instanceof PistonBlock && blockstate.get(PistonBlock.EXTENDED)) {
-         worldIn.removeBlock(blockpos, false);
-      }
+    /**
+     * Called after a player destroys this Block - the posiiton pos may no longer hold the state indicated.
+     */
+    public void onPlayerDestroy(IWorld worldIn, BlockPos pos, BlockState state)
+    {
+        BlockPos blockpos = pos.offset(state.get(FACING).getOpposite());
+        BlockState blockstate = worldIn.getBlockState(blockpos);
 
-   }
+        if (blockstate.getBlock() instanceof PistonBlock && blockstate.get(PistonBlock.EXTENDED))
+        {
+            worldIn.removeBlock(blockpos, false);
+        }
+    }
 
-   public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-      if (!worldIn.isRemote && worldIn.getTileEntity(pos) == null) {
-         worldIn.removeBlock(pos, false);
-         return ActionResultType.CONSUME;
-      } else {
-         return ActionResultType.PASS;
-      }
-   }
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
+    {
+        if (!worldIn.isRemote && worldIn.getTileEntity(pos) == null)
+        {
+            worldIn.removeBlock(pos, false);
+            return ActionResultType.CONSUME;
+        }
+        else
+        {
+            return ActionResultType.PASS;
+        }
+    }
 
-   public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
-      PistonTileEntity pistontileentity = this.getTileEntity(builder.getWorld(), new BlockPos(builder.assertPresent(LootParameters.field_237457_g_)));
-      return pistontileentity == null ? Collections.emptyList() : pistontileentity.getPistonState().getDrops(builder);
-   }
+    public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder)
+    {
+        PistonTileEntity pistontileentity = this.getTileEntity(builder.getWorld(), new BlockPos(builder.assertPresent(LootParameters.field_237457_g_)));
+        return pistontileentity == null ? Collections.emptyList() : pistontileentity.getPistonState().getDrops(builder);
+    }
 
-   public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-      return VoxelShapes.empty();
-   }
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
+    {
+        return VoxelShapes.empty();
+    }
 
-   public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-      PistonTileEntity pistontileentity = this.getTileEntity(worldIn, pos);
-      return pistontileentity != null ? pistontileentity.getCollisionShape(worldIn, pos) : VoxelShapes.empty();
-   }
+    public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
+    {
+        PistonTileEntity pistontileentity = this.getTileEntity(worldIn, pos);
+        return pistontileentity != null ? pistontileentity.getCollisionShape(worldIn, pos) : VoxelShapes.empty();
+    }
 
-   @Nullable
-   private PistonTileEntity getTileEntity(IBlockReader blockReader, BlockPos pos) {
-      TileEntity tileentity = blockReader.getTileEntity(pos);
-      return tileentity instanceof PistonTileEntity ? (PistonTileEntity)tileentity : null;
-   }
+    @Nullable
+    private PistonTileEntity getTileEntity(IBlockReader blockReader, BlockPos pos)
+    {
+        TileEntity tileentity = blockReader.getTileEntity(pos);
+        return tileentity instanceof PistonTileEntity ? (PistonTileEntity)tileentity : null;
+    }
 
-   @OnlyIn(Dist.CLIENT)
-   public ItemStack getItem(IBlockReader worldIn, BlockPos pos, BlockState state) {
-      return ItemStack.EMPTY;
-   }
+    public ItemStack getItem(IBlockReader worldIn, BlockPos pos, BlockState state)
+    {
+        return ItemStack.EMPTY;
+    }
 
-   public BlockState rotate(BlockState state, Rotation rot) {
-      return state.with(FACING, rot.rotate(state.get(FACING)));
-   }
+    /**
+     * Returns the blockstate with the given rotation from the passed blockstate. If inapplicable, returns the passed
+     * blockstate.
+     * @deprecated call via {@link IBlockState#withRotation(Rotation)} whenever possible. Implementing/overriding is
+     * fine.
+     */
+    public BlockState rotate(BlockState state, Rotation rot)
+    {
+        return state.with(FACING, rot.rotate(state.get(FACING)));
+    }
 
-   public BlockState mirror(BlockState state, Mirror mirrorIn) {
-      return state.rotate(mirrorIn.toRotation(state.get(FACING)));
-   }
+    /**
+     * Returns the blockstate with the given mirror of the passed blockstate. If inapplicable, returns the passed
+     * blockstate.
+     * @deprecated call via {@link IBlockState#withMirror(Mirror)} whenever possible. Implementing/overriding is fine.
+     */
+    public BlockState mirror(BlockState state, Mirror mirrorIn)
+    {
+        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+    }
 
-   protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-      builder.add(FACING, TYPE);
-   }
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    {
+        builder.add(FACING, TYPE);
+    }
 
-   public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
-      return false;
-   }
+    public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type)
+    {
+        return false;
+    }
 }

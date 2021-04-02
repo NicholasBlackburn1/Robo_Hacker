@@ -6,78 +6,118 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.RecipeItemHelper;
 import net.minecraft.util.NonNullList;
 
-public class CraftingInventory implements IInventory, IRecipeHelperPopulator {
-   private final NonNullList<ItemStack> stackList;
-   private final int width;
-   private final int height;
-   private final Container eventHandler;
+public class CraftingInventory implements IInventory, IRecipeHelperPopulator
+{
+    private final NonNullList<ItemStack> stackList;
+    private final int width;
+    private final int height;
+    private final Container eventHandler;
 
-   public CraftingInventory(Container eventHandlerIn, int width, int height) {
-      this.stackList = NonNullList.withSize(width * height, ItemStack.EMPTY);
-      this.eventHandler = eventHandlerIn;
-      this.width = width;
-      this.height = height;
-   }
+    public CraftingInventory(Container eventHandlerIn, int width, int height)
+    {
+        this.stackList = NonNullList.withSize(width * height, ItemStack.EMPTY);
+        this.eventHandler = eventHandlerIn;
+        this.width = width;
+        this.height = height;
+    }
 
-   public int getSizeInventory() {
-      return this.stackList.size();
-   }
+    /**
+     * Returns the number of slots in the inventory.
+     */
+    public int getSizeInventory()
+    {
+        return this.stackList.size();
+    }
 
-   public boolean isEmpty() {
-      for(ItemStack itemstack : this.stackList) {
-         if (!itemstack.isEmpty()) {
-            return false;
-         }
-      }
+    public boolean isEmpty()
+    {
+        for (ItemStack itemstack : this.stackList)
+        {
+            if (!itemstack.isEmpty())
+            {
+                return false;
+            }
+        }
 
-      return true;
-   }
+        return true;
+    }
 
-   public ItemStack getStackInSlot(int index) {
-      return index >= this.getSizeInventory() ? ItemStack.EMPTY : this.stackList.get(index);
-   }
+    /**
+     * Returns the stack in the given slot.
+     */
+    public ItemStack getStackInSlot(int index)
+    {
+        return index >= this.getSizeInventory() ? ItemStack.EMPTY : this.stackList.get(index);
+    }
 
-   public ItemStack removeStackFromSlot(int index) {
-      return ItemStackHelper.getAndRemove(this.stackList, index);
-   }
+    /**
+     * Removes a stack from the given slot and returns it.
+     */
+    public ItemStack removeStackFromSlot(int index)
+    {
+        return ItemStackHelper.getAndRemove(this.stackList, index);
+    }
 
-   public ItemStack decrStackSize(int index, int count) {
-      ItemStack itemstack = ItemStackHelper.getAndSplit(this.stackList, index, count);
-      if (!itemstack.isEmpty()) {
-         this.eventHandler.onCraftMatrixChanged(this);
-      }
+    /**
+     * Removes up to a specified number of items from an inventory slot and returns them in a new stack.
+     */
+    public ItemStack decrStackSize(int index, int count)
+    {
+        ItemStack itemstack = ItemStackHelper.getAndSplit(this.stackList, index, count);
 
-      return itemstack;
-   }
+        if (!itemstack.isEmpty())
+        {
+            this.eventHandler.onCraftMatrixChanged(this);
+        }
 
-   public void setInventorySlotContents(int index, ItemStack stack) {
-      this.stackList.set(index, stack);
-      this.eventHandler.onCraftMatrixChanged(this);
-   }
+        return itemstack;
+    }
 
-   public void markDirty() {
-   }
+    /**
+     * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).
+     */
+    public void setInventorySlotContents(int index, ItemStack stack)
+    {
+        this.stackList.set(index, stack);
+        this.eventHandler.onCraftMatrixChanged(this);
+    }
 
-   public boolean isUsableByPlayer(PlayerEntity player) {
-      return true;
-   }
+    /**
+     * For tile entities, ensures the chunk containing the tile entity is saved to disk later - the game won't think it
+     * hasn't changed and skip it.
+     */
+    public void markDirty()
+    {
+    }
 
-   public void clear() {
-      this.stackList.clear();
-   }
+    /**
+     * Don't rename this method to canInteractWith due to conflicts with Container
+     */
+    public boolean isUsableByPlayer(PlayerEntity player)
+    {
+        return true;
+    }
 
-   public int getHeight() {
-      return this.height;
-   }
+    public void clear()
+    {
+        this.stackList.clear();
+    }
 
-   public int getWidth() {
-      return this.width;
-   }
+    public int getHeight()
+    {
+        return this.height;
+    }
 
-   public void fillStackedContents(RecipeItemHelper helper) {
-      for(ItemStack itemstack : this.stackList) {
-         helper.accountPlainStack(itemstack);
-      }
+    public int getWidth()
+    {
+        return this.width;
+    }
 
-   }
+    public void fillStackedContents(RecipeItemHelper helper)
+    {
+        for (ItemStack itemstack : this.stackList)
+        {
+            helper.accountPlainStack(itemstack);
+        }
+    }
 }

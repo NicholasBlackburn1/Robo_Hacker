@@ -7,63 +7,75 @@ import javax.annotation.Nullable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
-public class SoundEventAccessor implements ISoundEventAccessor<Sound> {
-   private final List<ISoundEventAccessor<Sound>> accessorList = Lists.newArrayList();
-   private final Random rnd = new Random();
-   private final ResourceLocation location;
-   @Nullable
-   private final ITextComponent subtitle;
+public class SoundEventAccessor implements ISoundEventAccessor<Sound>
+{
+    private final List<ISoundEventAccessor<Sound>> accessorList = Lists.newArrayList();
+    private final Random rnd = new Random();
+    private final ResourceLocation location;
+    @Nullable
+    private final ITextComponent subtitle;
 
-   public SoundEventAccessor(ResourceLocation locationIn, @Nullable String subtitleIn) {
-      this.location = locationIn;
-      this.subtitle = subtitleIn == null ? null : new TranslationTextComponent(subtitleIn);
-   }
+    public SoundEventAccessor(ResourceLocation locationIn, @Nullable String subtitleIn)
+    {
+        this.location = locationIn;
+        this.subtitle = subtitleIn == null ? null : new TranslationTextComponent(subtitleIn);
+    }
 
-   public int getWeight() {
-      int i = 0;
+    public int getWeight()
+    {
+        int i = 0;
 
-      for(ISoundEventAccessor<Sound> isoundeventaccessor : this.accessorList) {
-         i += isoundeventaccessor.getWeight();
-      }
+        for (ISoundEventAccessor<Sound> isoundeventaccessor : this.accessorList)
+        {
+            i += isoundeventaccessor.getWeight();
+        }
 
-      return i;
-   }
+        return i;
+    }
 
-   public Sound cloneEntry() {
-      int i = this.getWeight();
-      if (!this.accessorList.isEmpty() && i != 0) {
-         int j = this.rnd.nextInt(i);
+    public Sound cloneEntry()
+    {
+        int i = this.getWeight();
 
-         for(ISoundEventAccessor<Sound> isoundeventaccessor : this.accessorList) {
-            j -= isoundeventaccessor.getWeight();
-            if (j < 0) {
-               return isoundeventaccessor.cloneEntry();
+        if (!this.accessorList.isEmpty() && i != 0)
+        {
+            int j = this.rnd.nextInt(i);
+
+            for (ISoundEventAccessor<Sound> isoundeventaccessor : this.accessorList)
+            {
+                j -= isoundeventaccessor.getWeight();
+
+                if (j < 0)
+                {
+                    return isoundeventaccessor.cloneEntry();
+                }
             }
-         }
 
-         return SoundHandler.MISSING_SOUND;
-      } else {
-         return SoundHandler.MISSING_SOUND;
-      }
-   }
+            return SoundHandler.MISSING_SOUND;
+        }
+        else
+        {
+            return SoundHandler.MISSING_SOUND;
+        }
+    }
 
-   public void addSound(ISoundEventAccessor<Sound> accessor) {
-      this.accessorList.add(accessor);
-   }
+    public void addSound(ISoundEventAccessor<Sound> accessor)
+    {
+        this.accessorList.add(accessor);
+    }
 
-   @Nullable
-   public ITextComponent getSubtitle() {
-      return this.subtitle;
-   }
+    @Nullable
+    public ITextComponent getSubtitle()
+    {
+        return this.subtitle;
+    }
 
-   public void enqueuePreload(SoundEngine engine) {
-      for(ISoundEventAccessor<Sound> isoundeventaccessor : this.accessorList) {
-         isoundeventaccessor.enqueuePreload(engine);
-      }
-
-   }
+    public void enqueuePreload(SoundEngine engine)
+    {
+        for (ISoundEventAccessor<Sound> isoundeventaccessor : this.accessorList)
+        {
+            isoundeventaccessor.enqueuePreload(engine);
+        }
+    }
 }

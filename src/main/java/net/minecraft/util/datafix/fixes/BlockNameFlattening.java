@@ -11,28 +11,36 @@ import java.util.Objects;
 import net.minecraft.util.datafix.NamespacedSchema;
 import net.minecraft.util.datafix.TypeReferences;
 
-public class BlockNameFlattening extends DataFix {
-   public BlockNameFlattening(Schema outputSchema, boolean changesType) {
-      super(outputSchema, changesType);
-   }
+public class BlockNameFlattening extends DataFix
+{
+    public BlockNameFlattening(Schema outputSchema, boolean changesType)
+    {
+        super(outputSchema, changesType);
+    }
 
-   public TypeRewriteRule makeRule() {
-      Type<?> type = this.getInputSchema().getType(TypeReferences.BLOCK_NAME);
-      Type<?> type1 = this.getOutputSchema().getType(TypeReferences.BLOCK_NAME);
-      Type<Pair<String, Either<Integer, String>>> type2 = DSL.named(TypeReferences.BLOCK_NAME.typeName(), DSL.or(DSL.intType(), NamespacedSchema.func_233457_a_()));
-      Type<Pair<String, String>> type3 = DSL.named(TypeReferences.BLOCK_NAME.typeName(), NamespacedSchema.func_233457_a_());
-      if (Objects.equals(type, type2) && Objects.equals(type1, type3)) {
-         return this.fixTypeEverywhere("BlockNameFlatteningFix", type2, type3, (p_209702_0_) -> {
-            return (p_206303_0_) -> {
-               return p_206303_0_.mapSecond((p_206304_0_) -> {
-                  return p_206304_0_.map(BlockStateFlatteningMap::updateId, (p_206305_0_) -> {
-                     return BlockStateFlatteningMap.updateName(NamespacedSchema.ensureNamespaced(p_206305_0_));
-                  });
-               });
-            };
-         });
-      } else {
-         throw new IllegalStateException("Expected and actual types don't match.");
-      }
-   }
+    public TypeRewriteRule makeRule()
+    {
+        Type<?> type = this.getInputSchema().getType(TypeReferences.BLOCK_NAME);
+        Type<?> type1 = this.getOutputSchema().getType(TypeReferences.BLOCK_NAME);
+        Type<Pair<String, Either<Integer, String>>> type2 = DSL.named(TypeReferences.BLOCK_NAME.typeName(), DSL.or(DSL.intType(), NamespacedSchema.func_233457_a_()));
+        Type<Pair<String, String>> type3 = DSL.named(TypeReferences.BLOCK_NAME.typeName(), NamespacedSchema.func_233457_a_());
+
+        if (Objects.equals(type, type2) && Objects.equals(type1, type3))
+        {
+            return this.fixTypeEverywhere("BlockNameFlatteningFix", type2, type3, (p_209702_0_) ->
+            {
+                return (p_206303_0_) -> {
+                    return p_206303_0_.mapSecond((p_206304_0_) -> {
+                        return p_206304_0_.map(BlockStateFlatteningMap::updateId, (p_206305_0_) -> {
+                            return BlockStateFlatteningMap.updateName(NamespacedSchema.ensureNamespaced(p_206305_0_));
+                        });
+                    });
+                };
+            });
+        }
+        else
+        {
+            throw new IllegalStateException("Expected and actual types don't match.");
+        }
+    }
 }

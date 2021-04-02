@@ -8,24 +8,33 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-public class TallFlowerBlock extends DoublePlantBlock implements IGrowable {
-   public TallFlowerBlock(AbstractBlock.Properties properties) {
-      super(properties);
-   }
+public class TallFlowerBlock extends DoublePlantBlock implements IGrowable
+{
+    public TallFlowerBlock(AbstractBlock.Properties properties)
+    {
+        super(properties);
+    }
 
-   public boolean isReplaceable(BlockState state, BlockItemUseContext useContext) {
-      return false;
-   }
+    public boolean isReplaceable(BlockState state, BlockItemUseContext useContext)
+    {
+        return false;
+    }
 
-   public boolean canGrow(IBlockReader worldIn, BlockPos pos, BlockState state, boolean isClient) {
-      return true;
-   }
+    /**
+     * Whether this IGrowable can grow
+     */
+    public boolean canGrow(IBlockReader worldIn, BlockPos pos, BlockState state, boolean isClient)
+    {
+        return true;
+    }
 
-   public boolean canUseBonemeal(World worldIn, Random rand, BlockPos pos, BlockState state) {
-      return true;
-   }
+    public boolean canUseBonemeal(World worldIn, Random rand, BlockPos pos, BlockState state)
+    {
+        return true;
+    }
 
-   public void grow(ServerWorld worldIn, Random rand, BlockPos pos, BlockState state) {
-      spawnAsEntity(worldIn, pos, new ItemStack(this));
-   }
+    public void grow(ServerWorld worldIn, Random rand, BlockPos pos, BlockState state)
+    {
+        spawnAsEntity(worldIn, pos, new ItemStack(this));
+    }
 }

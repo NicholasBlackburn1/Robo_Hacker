@@ -18,65 +18,78 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.raid.Raid;
 import net.minecraft.world.server.ServerWorld;
 
-public class CelebrateRaidVictoryTask extends Task<VillagerEntity> {
-   @Nullable
-   private Raid raid;
+public class CelebrateRaidVictoryTask extends Task<VillagerEntity>
+{
+    @Nullable
+    private Raid raid;
 
-   public CelebrateRaidVictoryTask(int durationMin, int durationMax) {
-      super(ImmutableMap.of(), durationMin, durationMax);
-   }
+    public CelebrateRaidVictoryTask(int durationMin, int durationMax)
+    {
+        super(ImmutableMap.of(), durationMin, durationMax);
+    }
 
-   protected boolean shouldExecute(ServerWorld worldIn, VillagerEntity owner) {
-      BlockPos blockpos = owner.getPosition();
-      this.raid = worldIn.findRaid(blockpos);
-      return this.raid != null && this.raid.isVictory() && MoveToSkylightTask.func_226306_a_(worldIn, owner, blockpos);
-   }
+    protected boolean shouldExecute(ServerWorld worldIn, VillagerEntity owner)
+    {
+        BlockPos blockpos = owner.getPosition();
+        this.raid = worldIn.findRaid(blockpos);
+        return this.raid != null && this.raid.isVictory() && MoveToSkylightTask.func_226306_a_(worldIn, owner, blockpos);
+    }
 
-   protected boolean shouldContinueExecuting(ServerWorld worldIn, VillagerEntity entityIn, long gameTimeIn) {
-      return this.raid != null && !this.raid.isStopped();
-   }
+    protected boolean shouldContinueExecuting(ServerWorld worldIn, VillagerEntity entityIn, long gameTimeIn)
+    {
+        return this.raid != null && !this.raid.isStopped();
+    }
 
-   protected void resetTask(ServerWorld worldIn, VillagerEntity entityIn, long gameTimeIn) {
-      this.raid = null;
-      entityIn.getBrain().updateActivity(worldIn.getDayTime(), worldIn.getGameTime());
-   }
+    protected void resetTask(ServerWorld worldIn, VillagerEntity entityIn, long gameTimeIn)
+    {
+        this.raid = null;
+        entityIn.getBrain().updateActivity(worldIn.getDayTime(), worldIn.getGameTime());
+    }
 
-   protected void updateTask(ServerWorld worldIn, VillagerEntity owner, long gameTime) {
-      Random random = owner.getRNG();
-      if (random.nextInt(100) == 0) {
-         owner.playCelebrateSound();
-      }
+    protected void updateTask(ServerWorld worldIn, VillagerEntity owner, long gameTime)
+    {
+        Random random = owner.getRNG();
 
-      if (random.nextInt(200) == 0 && MoveToSkylightTask.func_226306_a_(worldIn, owner, owner.getPosition())) {
-         DyeColor dyecolor = Util.getRandomObject(DyeColor.values(), random);
-         int i = random.nextInt(3);
-         ItemStack itemstack = this.makeFirework(dyecolor, i);
-         FireworkRocketEntity fireworkrocketentity = new FireworkRocketEntity(owner.world, owner, owner.getPosX(), owner.getPosYEye(), owner.getPosZ(), itemstack);
-         owner.world.addEntity(fireworkrocketentity);
-      }
+        if (random.nextInt(100) == 0)
+        {
+            owner.playCelebrateSound();
+        }
 
-   }
+        if (random.nextInt(200) == 0 && MoveToSkylightTask.func_226306_a_(worldIn, owner, owner.getPosition()))
+        {
+            DyeColor dyecolor = Util.getRandomObject(DyeColor.values(), random);
+            int i = random.nextInt(3);
+            ItemStack itemstack = this.makeFirework(dyecolor, i);
+            FireworkRocketEntity fireworkrocketentity = new FireworkRocketEntity(owner.world, owner, owner.getPosX(), owner.getPosYEye(), owner.getPosZ(), itemstack);
+            owner.world.addEntity(fireworkrocketentity);
+        }
+    }
 
-   private ItemStack makeFirework(DyeColor color, int flightTime) {
-      ItemStack itemstack = new ItemStack(Items.FIREWORK_ROCKET, 1);
-      ItemStack itemstack1 = new ItemStack(Items.FIREWORK_STAR);
-      CompoundNBT compoundnbt = itemstack1.getOrCreateChildTag("Explosion");
-      List<Integer> list = Lists.newArrayList();
-      list.add(color.getFireworkColor());
-      compoundnbt.putIntArray("Colors", list);
-      compoundnbt.putByte("Type", (byte)FireworkRocketItem.Shape.BURST.getIndex());
-      CompoundNBT compoundnbt1 = itemstack.getOrCreateChildTag("Fireworks");
-      ListNBT listnbt = new ListNBT();
-      CompoundNBT compoundnbt2 = itemstack1.getChildTag("Explosion");
-      if (compoundnbt2 != null) {
-         listnbt.add(compoundnbt2);
-      }
+    private ItemStack makeFirework(DyeColor color, int flightTime)
+    {
+        ItemStack itemstack = new ItemStack(Items.FIREWORK_ROCKET, 1);
+        ItemStack itemstack1 = new ItemStack(Items.FIREWORK_STAR);
+        CompoundNBT compoundnbt = itemstack1.getOrCreateChildTag("Explosion");
+        List<Integer> list = Lists.newArrayList();
+        list.add(color.getFireworkColor());
+        compoundnbt.putIntArray("Colors", list);
+        compoundnbt.putByte("Type", (byte)FireworkRocketItem.Shape.BURST.getIndex());
+        CompoundNBT compoundnbt1 = itemstack.getOrCreateChildTag("Fireworks");
+        ListNBT listnbt = new ListNBT();
+        CompoundNBT compoundnbt2 = itemstack1.getChildTag("Explosion");
 
-      compoundnbt1.putByte("Flight", (byte)flightTime);
-      if (!listnbt.isEmpty()) {
-         compoundnbt1.put("Explosions", listnbt);
-      }
+        if (compoundnbt2 != null)
+        {
+            listnbt.add(compoundnbt2);
+        }
 
-      return itemstack;
-   }
+        compoundnbt1.putByte("Flight", (byte)flightTime);
+
+        if (!listnbt.isEmpty())
+        {
+            compoundnbt1.put("Explosions", listnbt);
+        }
+
+        return itemstack;
+    }
 }

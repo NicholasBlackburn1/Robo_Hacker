@@ -4,8 +4,9 @@ import com.google.gson.JsonObject;
 import net.minecraft.loot.ConditionArraySerializer;
 import net.minecraft.util.ResourceLocation;
 
-public interface ICriterionInstance {
-   ResourceLocation getId();
+public interface ICriterionInstance
+{
+    ResourceLocation getId();
 
-   JsonObject serialize(ConditionArraySerializer conditions);
+    JsonObject serialize(ConditionArraySerializer conditions);
 }

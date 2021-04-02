@@ -12,37 +12,47 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.Heightmap;
 
-public class IceAndSnowFeature extends Feature<NoFeatureConfig> {
-   public IceAndSnowFeature(Codec<NoFeatureConfig> p_i231993_1_) {
-      super(p_i231993_1_);
-   }
+public class IceAndSnowFeature extends Feature<NoFeatureConfig>
+{
+    public IceAndSnowFeature(Codec<NoFeatureConfig> p_i231993_1_)
+    {
+        super(p_i231993_1_);
+    }
 
-   public boolean generate(ISeedReader reader, ChunkGenerator generator, Random rand, BlockPos pos, NoFeatureConfig config) {
-      BlockPos.Mutable blockpos$mutable = new BlockPos.Mutable();
-      BlockPos.Mutable blockpos$mutable1 = new BlockPos.Mutable();
+    public boolean func_241855_a(ISeedReader p_241855_1_, ChunkGenerator p_241855_2_, Random p_241855_3_, BlockPos p_241855_4_, NoFeatureConfig p_241855_5_)
+    {
+        BlockPos.Mutable blockpos$mutable = new BlockPos.Mutable();
+        BlockPos.Mutable blockpos$mutable1 = new BlockPos.Mutable();
 
-      for(int i = 0; i < 16; ++i) {
-         for(int j = 0; j < 16; ++j) {
-            int k = pos.getX() + i;
-            int l = pos.getZ() + j;
-            int i1 = reader.getHeight(Heightmap.Type.MOTION_BLOCKING, k, l);
-            blockpos$mutable.setPos(k, i1, l);
-            blockpos$mutable1.setPos(blockpos$mutable).move(Direction.DOWN, 1);
-            Biome biome = reader.getBiome(blockpos$mutable);
-            if (biome.doesWaterFreeze(reader, blockpos$mutable1, false)) {
-               reader.setBlockState(blockpos$mutable1, Blocks.ICE.getDefaultState(), 2);
+        for (int i = 0; i < 16; ++i)
+        {
+            for (int j = 0; j < 16; ++j)
+            {
+                int k = p_241855_4_.getX() + i;
+                int l = p_241855_4_.getZ() + j;
+                int i1 = p_241855_1_.getHeight(Heightmap.Type.MOTION_BLOCKING, k, l);
+                blockpos$mutable.setPos(k, i1, l);
+                blockpos$mutable1.setPos(blockpos$mutable).move(Direction.DOWN, 1);
+                Biome biome = p_241855_1_.getBiome(blockpos$mutable);
+
+                if (biome.doesWaterFreeze(p_241855_1_, blockpos$mutable1, false))
+                {
+                    p_241855_1_.setBlockState(blockpos$mutable1, Blocks.ICE.getDefaultState(), 2);
+                }
+
+                if (biome.doesSnowGenerate(p_241855_1_, blockpos$mutable))
+                {
+                    p_241855_1_.setBlockState(blockpos$mutable, Blocks.SNOW.getDefaultState(), 2);
+                    BlockState blockstate = p_241855_1_.getBlockState(blockpos$mutable1);
+
+                    if (blockstate.hasProperty(SnowyDirtBlock.SNOWY))
+                    {
+                        p_241855_1_.setBlockState(blockpos$mutable1, blockstate.with(SnowyDirtBlock.SNOWY, Boolean.valueOf(true)), 2);
+                    }
+                }
             }
+        }
 
-            if (biome.doesSnowGenerate(reader, blockpos$mutable)) {
-               reader.setBlockState(blockpos$mutable, Blocks.SNOW.getDefaultState(), 2);
-               BlockState blockstate = reader.getBlockState(blockpos$mutable1);
-               if (blockstate.hasProperty(SnowyDirtBlock.SNOWY)) {
-                  reader.setBlockState(blockpos$mutable1, blockstate.with(SnowyDirtBlock.SNOWY, Boolean.valueOf(true)), 2);
-               }
-            }
-         }
-      }
-
-      return true;
-   }
+        return true;
+    }
 }

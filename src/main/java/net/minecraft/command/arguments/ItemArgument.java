@@ -11,36 +11,45 @@ import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.tags.ItemTags;
 
-public class ItemArgument implements ArgumentType<ItemInput> {
-   private static final Collection<String> EXAMPLES = Arrays.asList("stick", "minecraft:stick", "stick{foo=bar}");
+public class ItemArgument implements ArgumentType<ItemInput>
+{
+    private static final Collection<String> EXAMPLES = Arrays.asList("stick", "minecraft:stick", "stick{foo=bar}");
 
-   public static ItemArgument item() {
-      return new ItemArgument();
-   }
+    public static ItemArgument item()
+    {
+        return new ItemArgument();
+    }
 
-   public ItemInput parse(StringReader p_parse_1_) throws CommandSyntaxException {
-      ItemParser itemparser = (new ItemParser(p_parse_1_, false)).parse();
-      return new ItemInput(itemparser.getItem(), itemparser.getNbt());
-   }
+    public ItemInput parse(StringReader p_parse_1_) throws CommandSyntaxException
+    {
+        ItemParser itemparser = (new ItemParser(p_parse_1_, false)).parse();
+        return new ItemInput(itemparser.getItem(), itemparser.getNbt());
+    }
 
-   public static <S> ItemInput getItem(CommandContext<S> context, String name) {
-      return context.getArgument(name, ItemInput.class);
-   }
+    public static <S> ItemInput getItem(CommandContext<S> context, String name)
+    {
+        return context.getArgument(name, ItemInput.class);
+    }
 
-   public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> p_listSuggestions_1_, SuggestionsBuilder p_listSuggestions_2_) {
-      StringReader stringreader = new StringReader(p_listSuggestions_2_.getInput());
-      stringreader.setCursor(p_listSuggestions_2_.getStart());
-      ItemParser itemparser = new ItemParser(stringreader, false);
+    public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> p_listSuggestions_1_, SuggestionsBuilder p_listSuggestions_2_)
+    {
+        StringReader stringreader = new StringReader(p_listSuggestions_2_.getInput());
+        stringreader.setCursor(p_listSuggestions_2_.getStart());
+        ItemParser itemparser = new ItemParser(stringreader, false);
 
-      try {
-         itemparser.parse();
-      } catch (CommandSyntaxException commandsyntaxexception) {
-      }
+        try
+        {
+            itemparser.parse();
+        }
+        catch (CommandSyntaxException commandsyntaxexception)
+        {
+        }
 
-      return itemparser.fillSuggestions(p_listSuggestions_2_, ItemTags.getCollection());
-   }
+        return itemparser.fillSuggestions(p_listSuggestions_2_, ItemTags.getCollection());
+    }
 
-   public Collection<String> getExamples() {
-      return EXAMPLES;
-   }
+    public Collection<String> getExamples()
+    {
+        return EXAMPLES;
+    }
 }

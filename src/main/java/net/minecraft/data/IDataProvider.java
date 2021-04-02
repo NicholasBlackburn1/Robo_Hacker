@@ -10,24 +10,35 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
-public interface IDataProvider {
-   HashFunction HASH_FUNCTION = Hashing.sha1();
+public interface IDataProvider
+{
+    HashFunction HASH_FUNCTION = Hashing.sha1();
 
-   void act(DirectoryCache cache) throws IOException;
+    /**
+     * Performs this provider's action.
+     */
+    void act(DirectoryCache cache) throws IOException;
 
-   String getName();
+    /**
+     * Gets a name for this provider, to use in logging.
+     */
+    String getName();
 
-   static void save(Gson gson, DirectoryCache cache, JsonElement jsonElement, Path pathIn) throws IOException {
-      String s = gson.toJson(jsonElement);
-      String s1 = HASH_FUNCTION.hashUnencodedChars(s).toString();
-      if (!Objects.equals(cache.getPreviousHash(pathIn), s1) || !Files.exists(pathIn)) {
-         Files.createDirectories(pathIn.getParent());
+    static void save(Gson gson, DirectoryCache cache, JsonElement jsonElement, Path pathIn) throws IOException
+    {
+        String s = gson.toJson(jsonElement);
+        String s1 = HASH_FUNCTION.hashUnencodedChars(s).toString();
 
-         try (BufferedWriter bufferedwriter = Files.newBufferedWriter(pathIn)) {
-            bufferedwriter.write(s);
-         }
-      }
+        if (!Objects.equals(cache.getPreviousHash(pathIn), s1) || !Files.exists(pathIn))
+        {
+            Files.createDirectories(pathIn.getParent());
 
-      cache.recordHash(pathIn, s1);
-   }
+            try (BufferedWriter bufferedwriter = Files.newBufferedWriter(pathIn))
+            {
+                bufferedwriter.write(s);
+            }
+        }
+
+        cache.recordHash(pathIn, s1);
+    }
 }

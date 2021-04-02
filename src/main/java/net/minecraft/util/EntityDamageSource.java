@@ -9,46 +9,77 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
-public class EntityDamageSource extends DamageSource {
-   @Nullable
-   protected final Entity damageSourceEntity;
-   private boolean isThornsDamage;
+public class EntityDamageSource extends DamageSource
+{
+    @Nullable
+    protected final Entity damageSourceEntity;
 
-   public EntityDamageSource(String damageTypeIn, @Nullable Entity damageSourceEntityIn) {
-      super(damageTypeIn);
-      this.damageSourceEntity = damageSourceEntityIn;
-   }
+    /**
+     * Whether this EntityDamageSource is from an entity wearing Thorns-enchanted armor.
+     */
+    private boolean isThornsDamage;
 
-   public EntityDamageSource setIsThornsDamage() {
-      this.isThornsDamage = true;
-      return this;
-   }
+    public EntityDamageSource(String damageTypeIn, @Nullable Entity damageSourceEntityIn)
+    {
+        super(damageTypeIn);
+        this.damageSourceEntity = damageSourceEntityIn;
+    }
 
-   public boolean getIsThornsDamage() {
-      return this.isThornsDamage;
-   }
+    /**
+     * Sets this EntityDamageSource as originating from Thorns armor
+     */
+    public EntityDamageSource setIsThornsDamage()
+    {
+        this.isThornsDamage = true;
+        return this;
+    }
 
-   @Nullable
-   public Entity getTrueSource() {
-      return this.damageSourceEntity;
-   }
+    public boolean getIsThornsDamage()
+    {
+        return this.isThornsDamage;
+    }
 
-   public ITextComponent getDeathMessage(LivingEntity entityLivingBaseIn) {
-      ItemStack itemstack = this.damageSourceEntity instanceof LivingEntity ? ((LivingEntity)this.damageSourceEntity).getHeldItemMainhand() : ItemStack.EMPTY;
-      String s = "death.attack." + this.damageType;
-      return !itemstack.isEmpty() && itemstack.hasDisplayName() ? new TranslationTextComponent(s + ".item", entityLivingBaseIn.getDisplayName(), this.damageSourceEntity.getDisplayName(), itemstack.getTextComponent()) : new TranslationTextComponent(s, entityLivingBaseIn.getDisplayName(), this.damageSourceEntity.getDisplayName());
-   }
+    @Nullable
 
-   public boolean isDifficultyScaled() {
-      return this.damageSourceEntity != null && this.damageSourceEntity instanceof LivingEntity && !(this.damageSourceEntity instanceof PlayerEntity);
-   }
+    /**
+     * Retrieves the true causer of the damage, e.g. the player who fired an arrow, the shulker who fired the bullet,
+     * etc.
+     */
+    public Entity getTrueSource()
+    {
+        return this.damageSourceEntity;
+    }
 
-   @Nullable
-   public Vector3d getDamageLocation() {
-      return this.damageSourceEntity != null ? this.damageSourceEntity.getPositionVec() : null;
-   }
+    /**
+     * Gets the death message that is displayed when the player dies
+     */
+    public ITextComponent getDeathMessage(LivingEntity entityLivingBaseIn)
+    {
+        ItemStack itemstack = this.damageSourceEntity instanceof LivingEntity ? ((LivingEntity)this.damageSourceEntity).getHeldItemMainhand() : ItemStack.EMPTY;
+        String s = "death.attack." + this.damageType;
+        return !itemstack.isEmpty() && itemstack.hasDisplayName() ? new TranslationTextComponent(s + ".item", entityLivingBaseIn.getDisplayName(), this.damageSourceEntity.getDisplayName(), itemstack.getTextComponent()) : new TranslationTextComponent(s, entityLivingBaseIn.getDisplayName(), this.damageSourceEntity.getDisplayName());
+    }
 
-   public String toString() {
-      return "EntityDamageSource (" + this.damageSourceEntity + ")";
-   }
+    /**
+     * Return whether this damage source will have its damage amount scaled based on the current difficulty.
+     */
+    public boolean isDifficultyScaled()
+    {
+        return this.damageSourceEntity != null && this.damageSourceEntity instanceof LivingEntity && !(this.damageSourceEntity instanceof PlayerEntity);
+    }
+
+    @Nullable
+
+    /**
+     * Gets the location from which the damage originates.
+     */
+    public Vector3d getDamageLocation()
+    {
+        return this.damageSourceEntity != null ? this.damageSourceEntity.getPositionVec() : null;
+    }
+
+    public String toString()
+    {
+        return "EntityDamageSource (" + this.damageSourceEntity + ")";
+    }
 }

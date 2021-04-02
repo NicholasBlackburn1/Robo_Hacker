@@ -18,65 +18,81 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class MusicDiscItem extends Item {
-   private static final Map<SoundEvent, MusicDiscItem> RECORDS = Maps.newHashMap();
-   private final int comparatorValue;
-   private final SoundEvent sound;
+public class MusicDiscItem extends Item
+{
+    private static final Map<SoundEvent, MusicDiscItem> RECORDS = Maps.newHashMap();
+    private final int comparatorValue;
+    private final SoundEvent sound;
 
-   protected MusicDiscItem(int comparatorValueIn, SoundEvent soundIn, Item.Properties builder) {
-      super(builder);
-      this.comparatorValue = comparatorValueIn;
-      this.sound = soundIn;
-      RECORDS.put(this.sound, this);
-   }
+    protected MusicDiscItem(int comparatorValueIn, SoundEvent soundIn, Item.Properties builder)
+    {
+        super(builder);
+        this.comparatorValue = comparatorValueIn;
+        this.sound = soundIn;
+        RECORDS.put(this.sound, this);
+    }
 
-   public ActionResultType onItemUse(ItemUseContext context) {
-      World world = context.getWorld();
-      BlockPos blockpos = context.getPos();
-      BlockState blockstate = world.getBlockState(blockpos);
-      if (blockstate.isIn(Blocks.JUKEBOX) && !blockstate.get(JukeboxBlock.HAS_RECORD)) {
-         ItemStack itemstack = context.getItem();
-         if (!world.isRemote) {
-            ((JukeboxBlock)Blocks.JUKEBOX).insertRecord(world, blockpos, blockstate, itemstack);
-            world.playEvent((PlayerEntity)null, 1010, blockpos, Item.getIdFromItem(this));
-            itemstack.shrink(1);
-            PlayerEntity playerentity = context.getPlayer();
-            if (playerentity != null) {
-               playerentity.addStat(Stats.PLAY_RECORD);
+    /**
+     * Called when this item is used when targetting a Block
+     */
+    public ActionResultType onItemUse(ItemUseContext context)
+    {
+        World world = context.getWorld();
+        BlockPos blockpos = context.getPos();
+        BlockState blockstate = world.getBlockState(blockpos);
+
+        if (blockstate.isIn(Blocks.JUKEBOX) && !blockstate.get(JukeboxBlock.HAS_RECORD))
+        {
+            ItemStack itemstack = context.getItem();
+
+            if (!world.isRemote)
+            {
+                ((JukeboxBlock)Blocks.JUKEBOX).insertRecord(world, blockpos, blockstate, itemstack);
+                world.playEvent((PlayerEntity)null, 1010, blockpos, Item.getIdFromItem(this));
+                itemstack.shrink(1);
+                PlayerEntity playerentity = context.getPlayer();
+
+                if (playerentity != null)
+                {
+                    playerentity.addStat(Stats.PLAY_RECORD);
+                }
             }
-         }
 
-         return ActionResultType.func_233537_a_(world.isRemote);
-      } else {
-         return ActionResultType.PASS;
-      }
-   }
+            return ActionResultType.func_233537_a_(world.isRemote);
+        }
+        else
+        {
+            return ActionResultType.PASS;
+        }
+    }
 
-   public int getComparatorValue() {
-      return this.comparatorValue;
-   }
+    public int getComparatorValue()
+    {
+        return this.comparatorValue;
+    }
 
-   @OnlyIn(Dist.CLIENT)
-   public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-      tooltip.add(this.getDescription().mergeStyle(TextFormatting.GRAY));
-   }
+    /**
+     * allows items to add custom lines of information to the mouseover description
+     */
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn)
+    {
+        tooltip.add(this.getDescription().mergeStyle(TextFormatting.GRAY));
+    }
 
-   @OnlyIn(Dist.CLIENT)
-   public IFormattableTextComponent getDescription() {
-      return new TranslationTextComponent(this.getTranslationKey() + ".desc");
-   }
+    public IFormattableTextComponent getDescription()
+    {
+        return new TranslationTextComponent(this.getTranslationKey() + ".desc");
+    }
 
-   @Nullable
-   @OnlyIn(Dist.CLIENT)
-   public static MusicDiscItem getBySound(SoundEvent soundIn) {
-      return RECORDS.get(soundIn);
-   }
+    @Nullable
+    public static MusicDiscItem getBySound(SoundEvent soundIn)
+    {
+        return RECORDS.get(soundIn);
+    }
 
-   @OnlyIn(Dist.CLIENT)
-   public SoundEvent getSound() {
-      return this.sound;
-   }
+    public SoundEvent getSound()
+    {
+        return this.sound;
+    }
 }

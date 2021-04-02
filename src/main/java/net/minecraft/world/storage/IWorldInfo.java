@@ -4,39 +4,70 @@ import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.GameRules;
 
-public interface IWorldInfo {
-   int getSpawnX();
+public interface IWorldInfo
+{
+    /**
+     * Returns the x spawn position
+     */
+    int getSpawnX();
 
-   int getSpawnY();
+    /**
+     * Return the Y axis spawning point of the player.
+     */
+    int getSpawnY();
 
-   int getSpawnZ();
+    /**
+     * Returns the z spawn position
+     */
+    int getSpawnZ();
 
-   float getSpawnAngle();
+    float getSpawnAngle();
 
-   long getGameTime();
+    long getGameTime();
 
-   long getDayTime();
+    /**
+     * Get current world time
+     */
+    long getDayTime();
 
-   boolean isThundering();
+    /**
+     * Returns true if it is thundering, false otherwise.
+     */
+    boolean isThundering();
 
-   boolean isRaining();
+    /**
+     * Returns true if it is raining, false otherwise.
+     */
+    boolean isRaining();
 
-   void setRaining(boolean isRaining);
+    /**
+     * Sets whether it is raining or not.
+     */
+    void setRaining(boolean isRaining);
 
-   boolean isHardcore();
+    /**
+     * Returns true if hardcore mode is enabled, otherwise false
+     */
+    boolean isHardcore();
 
-   GameRules getGameRulesInstance();
+    /**
+     * Gets the GameRules class Instance.
+     */
+    GameRules getGameRulesInstance();
 
-   Difficulty getDifficulty();
+    Difficulty getDifficulty();
 
-   boolean isDifficultyLocked();
+    boolean isDifficultyLocked();
 
-   default void addToCrashReport(CrashReportCategory category) {
-      category.addDetail("Level spawn location", () -> {
-         return CrashReportCategory.getCoordinateInfo(this.getSpawnX(), this.getSpawnY(), this.getSpawnZ());
-      });
-      category.addDetail("Level time", () -> {
-         return String.format("%d game time, %d day time", this.getGameTime(), this.getDayTime());
-      });
-   }
+default void addToCrashReport(CrashReportCategory category)
+    {
+        category.addDetail("Level spawn location", () ->
+        {
+            return CrashReportCategory.getCoordinateInfo(this.getSpawnX(), this.getSpawnY(), this.getSpawnZ());
+        });
+        category.addDetail("Level time", () ->
+        {
+            return String.format("%d game time, %d day time", this.getGameTime(), this.getDayTime());
+        });
+    }
 }

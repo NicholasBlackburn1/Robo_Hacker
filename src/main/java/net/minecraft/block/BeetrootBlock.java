@@ -12,46 +12,55 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class BeetrootBlock extends CropsBlock {
-   public static final IntegerProperty BEETROOT_AGE = BlockStateProperties.AGE_0_3;
-   private static final VoxelShape[] SHAPE = new VoxelShape[]{Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D), Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 4.0D, 16.0D), Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D), Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D)};
+public class BeetrootBlock extends CropsBlock
+{
+    public static final IntegerProperty BEETROOT_AGE = BlockStateProperties.AGE_0_3;
+    private static final VoxelShape[] SHAPE = new VoxelShape[] {Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D), Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 4.0D, 16.0D), Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D), Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D)};
 
-   public BeetrootBlock(AbstractBlock.Properties properties) {
-      super(properties);
-   }
+    public BeetrootBlock(AbstractBlock.Properties properties)
+    {
+        super(properties);
+    }
 
-   public IntegerProperty getAgeProperty() {
-      return BEETROOT_AGE;
-   }
+    public IntegerProperty getAgeProperty()
+    {
+        return BEETROOT_AGE;
+    }
 
-   public int getMaxAge() {
-      return 3;
-   }
+    public int getMaxAge()
+    {
+        return 3;
+    }
 
-   @OnlyIn(Dist.CLIENT)
-   protected IItemProvider getSeedsItem() {
-      return Items.BEETROOT_SEEDS;
-   }
+    protected IItemProvider getSeedsItem()
+    {
+        return Items.BEETROOT_SEEDS;
+    }
 
-   public void randomTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
-      if (random.nextInt(3) != 0) {
-         super.randomTick(state, worldIn, pos, random);
-      }
+    /**
+     * Performs a random tick on a block.
+     */
+    public void randomTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random)
+    {
+        if (random.nextInt(3) != 0)
+        {
+            super.randomTick(state, worldIn, pos, random);
+        }
+    }
 
-   }
+    protected int getBonemealAgeIncrease(World worldIn)
+    {
+        return super.getBonemealAgeIncrease(worldIn) / 3;
+    }
 
-   protected int getBonemealAgeIncrease(World worldIn) {
-      return super.getBonemealAgeIncrease(worldIn) / 3;
-   }
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    {
+        builder.add(BEETROOT_AGE);
+    }
 
-   protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-      builder.add(BEETROOT_AGE);
-   }
-
-   public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-      return SHAPE[state.get(this.getAgeProperty())];
-   }
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
+    {
+        return SHAPE[state.get(this.getAgeProperty())];
+    }
 }

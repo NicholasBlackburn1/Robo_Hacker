@@ -18,54 +18,76 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.server.ServerWorld;
 
-public class BlockPosArgument implements ArgumentType<ILocationArgument> {
-   private static final Collection<String> EXAMPLES = Arrays.asList("0 0 0", "~ ~ ~", "^ ^ ^", "^1 ^ ^-5", "~0.5 ~1 ~-5");
-   public static final SimpleCommandExceptionType POS_UNLOADED = new SimpleCommandExceptionType(new TranslationTextComponent("argument.pos.unloaded"));
-   public static final SimpleCommandExceptionType POS_OUT_OF_WORLD = new SimpleCommandExceptionType(new TranslationTextComponent("argument.pos.outofworld"));
+public class BlockPosArgument implements ArgumentType<ILocationArgument>
+{
+    private static final Collection<String> EXAMPLES = Arrays.asList("0 0 0", "~ ~ ~", "^ ^ ^", "^1 ^ ^-5", "~0.5 ~1 ~-5");
+    public static final SimpleCommandExceptionType POS_UNLOADED = new SimpleCommandExceptionType(new TranslationTextComponent("argument.pos.unloaded"));
+    public static final SimpleCommandExceptionType POS_OUT_OF_WORLD = new SimpleCommandExceptionType(new TranslationTextComponent("argument.pos.outofworld"));
 
-   public static BlockPosArgument blockPos() {
-      return new BlockPosArgument();
-   }
+    public static BlockPosArgument blockPos()
+    {
+        return new BlockPosArgument();
+    }
 
-   public static BlockPos getLoadedBlockPos(CommandContext<CommandSource> context, String name) throws CommandSyntaxException {
-      BlockPos blockpos = context.getArgument(name, ILocationArgument.class).getBlockPos(context.getSource());
-      if (!context.getSource().getWorld().isBlockLoaded(blockpos)) {
-         throw POS_UNLOADED.create();
-      } else {
-         context.getSource().getWorld();
-         if (!ServerWorld.isValid(blockpos)) {
-            throw POS_OUT_OF_WORLD.create();
-         } else {
-            return blockpos;
-         }
-      }
-   }
+    public static BlockPos getLoadedBlockPos(CommandContext<CommandSource> context, String name) throws CommandSyntaxException
+    {
+        BlockPos blockpos = context.getArgument(name, ILocationArgument.class).getBlockPos(context.getSource());
 
-   public static BlockPos getBlockPos(CommandContext<CommandSource> context, String name) throws CommandSyntaxException {
-      return context.getArgument(name, ILocationArgument.class).getBlockPos(context.getSource());
-   }
+        if (!context.getSource().getWorld().isBlockLoaded(blockpos))
+        {
+            throw POS_UNLOADED.create();
+        }
+        else
+        {
+            context.getSource().getWorld();
 
-   public ILocationArgument parse(StringReader p_parse_1_) throws CommandSyntaxException {
-      return (ILocationArgument)(p_parse_1_.canRead() && p_parse_1_.peek() == '^' ? LocalLocationArgument.parse(p_parse_1_) : LocationInput.parseInt(p_parse_1_));
-   }
+            if (!ServerWorld.isValid(blockpos))
+            {
+                throw POS_OUT_OF_WORLD.create();
+            }
+            else
+            {
+                return blockpos;
+            }
+        }
+    }
 
-   public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> p_listSuggestions_1_, SuggestionsBuilder p_listSuggestions_2_) {
-      if (!(p_listSuggestions_1_.getSource() instanceof ISuggestionProvider)) {
-         return Suggestions.empty();
-      } else {
-         String s = p_listSuggestions_2_.getRemaining();
-         Collection<ISuggestionProvider.Coordinates> collection;
-         if (!s.isEmpty() && s.charAt(0) == '^') {
-            collection = Collections.singleton(ISuggestionProvider.Coordinates.DEFAULT_LOCAL);
-         } else {
-            collection = ((ISuggestionProvider)p_listSuggestions_1_.getSource()).func_217294_q();
-         }
+    public static BlockPos getBlockPos(CommandContext<CommandSource> context, String name) throws CommandSyntaxException
+    {
+        return context.getArgument(name, ILocationArgument.class).getBlockPos(context.getSource());
+    }
 
-         return ISuggestionProvider.func_209000_a(s, collection, p_listSuggestions_2_, Commands.predicate(this::parse));
-      }
-   }
+    public ILocationArgument parse(StringReader p_parse_1_) throws CommandSyntaxException
+    {
+        return (ILocationArgument)(p_parse_1_.canRead() && p_parse_1_.peek() == '^' ? LocalLocationArgument.parse(p_parse_1_) : LocationInput.parseInt(p_parse_1_));
+    }
 
-   public Collection<String> getExamples() {
-      return EXAMPLES;
-   }
+    public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> p_listSuggestions_1_, SuggestionsBuilder p_listSuggestions_2_)
+    {
+        if (!(p_listSuggestions_1_.getSource() instanceof ISuggestionProvider))
+        {
+            return Suggestions.empty();
+        }
+        else
+        {
+            String s = p_listSuggestions_2_.getRemaining();
+            Collection<ISuggestionProvider.Coordinates> collection;
+
+            if (!s.isEmpty() && s.charAt(0) == '^')
+            {
+                collection = Collections.singleton(ISuggestionProvider.Coordinates.DEFAULT_LOCAL);
+            }
+            else
+            {
+                collection = ((ISuggestionProvider)p_listSuggestions_1_.getSource()).func_217294_q();
+            }
+
+            return ISuggestionProvider.func_209000_a(s, collection, p_listSuggestions_2_, Commands.predicate(this::parse));
+        }
+    }
+
+    public Collection<String> getExamples()
+    {
+        return EXAMPLES;
+    }
 }

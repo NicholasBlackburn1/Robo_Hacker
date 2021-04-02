@@ -10,41 +10,56 @@ import net.minecraft.potion.Potions;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
-public class ExperienceBottleEntity extends ProjectileItemEntity {
-   public ExperienceBottleEntity(EntityType<? extends ExperienceBottleEntity> p_i50152_1_, World world) {
-      super(p_i50152_1_, world);
-   }
+public class ExperienceBottleEntity extends ProjectileItemEntity
+{
+    public ExperienceBottleEntity(EntityType <? extends ExperienceBottleEntity > p_i50152_1_, World world)
+    {
+        super(p_i50152_1_, world);
+    }
 
-   public ExperienceBottleEntity(World worldIn, LivingEntity throwerIn) {
-      super(EntityType.EXPERIENCE_BOTTLE, throwerIn, worldIn);
-   }
+    public ExperienceBottleEntity(World worldIn, LivingEntity throwerIn)
+    {
+        super(EntityType.EXPERIENCE_BOTTLE, throwerIn, worldIn);
+    }
 
-   public ExperienceBottleEntity(World worldIn, double x, double y, double z) {
-      super(EntityType.EXPERIENCE_BOTTLE, x, y, z, worldIn);
-   }
+    public ExperienceBottleEntity(World worldIn, double x, double y, double z)
+    {
+        super(EntityType.EXPERIENCE_BOTTLE, x, y, z, worldIn);
+    }
 
-   protected Item getDefaultItem() {
-      return Items.EXPERIENCE_BOTTLE;
-   }
+    protected Item getDefaultItem()
+    {
+        return Items.EXPERIENCE_BOTTLE;
+    }
 
-   protected float getGravityVelocity() {
-      return 0.07F;
-   }
+    /**
+     * Gets the amount of gravity to apply to the thrown entity with each tick.
+     */
+    protected float getGravityVelocity()
+    {
+        return 0.07F;
+    }
 
-   protected void onImpact(RayTraceResult result) {
-      super.onImpact(result);
-      if (!this.world.isRemote) {
-         this.world.playEvent(2002, this.getPosition(), PotionUtils.getPotionColor(Potions.WATER));
-         int i = 3 + this.world.rand.nextInt(5) + this.world.rand.nextInt(5);
+    /**
+     * Called when this EntityFireball hits a block or entity.
+     */
+    protected void onImpact(RayTraceResult result)
+    {
+        super.onImpact(result);
 
-         while(i > 0) {
-            int j = ExperienceOrbEntity.getXPSplit(i);
-            i -= j;
-            this.world.addEntity(new ExperienceOrbEntity(this.world, this.getPosX(), this.getPosY(), this.getPosZ(), j));
-         }
+        if (!this.world.isRemote)
+        {
+            this.world.playEvent(2002, this.getPosition(), PotionUtils.getPotionColor(Potions.WATER));
+            int i = 3 + this.world.rand.nextInt(5) + this.world.rand.nextInt(5);
 
-         this.remove();
-      }
+            while (i > 0)
+            {
+                int j = ExperienceOrbEntity.getXPSplit(i);
+                i -= j;
+                this.world.addEntity(new ExperienceOrbEntity(this.world, this.getPosX(), this.getPosY(), this.getPosZ(), j));
+            }
 
-   }
+            this.remove();
+        }
+    }
 }

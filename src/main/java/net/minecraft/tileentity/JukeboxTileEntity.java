@@ -5,40 +5,50 @@ import net.minecraft.inventory.IClearable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 
-public class JukeboxTileEntity extends TileEntity implements IClearable {
-   private ItemStack record = ItemStack.EMPTY;
+public class JukeboxTileEntity extends TileEntity implements IClearable
+{
+    private ItemStack record = ItemStack.EMPTY;
 
-   public JukeboxTileEntity() {
-      super(TileEntityType.JUKEBOX);
-   }
+    public JukeboxTileEntity()
+    {
+        super(TileEntityType.JUKEBOX);
+    }
 
-   public void read(BlockState state, CompoundNBT nbt) {
-      super.read(state, nbt);
-      if (nbt.contains("RecordItem", 10)) {
-         this.setRecord(ItemStack.read(nbt.getCompound("RecordItem")));
-      }
+    public void read(BlockState state, CompoundNBT nbt)
+    {
+        super.read(state, nbt);
 
-   }
+        if (nbt.contains("RecordItem", 10))
+        {
+            this.setRecord(ItemStack.read(nbt.getCompound("RecordItem")));
+        }
+    }
 
-   public CompoundNBT write(CompoundNBT compound) {
-      super.write(compound);
-      if (!this.getRecord().isEmpty()) {
-         compound.put("RecordItem", this.getRecord().write(new CompoundNBT()));
-      }
+    public CompoundNBT write(CompoundNBT compound)
+    {
+        super.write(compound);
 
-      return compound;
-   }
+        if (!this.getRecord().isEmpty())
+        {
+            compound.put("RecordItem", this.getRecord().write(new CompoundNBT()));
+        }
 
-   public ItemStack getRecord() {
-      return this.record;
-   }
+        return compound;
+    }
 
-   public void setRecord(ItemStack p_195535_1_) {
-      this.record = p_195535_1_;
-      this.markDirty();
-   }
+    public ItemStack getRecord()
+    {
+        return this.record;
+    }
 
-   public void clear() {
-      this.setRecord(ItemStack.EMPTY);
-   }
+    public void setRecord(ItemStack p_195535_1_)
+    {
+        this.record = p_195535_1_;
+        this.markDirty();
+    }
+
+    public void clear()
+    {
+        this.setRecord(ItemStack.EMPTY);
+    }
 }

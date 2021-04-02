@@ -23,134 +23,175 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.World;
 
-public class FurnaceMinecartEntity extends AbstractMinecartEntity {
-   private static final DataParameter<Boolean> POWERED = EntityDataManager.createKey(FurnaceMinecartEntity.class, DataSerializers.BOOLEAN);
-   private int fuel;
-   public double pushX;
-   public double pushZ;
-   private static final Ingredient BURNABLE_FUELS = Ingredient.fromItems(Items.COAL, Items.CHARCOAL);
+public class FurnaceMinecartEntity extends AbstractMinecartEntity
+{
+    private static final DataParameter<Boolean> POWERED = EntityDataManager.createKey(FurnaceMinecartEntity.class, DataSerializers.BOOLEAN);
+    private int fuel;
+    public double pushX;
+    public double pushZ;
 
-   public FurnaceMinecartEntity(EntityType<? extends FurnaceMinecartEntity> furnaceCart, World world) {
-      super(furnaceCart, world);
-   }
+    /** The fuel item used to make the minecart move. */
+    private static final Ingredient BURNABLE_FUELS = Ingredient.fromItems(Items.COAL, Items.CHARCOAL);
 
-   public FurnaceMinecartEntity(World worldIn, double x, double y, double z) {
-      super(EntityType.FURNACE_MINECART, worldIn, x, y, z);
-   }
+    public FurnaceMinecartEntity(EntityType <? extends FurnaceMinecartEntity > furnaceCart, World world)
+    {
+        super(furnaceCart, world);
+    }
 
-   public AbstractMinecartEntity.Type getMinecartType() {
-      return AbstractMinecartEntity.Type.FURNACE;
-   }
+    public FurnaceMinecartEntity(World worldIn, double x, double y, double z)
+    {
+        super(EntityType.FURNACE_MINECART, worldIn, x, y, z);
+    }
 
-   protected void registerData() {
-      super.registerData();
-      this.dataManager.register(POWERED, false);
-   }
+    public AbstractMinecartEntity.Type getMinecartType()
+    {
+        return AbstractMinecartEntity.Type.FURNACE;
+    }
 
-   public void tick() {
-      super.tick();
-      if (!this.world.isRemote()) {
-         if (this.fuel > 0) {
-            --this.fuel;
-         }
+    protected void registerData()
+    {
+        super.registerData();
+        this.dataManager.register(POWERED, false);
+    }
 
-         if (this.fuel <= 0) {
-            this.pushX = 0.0D;
-            this.pushZ = 0.0D;
-         }
+    /**
+     * Called to update the entity's position/logic.
+     */
+    public void tick()
+    {
+        super.tick();
 
-         this.setMinecartPowered(this.fuel > 0);
-      }
+        if (!this.world.isRemote())
+        {
+            if (this.fuel > 0)
+            {
+                --this.fuel;
+            }
 
-      if (this.isMinecartPowered() && this.rand.nextInt(4) == 0) {
-         this.world.addParticle(ParticleTypes.LARGE_SMOKE, this.getPosX(), this.getPosY() + 0.8D, this.getPosZ(), 0.0D, 0.0D, 0.0D);
-      }
+            if (this.fuel <= 0)
+            {
+                this.pushX = 0.0D;
+                this.pushZ = 0.0D;
+            }
 
-   }
+            this.setMinecartPowered(this.fuel > 0);
+        }
 
-   protected double getMaximumSpeed() {
-      return 0.2D;
-   }
+        if (this.isMinecartPowered() && this.rand.nextInt(4) == 0)
+        {
+            this.world.addParticle(ParticleTypes.LARGE_SMOKE, this.getPosX(), this.getPosY() + 0.8D, this.getPosZ(), 0.0D, 0.0D, 0.0D);
+        }
+    }
 
-   public void killMinecart(DamageSource source) {
-      super.killMinecart(source);
-      if (!source.isExplosion() && this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS)) {
-         this.entityDropItem(Blocks.FURNACE);
-      }
+    /**
+     * Get's the maximum speed for a minecart
+     */
+    protected double getMaximumSpeed()
+    {
+        return 0.2D;
+    }
 
-   }
+    public void killMinecart(DamageSource source)
+    {
+        super.killMinecart(source);
 
-   protected void moveAlongTrack(BlockPos pos, BlockState state) {
-      double d0 = 1.0E-4D;
-      double d1 = 0.001D;
-      super.moveAlongTrack(pos, state);
-      Vector3d vector3d = this.getMotion();
-      double d2 = horizontalMag(vector3d);
-      double d3 = this.pushX * this.pushX + this.pushZ * this.pushZ;
-      if (d3 > 1.0E-4D && d2 > 0.001D) {
-         double d4 = (double)MathHelper.sqrt(d2);
-         double d5 = (double)MathHelper.sqrt(d3);
-         this.pushX = vector3d.x / d4 * d5;
-         this.pushZ = vector3d.z / d4 * d5;
-      }
+        if (!source.isExplosion() && this.world.getGameRules().getBoolean(GameRules.DO_ENTITY_DROPS))
+        {
+            this.entityDropItem(Blocks.FURNACE);
+        }
+    }
 
-   }
+    protected void moveAlongTrack(BlockPos pos, BlockState state)
+    {
+        double d0 = 1.0E-4D;
+        double d1 = 0.001D;
+        super.moveAlongTrack(pos, state);
+        Vector3d vector3d = this.getMotion();
+        double d2 = horizontalMag(vector3d);
+        double d3 = this.pushX * this.pushX + this.pushZ * this.pushZ;
 
-   protected void applyDrag() {
-      double d0 = this.pushX * this.pushX + this.pushZ * this.pushZ;
-      if (d0 > 1.0E-7D) {
-         d0 = (double)MathHelper.sqrt(d0);
-         this.pushX /= d0;
-         this.pushZ /= d0;
-         this.setMotion(this.getMotion().mul(0.8D, 0.0D, 0.8D).add(this.pushX, 0.0D, this.pushZ));
-      } else {
-         this.setMotion(this.getMotion().mul(0.98D, 0.0D, 0.98D));
-      }
+        if (d3 > 1.0E-4D && d2 > 0.001D)
+        {
+            double d4 = (double)MathHelper.sqrt(d2);
+            double d5 = (double)MathHelper.sqrt(d3);
+            this.pushX = vector3d.x / d4 * d5;
+            this.pushZ = vector3d.z / d4 * d5;
+        }
+    }
 
-      super.applyDrag();
-   }
+    protected void applyDrag()
+    {
+        double d0 = this.pushX * this.pushX + this.pushZ * this.pushZ;
 
-   public ActionResultType processInitialInteract(PlayerEntity player, Hand hand) {
-      ItemStack itemstack = player.getHeldItem(hand);
-      if (BURNABLE_FUELS.test(itemstack) && this.fuel + 3600 <= 32000) {
-         if (!player.abilities.isCreativeMode) {
-            itemstack.shrink(1);
-         }
+        if (d0 > 1.0E-7D)
+        {
+            d0 = (double)MathHelper.sqrt(d0);
+            this.pushX /= d0;
+            this.pushZ /= d0;
+            this.setMotion(this.getMotion().mul(0.8D, 0.0D, 0.8D).add(this.pushX, 0.0D, this.pushZ));
+        }
+        else
+        {
+            this.setMotion(this.getMotion().mul(0.98D, 0.0D, 0.98D));
+        }
 
-         this.fuel += 3600;
-      }
+        super.applyDrag();
+    }
 
-      if (this.fuel > 0) {
-         this.pushX = this.getPosX() - player.getPosX();
-         this.pushZ = this.getPosZ() - player.getPosZ();
-      }
+    public ActionResultType processInitialInteract(PlayerEntity player, Hand hand)
+    {
+        ItemStack itemstack = player.getHeldItem(hand);
 
-      return ActionResultType.func_233537_a_(this.world.isRemote);
-   }
+        if (BURNABLE_FUELS.test(itemstack) && this.fuel + 3600 <= 32000)
+        {
+            if (!player.abilities.isCreativeMode)
+            {
+                itemstack.shrink(1);
+            }
 
-   protected void writeAdditional(CompoundNBT compound) {
-      super.writeAdditional(compound);
-      compound.putDouble("PushX", this.pushX);
-      compound.putDouble("PushZ", this.pushZ);
-      compound.putShort("Fuel", (short)this.fuel);
-   }
+            this.fuel += 3600;
+        }
 
-   protected void readAdditional(CompoundNBT compound) {
-      super.readAdditional(compound);
-      this.pushX = compound.getDouble("PushX");
-      this.pushZ = compound.getDouble("PushZ");
-      this.fuel = compound.getShort("Fuel");
-   }
+        if (this.fuel > 0)
+        {
+            this.pushX = this.getPosX() - player.getPosX();
+            this.pushZ = this.getPosZ() - player.getPosZ();
+        }
 
-   protected boolean isMinecartPowered() {
-      return this.dataManager.get(POWERED);
-   }
+        return ActionResultType.func_233537_a_(this.world.isRemote);
+    }
 
-   protected void setMinecartPowered(boolean powered) {
-      this.dataManager.set(POWERED, powered);
-   }
+    protected void writeAdditional(CompoundNBT compound)
+    {
+        super.writeAdditional(compound);
+        compound.putDouble("PushX", this.pushX);
+        compound.putDouble("PushZ", this.pushZ);
+        compound.putShort("Fuel", (short)this.fuel);
+    }
 
-   public BlockState getDefaultDisplayTile() {
-      return Blocks.FURNACE.getDefaultState().with(FurnaceBlock.FACING, Direction.NORTH).with(FurnaceBlock.LIT, Boolean.valueOf(this.isMinecartPowered()));
-   }
+    /**
+     * (abstract) Protected helper method to read subclass entity data from NBT.
+     */
+    protected void readAdditional(CompoundNBT compound)
+    {
+        super.readAdditional(compound);
+        this.pushX = compound.getDouble("PushX");
+        this.pushZ = compound.getDouble("PushZ");
+        this.fuel = compound.getShort("Fuel");
+    }
+
+    protected boolean isMinecartPowered()
+    {
+        return this.dataManager.get(POWERED);
+    }
+
+    protected void setMinecartPowered(boolean powered)
+    {
+        this.dataManager.set(POWERED, powered);
+    }
+
+    public BlockState getDefaultDisplayTile()
+    {
+        return Blocks.FURNACE.getDefaultState().with(FurnaceBlock.FACING, Direction.NORTH).with(FurnaceBlock.LIT, Boolean.valueOf(this.isMinecartPowered()));
+    }
 }

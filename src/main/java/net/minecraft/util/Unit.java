@@ -1,5 +1,6 @@
 package net.minecraft.util;
 
-public enum Unit {
-   INSTANCE;
+public enum Unit
+{
+    INSTANCE;
 }

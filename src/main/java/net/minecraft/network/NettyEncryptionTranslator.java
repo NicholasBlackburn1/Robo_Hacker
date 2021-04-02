@@ -5,41 +5,50 @@ import io.netty.channel.ChannelHandlerContext;
 import javax.crypto.Cipher;
 import javax.crypto.ShortBufferException;
 
-public class NettyEncryptionTranslator {
-   private final Cipher cipher;
-   private byte[] inputBuffer = new byte[0];
-   private byte[] outputBuffer = new byte[0];
+public class NettyEncryptionTranslator
+{
+    private final Cipher cipher;
+    private byte[] inputBuffer = new byte[0];
+    private byte[] outputBuffer = new byte[0];
 
-   protected NettyEncryptionTranslator(Cipher cipherIn) {
-      this.cipher = cipherIn;
-   }
+    protected NettyEncryptionTranslator(Cipher cipherIn)
+    {
+        this.cipher = cipherIn;
+    }
 
-   private byte[] bufToBytes(ByteBuf buf) {
-      int i = buf.readableBytes();
-      if (this.inputBuffer.length < i) {
-         this.inputBuffer = new byte[i];
-      }
+    private byte[] bufToBytes(ByteBuf buf)
+    {
+        int i = buf.readableBytes();
 
-      buf.readBytes(this.inputBuffer, 0, i);
-      return this.inputBuffer;
-   }
+        if (this.inputBuffer.length < i)
+        {
+            this.inputBuffer = new byte[i];
+        }
 
-   protected ByteBuf decipher(ChannelHandlerContext ctx, ByteBuf buffer) throws ShortBufferException {
-      int i = buffer.readableBytes();
-      byte[] abyte = this.bufToBytes(buffer);
-      ByteBuf bytebuf = ctx.alloc().heapBuffer(this.cipher.getOutputSize(i));
-      bytebuf.writerIndex(this.cipher.update(abyte, 0, i, bytebuf.array(), bytebuf.arrayOffset()));
-      return bytebuf;
-   }
+        buf.readBytes(this.inputBuffer, 0, i);
+        return this.inputBuffer;
+    }
 
-   protected void cipher(ByteBuf in, ByteBuf out) throws ShortBufferException {
-      int i = in.readableBytes();
-      byte[] abyte = this.bufToBytes(in);
-      int j = this.cipher.getOutputSize(i);
-      if (this.outputBuffer.length < j) {
-         this.outputBuffer = new byte[j];
-      }
+    protected ByteBuf decipher(ChannelHandlerContext ctx, ByteBuf buffer) throws ShortBufferException
+    {
+        int i = buffer.readableBytes();
+        byte[] abyte = this.bufToBytes(buffer);
+        ByteBuf bytebuf = ctx.alloc().heapBuffer(this.cipher.getOutputSize(i));
+        bytebuf.writerIndex(this.cipher.update(abyte, 0, i, bytebuf.array(), bytebuf.arrayOffset()));
+        return bytebuf;
+    }
 
-      out.writeBytes(this.outputBuffer, 0, this.cipher.update(abyte, 0, i, this.outputBuffer));
-   }
+    protected void cipher(ByteBuf in, ByteBuf out) throws ShortBufferException
+    {
+        int i = in.readableBytes();
+        byte[] abyte = this.bufToBytes(in);
+        int j = this.cipher.getOutputSize(i);
+
+        if (this.outputBuffer.length < j)
+        {
+            this.outputBuffer = new byte[j];
+        }
+
+        out.writeBytes(this.outputBuffer, 0, this.cipher.update(abyte, 0, i, this.outputBuffer));
+    }
 }

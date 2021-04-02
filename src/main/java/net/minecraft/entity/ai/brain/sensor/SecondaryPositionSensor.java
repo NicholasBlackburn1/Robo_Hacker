@@ -13,38 +13,50 @@ import net.minecraft.util.math.GlobalPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-public class SecondaryPositionSensor extends Sensor<VillagerEntity> {
-   public SecondaryPositionSensor() {
-      super(40);
-   }
+public class SecondaryPositionSensor extends Sensor<VillagerEntity>
+{
+    public SecondaryPositionSensor()
+    {
+        super(40);
+    }
 
-   protected void update(ServerWorld worldIn, VillagerEntity entityIn) {
-      RegistryKey<World> registrykey = worldIn.getDimensionKey();
-      BlockPos blockpos = entityIn.getPosition();
-      List<GlobalPos> list = Lists.newArrayList();
-      int i = 4;
+    protected void update(ServerWorld worldIn, VillagerEntity entityIn)
+    {
+        RegistryKey<World> registrykey = worldIn.getDimensionKey();
+        BlockPos blockpos = entityIn.getPosition();
+        List<GlobalPos> list = Lists.newArrayList();
+        int i = 4;
 
-      for(int j = -4; j <= 4; ++j) {
-         for(int k = -2; k <= 2; ++k) {
-            for(int l = -4; l <= 4; ++l) {
-               BlockPos blockpos1 = blockpos.add(j, k, l);
-               if (entityIn.getVillagerData().getProfession().getRelatedWorldBlocks().contains(worldIn.getBlockState(blockpos1).getBlock())) {
-                  list.add(GlobalPos.getPosition(registrykey, blockpos1));
-               }
+        for (int j = -4; j <= 4; ++j)
+        {
+            for (int k = -2; k <= 2; ++k)
+            {
+                for (int l = -4; l <= 4; ++l)
+                {
+                    BlockPos blockpos1 = blockpos.add(j, k, l);
+
+                    if (entityIn.getVillagerData().getProfession().getRelatedWorldBlocks().contains(worldIn.getBlockState(blockpos1).getBlock()))
+                    {
+                        list.add(GlobalPos.getPosition(registrykey, blockpos1));
+                    }
+                }
             }
-         }
-      }
+        }
 
-      Brain<?> brain = entityIn.getBrain();
-      if (!list.isEmpty()) {
-         brain.setMemory(MemoryModuleType.SECONDARY_JOB_SITE, list);
-      } else {
-         brain.removeMemory(MemoryModuleType.SECONDARY_JOB_SITE);
-      }
+        Brain<?> brain = entityIn.getBrain();
 
-   }
+        if (!list.isEmpty())
+        {
+            brain.setMemory(MemoryModuleType.SECONDARY_JOB_SITE, list);
+        }
+        else
+        {
+            brain.removeMemory(MemoryModuleType.SECONDARY_JOB_SITE);
+        }
+    }
 
-   public Set<MemoryModuleType<?>> getUsedMemories() {
-      return ImmutableSet.of(MemoryModuleType.SECONDARY_JOB_SITE);
-   }
+    public Set < MemoryModuleType<? >> getUsedMemories()
+    {
+        return ImmutableSet.of(MemoryModuleType.SECONDARY_JOB_SITE);
+    }
 }

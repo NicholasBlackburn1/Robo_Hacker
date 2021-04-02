@@ -1,6 +1,7 @@
 package net.minecraft.network;
 
-public enum PacketDirection {
-   SERVERBOUND,
-   CLIENTBOUND;
+public enum PacketDirection
+{
+    SERVERBOUND,
+    CLIENTBOUND;
 }

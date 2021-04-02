@@ -12,47 +12,60 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-public class WeightedPressurePlateBlock extends AbstractPressurePlateBlock {
-   public static final IntegerProperty POWER = BlockStateProperties.POWER_0_15;
-   private final int maxWeight;
+public class WeightedPressurePlateBlock extends AbstractPressurePlateBlock
+{
+    public static final IntegerProperty POWER = BlockStateProperties.POWER_0_15;
+    private final int maxWeight;
 
-   protected WeightedPressurePlateBlock(int maxWeight, AbstractBlock.Properties properties) {
-      super(properties);
-      this.setDefaultState(this.stateContainer.getBaseState().with(POWER, Integer.valueOf(0)));
-      this.maxWeight = maxWeight;
-   }
+    protected WeightedPressurePlateBlock(int maxWeight, AbstractBlock.Properties properties)
+    {
+        super(properties);
+        this.setDefaultState(this.stateContainer.getBaseState().with(POWER, Integer.valueOf(0)));
+        this.maxWeight = maxWeight;
+    }
 
-   protected int computeRedstoneStrength(World worldIn, BlockPos pos) {
-      int i = Math.min(worldIn.getEntitiesWithinAABB(Entity.class, PRESSURE_AABB.offset(pos)).size(), this.maxWeight);
-      if (i > 0) {
-         float f = (float)Math.min(this.maxWeight, i) / (float)this.maxWeight;
-         return MathHelper.ceil(f * 15.0F);
-      } else {
-         return 0;
-      }
-   }
+    protected int computeRedstoneStrength(World worldIn, BlockPos pos)
+    {
+        int i = Math.min(worldIn.getEntitiesWithinAABB(Entity.class, PRESSURE_AABB.offset(pos)).size(), this.maxWeight);
 
-   protected void playClickOnSound(IWorld worldIn, BlockPos pos) {
-      worldIn.playSound((PlayerEntity)null, pos, SoundEvents.BLOCK_METAL_PRESSURE_PLATE_CLICK_ON, SoundCategory.BLOCKS, 0.3F, 0.90000004F);
-   }
+        if (i > 0)
+        {
+            float f = (float)Math.min(this.maxWeight, i) / (float)this.maxWeight;
+            return MathHelper.ceil(f * 15.0F);
+        }
+        else
+        {
+            return 0;
+        }
+    }
 
-   protected void playClickOffSound(IWorld worldIn, BlockPos pos) {
-      worldIn.playSound((PlayerEntity)null, pos, SoundEvents.BLOCK_METAL_PRESSURE_PLATE_CLICK_OFF, SoundCategory.BLOCKS, 0.3F, 0.75F);
-   }
+    protected void playClickOnSound(IWorld worldIn, BlockPos pos)
+    {
+        worldIn.playSound((PlayerEntity)null, pos, SoundEvents.BLOCK_METAL_PRESSURE_PLATE_CLICK_ON, SoundCategory.BLOCKS, 0.3F, 0.90000004F);
+    }
 
-   protected int getRedstoneStrength(BlockState state) {
-      return state.get(POWER);
-   }
+    protected void playClickOffSound(IWorld worldIn, BlockPos pos)
+    {
+        worldIn.playSound((PlayerEntity)null, pos, SoundEvents.BLOCK_METAL_PRESSURE_PLATE_CLICK_OFF, SoundCategory.BLOCKS, 0.3F, 0.75F);
+    }
 
-   protected BlockState setRedstoneStrength(BlockState state, int strength) {
-      return state.with(POWER, Integer.valueOf(strength));
-   }
+    protected int getRedstoneStrength(BlockState state)
+    {
+        return state.get(POWER);
+    }
 
-   protected int getPoweredDuration() {
-      return 10;
-   }
+    protected BlockState setRedstoneStrength(BlockState state, int strength)
+    {
+        return state.with(POWER, Integer.valueOf(strength));
+    }
 
-   protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-      builder.add(POWER);
-   }
+    protected int getPoweredDuration()
+    {
+        return 10;
+    }
+
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    {
+        builder.add(POWER);
+    }
 }

@@ -4,33 +4,46 @@ import java.io.IOException;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.IServerPlayNetHandler;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class CHeldItemChangePacket implements IPacket<IServerPlayNetHandler> {
-   private int slotId;
+public class CHeldItemChangePacket implements IPacket<IServerPlayNetHandler>
+{
+    private int slotId;
 
-   public CHeldItemChangePacket() {
-   }
+    public CHeldItemChangePacket()
+    {
+    }
 
-   @OnlyIn(Dist.CLIENT)
-   public CHeldItemChangePacket(int slotIdIn) {
-      this.slotId = slotIdIn;
-   }
+    public CHeldItemChangePacket(int slotIdIn)
+    {
+        this.slotId = slotIdIn;
+    }
 
-   public void readPacketData(PacketBuffer buf) throws IOException {
-      this.slotId = buf.readShort();
-   }
+    /**
+     * Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(PacketBuffer buf) throws IOException
+    {
+        this.slotId = buf.readShort();
+    }
 
-   public void writePacketData(PacketBuffer buf) throws IOException {
-      buf.writeShort(this.slotId);
-   }
+    /**
+     * Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(PacketBuffer buf) throws IOException
+    {
+        buf.writeShort(this.slotId);
+    }
 
-   public void processPacket(IServerPlayNetHandler handler) {
-      handler.processHeldItemChange(this);
-   }
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(IServerPlayNetHandler handler)
+    {
+        handler.processHeldItemChange(this);
+    }
 
-   public int getSlotId() {
-      return this.slotId;
-   }
+    public int getSlotId()
+    {
+        return this.slotId;
+    }
 }

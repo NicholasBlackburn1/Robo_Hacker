@@ -14,198 +14,258 @@ import net.minecraft.network.play.server.STeamsPacket;
 import net.minecraft.network.play.server.SUpdateScorePacket;
 import net.minecraft.server.MinecraftServer;
 
-public class ServerScoreboard extends Scoreboard {
-   private final MinecraftServer server;
-   private final Set<ScoreObjective> addedObjectives = Sets.newHashSet();
-   private Runnable[] dirtyRunnables = new Runnable[0];
+public class ServerScoreboard extends Scoreboard
+{
+    private final MinecraftServer server;
+    private final Set<ScoreObjective> addedObjectives = Sets.newHashSet();
+    private Runnable[] dirtyRunnables = new Runnable[0];
 
-   public ServerScoreboard(MinecraftServer mcServer) {
-      this.server = mcServer;
-   }
+    public ServerScoreboard(MinecraftServer mcServer)
+    {
+        this.server = mcServer;
+    }
 
-   public void onScoreChanged(Score scoreIn) {
-      super.onScoreChanged(scoreIn);
-      if (this.addedObjectives.contains(scoreIn.getObjective())) {
-         this.server.getPlayerList().sendPacketToAllPlayers(new SUpdateScorePacket(ServerScoreboard.Action.CHANGE, scoreIn.getObjective().getName(), scoreIn.getPlayerName(), scoreIn.getScorePoints()));
-      }
+    public void onScoreChanged(Score scoreIn)
+    {
+        super.onScoreChanged(scoreIn);
 
-      this.markSaveDataDirty();
-   }
+        if (this.addedObjectives.contains(scoreIn.getObjective()))
+        {
+            this.server.getPlayerList().sendPacketToAllPlayers(new SUpdateScorePacket(ServerScoreboard.Action.CHANGE, scoreIn.getObjective().getName(), scoreIn.getPlayerName(), scoreIn.getScorePoints()));
+        }
 
-   public void onPlayerRemoved(String scoreName) {
-      super.onPlayerRemoved(scoreName);
-      this.server.getPlayerList().sendPacketToAllPlayers(new SUpdateScorePacket(ServerScoreboard.Action.REMOVE, (String)null, scoreName, 0));
-      this.markSaveDataDirty();
-   }
+        this.markSaveDataDirty();
+    }
 
-   public void onPlayerScoreRemoved(String scoreName, ScoreObjective objective) {
-      super.onPlayerScoreRemoved(scoreName, objective);
-      if (this.addedObjectives.contains(objective)) {
-         this.server.getPlayerList().sendPacketToAllPlayers(new SUpdateScorePacket(ServerScoreboard.Action.REMOVE, objective.getName(), scoreName, 0));
-      }
+    public void onPlayerRemoved(String scoreName)
+    {
+        super.onPlayerRemoved(scoreName);
+        this.server.getPlayerList().sendPacketToAllPlayers(new SUpdateScorePacket(ServerScoreboard.Action.REMOVE, (String)null, scoreName, 0));
+        this.markSaveDataDirty();
+    }
 
-      this.markSaveDataDirty();
-   }
+    public void onPlayerScoreRemoved(String scoreName, ScoreObjective objective)
+    {
+        super.onPlayerScoreRemoved(scoreName, objective);
 
-   public void setObjectiveInDisplaySlot(int objectiveSlot, @Nullable ScoreObjective objective) {
-      ScoreObjective scoreobjective = this.getObjectiveInDisplaySlot(objectiveSlot);
-      super.setObjectiveInDisplaySlot(objectiveSlot, objective);
-      if (scoreobjective != objective && scoreobjective != null) {
-         if (this.getObjectiveDisplaySlotCount(scoreobjective) > 0) {
-            this.server.getPlayerList().sendPacketToAllPlayers(new SDisplayObjectivePacket(objectiveSlot, objective));
-         } else {
-            this.sendDisplaySlotRemovalPackets(scoreobjective);
-         }
-      }
+        if (this.addedObjectives.contains(objective))
+        {
+            this.server.getPlayerList().sendPacketToAllPlayers(new SUpdateScorePacket(ServerScoreboard.Action.REMOVE, objective.getName(), scoreName, 0));
+        }
 
-      if (objective != null) {
-         if (this.addedObjectives.contains(objective)) {
-            this.server.getPlayerList().sendPacketToAllPlayers(new SDisplayObjectivePacket(objectiveSlot, objective));
-         } else {
-            this.addObjective(objective);
-         }
-      }
+        this.markSaveDataDirty();
+    }
 
-      this.markSaveDataDirty();
-   }
+    /**
+     * 0 is tab menu, 1 is sidebar, 2 is below name
+     */
+    public void setObjectiveInDisplaySlot(int objectiveSlot, @Nullable ScoreObjective objective)
+    {
+        ScoreObjective scoreobjective = this.getObjectiveInDisplaySlot(objectiveSlot);
+        super.setObjectiveInDisplaySlot(objectiveSlot, objective);
 
-   public boolean addPlayerToTeam(String p_197901_1_, ScorePlayerTeam p_197901_2_) {
-      if (super.addPlayerToTeam(p_197901_1_, p_197901_2_)) {
-         this.server.getPlayerList().sendPacketToAllPlayers(new STeamsPacket(p_197901_2_, Arrays.asList(p_197901_1_), 3));
-         this.markSaveDataDirty();
-         return true;
-      } else {
-         return false;
-      }
-   }
+        if (scoreobjective != objective && scoreobjective != null)
+        {
+            if (this.getObjectiveDisplaySlotCount(scoreobjective) > 0)
+            {
+                this.server.getPlayerList().sendPacketToAllPlayers(new SDisplayObjectivePacket(objectiveSlot, objective));
+            }
+            else
+            {
+                this.sendDisplaySlotRemovalPackets(scoreobjective);
+            }
+        }
 
-   public void removePlayerFromTeam(String username, ScorePlayerTeam playerTeam) {
-      super.removePlayerFromTeam(username, playerTeam);
-      this.server.getPlayerList().sendPacketToAllPlayers(new STeamsPacket(playerTeam, Arrays.asList(username), 4));
-      this.markSaveDataDirty();
-   }
+        if (objective != null)
+        {
+            if (this.addedObjectives.contains(objective))
+            {
+                this.server.getPlayerList().sendPacketToAllPlayers(new SDisplayObjectivePacket(objectiveSlot, objective));
+            }
+            else
+            {
+                this.addObjective(objective);
+            }
+        }
 
-   public void onObjectiveAdded(ScoreObjective objective) {
-      super.onObjectiveAdded(objective);
-      this.markSaveDataDirty();
-   }
+        this.markSaveDataDirty();
+    }
 
-   public void onObjectiveChanged(ScoreObjective objective) {
-      super.onObjectiveChanged(objective);
-      if (this.addedObjectives.contains(objective)) {
-         this.server.getPlayerList().sendPacketToAllPlayers(new SScoreboardObjectivePacket(objective, 2));
-      }
+    public boolean addPlayerToTeam(String p_197901_1_, ScorePlayerTeam p_197901_2_)
+    {
+        if (super.addPlayerToTeam(p_197901_1_, p_197901_2_))
+        {
+            this.server.getPlayerList().sendPacketToAllPlayers(new STeamsPacket(p_197901_2_, Arrays.asList(p_197901_1_), 3));
+            this.markSaveDataDirty();
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
-      this.markSaveDataDirty();
-   }
+    /**
+     * Removes the given username from the given ScorePlayerTeam. If the player is not on the team then an
+     * IllegalStateException is thrown.
+     */
+    public void removePlayerFromTeam(String username, ScorePlayerTeam playerTeam)
+    {
+        super.removePlayerFromTeam(username, playerTeam);
+        this.server.getPlayerList().sendPacketToAllPlayers(new STeamsPacket(playerTeam, Arrays.asList(username), 4));
+        this.markSaveDataDirty();
+    }
 
-   public void onObjectiveRemoved(ScoreObjective objective) {
-      super.onObjectiveRemoved(objective);
-      if (this.addedObjectives.contains(objective)) {
-         this.sendDisplaySlotRemovalPackets(objective);
-      }
+    public void onObjectiveAdded(ScoreObjective objective)
+    {
+        super.onObjectiveAdded(objective);
+        this.markSaveDataDirty();
+    }
 
-      this.markSaveDataDirty();
-   }
+    public void onObjectiveChanged(ScoreObjective objective)
+    {
+        super.onObjectiveChanged(objective);
 
-   public void onTeamAdded(ScorePlayerTeam playerTeam) {
-      super.onTeamAdded(playerTeam);
-      this.server.getPlayerList().sendPacketToAllPlayers(new STeamsPacket(playerTeam, 0));
-      this.markSaveDataDirty();
-   }
+        if (this.addedObjectives.contains(objective))
+        {
+            this.server.getPlayerList().sendPacketToAllPlayers(new SScoreboardObjectivePacket(objective, 2));
+        }
 
-   public void onTeamChanged(ScorePlayerTeam playerTeam) {
-      super.onTeamChanged(playerTeam);
-      this.server.getPlayerList().sendPacketToAllPlayers(new STeamsPacket(playerTeam, 2));
-      this.markSaveDataDirty();
-   }
+        this.markSaveDataDirty();
+    }
 
-   public void onTeamRemoved(ScorePlayerTeam playerTeam) {
-      super.onTeamRemoved(playerTeam);
-      this.server.getPlayerList().sendPacketToAllPlayers(new STeamsPacket(playerTeam, 1));
-      this.markSaveDataDirty();
-   }
+    public void onObjectiveRemoved(ScoreObjective objective)
+    {
+        super.onObjectiveRemoved(objective);
 
-   public void addDirtyRunnable(Runnable runnable) {
-      this.dirtyRunnables = Arrays.copyOf(this.dirtyRunnables, this.dirtyRunnables.length + 1);
-      this.dirtyRunnables[this.dirtyRunnables.length - 1] = runnable;
-   }
+        if (this.addedObjectives.contains(objective))
+        {
+            this.sendDisplaySlotRemovalPackets(objective);
+        }
 
-   protected void markSaveDataDirty() {
-      for(Runnable runnable : this.dirtyRunnables) {
-         runnable.run();
-      }
+        this.markSaveDataDirty();
+    }
 
-   }
+    public void onTeamAdded(ScorePlayerTeam playerTeam)
+    {
+        super.onTeamAdded(playerTeam);
+        this.server.getPlayerList().sendPacketToAllPlayers(new STeamsPacket(playerTeam, 0));
+        this.markSaveDataDirty();
+    }
 
-   public List<IPacket<?>> getCreatePackets(ScoreObjective objective) {
-      List<IPacket<?>> list = Lists.newArrayList();
-      list.add(new SScoreboardObjectivePacket(objective, 0));
+    public void onTeamChanged(ScorePlayerTeam playerTeam)
+    {
+        super.onTeamChanged(playerTeam);
+        this.server.getPlayerList().sendPacketToAllPlayers(new STeamsPacket(playerTeam, 2));
+        this.markSaveDataDirty();
+    }
 
-      for(int i = 0; i < 19; ++i) {
-         if (this.getObjectiveInDisplaySlot(i) == objective) {
-            list.add(new SDisplayObjectivePacket(i, objective));
-         }
-      }
+    public void onTeamRemoved(ScorePlayerTeam playerTeam)
+    {
+        super.onTeamRemoved(playerTeam);
+        this.server.getPlayerList().sendPacketToAllPlayers(new STeamsPacket(playerTeam, 1));
+        this.markSaveDataDirty();
+    }
 
-      for(Score score : this.getSortedScores(objective)) {
-         list.add(new SUpdateScorePacket(ServerScoreboard.Action.CHANGE, score.getObjective().getName(), score.getPlayerName(), score.getScorePoints()));
-      }
+    public void addDirtyRunnable(Runnable runnable)
+    {
+        this.dirtyRunnables = Arrays.copyOf(this.dirtyRunnables, this.dirtyRunnables.length + 1);
+        this.dirtyRunnables[this.dirtyRunnables.length - 1] = runnable;
+    }
 
-      return list;
-   }
+    protected void markSaveDataDirty()
+    {
+        for (Runnable runnable : this.dirtyRunnables)
+        {
+            runnable.run();
+        }
+    }
 
-   public void addObjective(ScoreObjective objective) {
-      List<IPacket<?>> list = this.getCreatePackets(objective);
+    public List < IPacket<? >> getCreatePackets(ScoreObjective objective)
+    {
+        List < IPacket<? >> list = Lists.newArrayList();
+        list.add(new SScoreboardObjectivePacket(objective, 0));
 
-      for(ServerPlayerEntity serverplayerentity : this.server.getPlayerList().getPlayers()) {
-         for(IPacket<?> ipacket : list) {
-            serverplayerentity.connection.sendPacket(ipacket);
-         }
-      }
+        for (int i = 0; i < 19; ++i)
+        {
+            if (this.getObjectiveInDisplaySlot(i) == objective)
+            {
+                list.add(new SDisplayObjectivePacket(i, objective));
+            }
+        }
 
-      this.addedObjectives.add(objective);
-   }
+        for (Score score : this.getSortedScores(objective))
+        {
+            list.add(new SUpdateScorePacket(ServerScoreboard.Action.CHANGE, score.getObjective().getName(), score.getPlayerName(), score.getScorePoints()));
+        }
 
-   public List<IPacket<?>> getDestroyPackets(ScoreObjective p_96548_1_) {
-      List<IPacket<?>> list = Lists.newArrayList();
-      list.add(new SScoreboardObjectivePacket(p_96548_1_, 1));
+        return list;
+    }
 
-      for(int i = 0; i < 19; ++i) {
-         if (this.getObjectiveInDisplaySlot(i) == p_96548_1_) {
-            list.add(new SDisplayObjectivePacket(i, p_96548_1_));
-         }
-      }
+    public void addObjective(ScoreObjective objective)
+    {
+        List < IPacket<? >> list = this.getCreatePackets(objective);
 
-      return list;
-   }
+        for (ServerPlayerEntity serverplayerentity : this.server.getPlayerList().getPlayers())
+        {
+            for (IPacket<?> ipacket : list)
+            {
+                serverplayerentity.connection.sendPacket(ipacket);
+            }
+        }
 
-   public void sendDisplaySlotRemovalPackets(ScoreObjective p_96546_1_) {
-      List<IPacket<?>> list = this.getDestroyPackets(p_96546_1_);
+        this.addedObjectives.add(objective);
+    }
 
-      for(ServerPlayerEntity serverplayerentity : this.server.getPlayerList().getPlayers()) {
-         for(IPacket<?> ipacket : list) {
-            serverplayerentity.connection.sendPacket(ipacket);
-         }
-      }
+    public List < IPacket<? >> getDestroyPackets(ScoreObjective p_96548_1_)
+    {
+        List < IPacket<? >> list = Lists.newArrayList();
+        list.add(new SScoreboardObjectivePacket(p_96548_1_, 1));
 
-      this.addedObjectives.remove(p_96546_1_);
-   }
+        for (int i = 0; i < 19; ++i)
+        {
+            if (this.getObjectiveInDisplaySlot(i) == p_96548_1_)
+            {
+                list.add(new SDisplayObjectivePacket(i, p_96548_1_));
+            }
+        }
 
-   public int getObjectiveDisplaySlotCount(ScoreObjective p_96552_1_) {
-      int i = 0;
+        return list;
+    }
 
-      for(int j = 0; j < 19; ++j) {
-         if (this.getObjectiveInDisplaySlot(j) == p_96552_1_) {
-            ++i;
-         }
-      }
+    public void sendDisplaySlotRemovalPackets(ScoreObjective p_96546_1_)
+    {
+        List < IPacket<? >> list = this.getDestroyPackets(p_96546_1_);
 
-      return i;
-   }
+        for (ServerPlayerEntity serverplayerentity : this.server.getPlayerList().getPlayers())
+        {
+            for (IPacket<?> ipacket : list)
+            {
+                serverplayerentity.connection.sendPacket(ipacket);
+            }
+        }
 
-   public static enum Action {
-      CHANGE,
-      REMOVE;
-   }
+        this.addedObjectives.remove(p_96546_1_);
+    }
+
+    public int getObjectiveDisplaySlotCount(ScoreObjective p_96552_1_)
+    {
+        int i = 0;
+
+        for (int j = 0; j < 19; ++j)
+        {
+            if (this.getObjectiveInDisplaySlot(j) == p_96552_1_)
+            {
+                ++i;
+            }
+        }
+
+        return i;
+    }
+
+    public static enum Action
+    {
+        CHANGE,
+        REMOVE;
+    }
 }

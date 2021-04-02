@@ -9,85 +9,111 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class SmithingRecipe implements IRecipe<IInventory> {
-   private final Ingredient base;
-   private final Ingredient addition;
-   private final ItemStack result;
-   private final ResourceLocation recipeId;
+public class SmithingRecipe implements IRecipe<IInventory>
+{
+    private final Ingredient base;
+    private final Ingredient addition;
+    private final ItemStack result;
+    private final ResourceLocation recipeId;
 
-   public SmithingRecipe(ResourceLocation recipeId, Ingredient base, Ingredient addition, ItemStack result) {
-      this.recipeId = recipeId;
-      this.base = base;
-      this.addition = addition;
-      this.result = result;
-   }
+    public SmithingRecipe(ResourceLocation recipeId, Ingredient base, Ingredient addition, ItemStack result)
+    {
+        this.recipeId = recipeId;
+        this.base = base;
+        this.addition = addition;
+        this.result = result;
+    }
 
-   public boolean matches(IInventory inv, World worldIn) {
-      return this.base.test(inv.getStackInSlot(0)) && this.addition.test(inv.getStackInSlot(1));
-   }
+    /**
+     * Used to check if a recipe matches current crafting inventory
+     */
+    public boolean matches(IInventory inv, World worldIn)
+    {
+        return this.base.test(inv.getStackInSlot(0)) && this.addition.test(inv.getStackInSlot(1));
+    }
 
-   public ItemStack getCraftingResult(IInventory inv) {
-      ItemStack itemstack = this.result.copy();
-      CompoundNBT compoundnbt = inv.getStackInSlot(0).getTag();
-      if (compoundnbt != null) {
-         itemstack.setTag(compoundnbt.copy());
-      }
+    /**
+     * Returns an Item that is the result of this recipe
+     */
+    public ItemStack getCraftingResult(IInventory inv)
+    {
+        ItemStack itemstack = this.result.copy();
+        CompoundNBT compoundnbt = inv.getStackInSlot(0).getTag();
 
-      return itemstack;
-   }
+        if (compoundnbt != null)
+        {
+            itemstack.setTag(compoundnbt.copy());
+        }
 
-   @OnlyIn(Dist.CLIENT)
-   public boolean canFit(int width, int height) {
-      return width * height >= 2;
-   }
+        return itemstack;
+    }
 
-   public ItemStack getRecipeOutput() {
-      return this.result;
-   }
+    /**
+     * Used to determine if this recipe can fit in a grid of the given width/height
+     */
+    public boolean canFit(int width, int height)
+    {
+        return width * height >= 2;
+    }
 
-   public boolean isValidAdditionItem(ItemStack addition) {
-      return this.addition.test(addition);
-   }
+    /**
+     * Get the result of this recipe, usually for display purposes (e.g. recipe book). If your recipe has more than one
+     * possible result (e.g. it's dynamic and depends on its inputs), then return an empty stack.
+     */
+    public ItemStack getRecipeOutput()
+    {
+        return this.result;
+    }
 
-   @OnlyIn(Dist.CLIENT)
-   public ItemStack getIcon() {
-      return new ItemStack(Blocks.SMITHING_TABLE);
-   }
+    public boolean isValidAdditionItem(ItemStack addition)
+    {
+        return this.addition.test(addition);
+    }
 
-   public ResourceLocation getId() {
-      return this.recipeId;
-   }
+    public ItemStack getIcon()
+    {
+        return new ItemStack(Blocks.SMITHING_TABLE);
+    }
 
-   public IRecipeSerializer<?> getSerializer() {
-      return IRecipeSerializer.SMITHING;
-   }
+    public ResourceLocation getId()
+    {
+        return this.recipeId;
+    }
 
-   public IRecipeType<?> getType() {
-      return IRecipeType.SMITHING;
-   }
+    public IRecipeSerializer<?> getSerializer()
+    {
+        return IRecipeSerializer.SMITHING;
+    }
 
-   public static class Serializer implements IRecipeSerializer<SmithingRecipe> {
-      public SmithingRecipe read(ResourceLocation recipeId, JsonObject json) {
-         Ingredient ingredient = Ingredient.deserialize(JSONUtils.getJsonObject(json, "base"));
-         Ingredient ingredient1 = Ingredient.deserialize(JSONUtils.getJsonObject(json, "addition"));
-         ItemStack itemstack = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
-         return new SmithingRecipe(recipeId, ingredient, ingredient1, itemstack);
-      }
+    public IRecipeType<?> getType()
+    {
+        return IRecipeType.SMITHING;
+    }
 
-      public SmithingRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-         Ingredient ingredient = Ingredient.read(buffer);
-         Ingredient ingredient1 = Ingredient.read(buffer);
-         ItemStack itemstack = buffer.readItemStack();
-         return new SmithingRecipe(recipeId, ingredient, ingredient1, itemstack);
-      }
+    public static class Serializer implements IRecipeSerializer<SmithingRecipe>
+    {
+        public SmithingRecipe read(ResourceLocation recipeId, JsonObject json)
+        {
+            Ingredient ingredient = Ingredient.deserialize(JSONUtils.getJsonObject(json, "base"));
+            Ingredient ingredient1 = Ingredient.deserialize(JSONUtils.getJsonObject(json, "addition"));
+            ItemStack itemstack = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
+            return new SmithingRecipe(recipeId, ingredient, ingredient1, itemstack);
+        }
 
-      public void write(PacketBuffer buffer, SmithingRecipe recipe) {
-         recipe.base.write(buffer);
-         recipe.addition.write(buffer);
-         buffer.writeItemStack(recipe.result);
-      }
-   }
+        public SmithingRecipe read(ResourceLocation recipeId, PacketBuffer buffer)
+        {
+            Ingredient ingredient = Ingredient.read(buffer);
+            Ingredient ingredient1 = Ingredient.read(buffer);
+            ItemStack itemstack = buffer.readItemStack();
+            return new SmithingRecipe(recipeId, ingredient, ingredient1, itemstack);
+        }
+
+        public void write(PacketBuffer buffer, SmithingRecipe recipe)
+        {
+            recipe.base.write(buffer);
+            recipe.addition.write(buffer);
+            buffer.writeItemStack(recipe.result);
+        }
+    }
 }

@@ -7,29 +7,45 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.IServerPlayNetHandler;
 import net.minecraft.util.ResourceLocation;
 
-public class CMarkRecipeSeenPacket implements IPacket<IServerPlayNetHandler> {
-   private ResourceLocation field_244320_a;
+public class CMarkRecipeSeenPacket implements IPacket<IServerPlayNetHandler>
+{
+    private ResourceLocation field_244320_a;
 
-   public CMarkRecipeSeenPacket() {
-   }
+    public CMarkRecipeSeenPacket()
+    {
+    }
 
-   public CMarkRecipeSeenPacket(IRecipe<?> p_i242089_1_) {
-      this.field_244320_a = p_i242089_1_.getId();
-   }
+    public CMarkRecipeSeenPacket(IRecipe<?> p_i242089_1_)
+    {
+        this.field_244320_a = p_i242089_1_.getId();
+    }
 
-   public void readPacketData(PacketBuffer buf) throws IOException {
-      this.field_244320_a = buf.readResourceLocation();
-   }
+    /**
+     * Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(PacketBuffer buf) throws IOException
+    {
+        this.field_244320_a = buf.readResourceLocation();
+    }
 
-   public void writePacketData(PacketBuffer buf) throws IOException {
-      buf.writeResourceLocation(this.field_244320_a);
-   }
+    /**
+     * Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(PacketBuffer buf) throws IOException
+    {
+        buf.writeResourceLocation(this.field_244320_a);
+    }
 
-   public void processPacket(IServerPlayNetHandler handler) {
-      handler.handleRecipeBookUpdate(this);
-   }
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(IServerPlayNetHandler handler)
+    {
+        handler.handleRecipeBookUpdate(this);
+    }
 
-   public ResourceLocation func_244321_b() {
-      return this.field_244320_a;
-   }
+    public ResourceLocation func_244321_b()
+    {
+        return this.field_244320_a;
+    }
 }
