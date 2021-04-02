@@ -23,7 +23,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class ResourceLoadProgressGui extends LoadingGui {
-   private static final ResourceLocation MOJANG_LOGO_TEXTURE = new ResourceLocation("textures/gui/title/mojang.png");
+   private static final ResourceLocation MOJANG_LOGO_TEXTURE = new ResourceLocation("textures/gui/title/mojangstudios.png");
    private static final int field_238627_b_ = ColorHelper.PackedColor.packColor(255, 239, 50, 61);
    private static final int field_238628_c_ = field_238627_b_ & 16777215;
    private final Minecraft mc;
@@ -43,6 +43,7 @@ public class ResourceLoadProgressGui extends LoadingGui {
 
    public static void loadLogoTexture(Minecraft mc) {
       mc.getTextureManager().loadTexture(MOJANG_LOGO_TEXTURE, new ResourceLoadProgressGui.MojangLogoTexture());
+   
    }
 
    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
@@ -83,7 +84,9 @@ public class ResourceLoadProgressGui extends LoadingGui {
       int j1 = (int)(d0 * 0.5D);
       double d1 = d0 * 4.0D;
       int k1 = (int)(d1 * 0.5D);
+      
       this.mc.getTextureManager().bindTexture(MOJANG_LOGO_TEXTURE);
+    //  this.mc.getTextureManager().loadTexture(textureLocation, textureObj);
       RenderSystem.enableBlend();
       RenderSystem.blendEquation(32774);
       RenderSystem.blendFunc(770, 1);
