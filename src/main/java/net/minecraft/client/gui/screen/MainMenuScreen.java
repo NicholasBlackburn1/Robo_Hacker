@@ -1,3 +1,8 @@
+
+/**
+ * MAIN MENU SCREEN 
+ * TODO: need to add a Background Selection For user 
+ */
 package net.minecraft.client.gui.screen;
 
 import com.google.common.util.concurrent.Runnables;
@@ -36,6 +41,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+
 
 @OnlyIn(Dist.CLIENT)
 public class MainMenuScreen extends Screen {
@@ -183,7 +190,7 @@ public class MainMenuScreen extends Screen {
       // this one will be for playing  between 12 am and 3 am
       //this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/1413249501665.png"));
 
-      this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/1413249501665.png"));
+      this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/background.png"));
       RenderSystem.enableBlend();
       RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
       RenderSystem.color4f(1.0F, 1.0F, 1.0F, this.showFadeInAnimation ? (float)MathHelper.ceil(MathHelper.clamp(f, 0.0F, 1.0F)) : 1.0F);

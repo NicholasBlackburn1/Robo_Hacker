@@ -50,6 +50,7 @@ public class WorldLoadProgressScreen extends Screen {
       this.renderBackground(matrixStack);
       String s = MathHelper.clamp(this.tracker.getPercentDone(), 0, 100) + "%";
       long i = Util.milliTime();
+   
       if (i - this.lastNarratorUpdateTime > 2000L) {
          this.lastNarratorUpdateTime = i;
          NarratorChatListener.INSTANCE.say((new TranslationTextComponent("narrator.loading", s)).getString());
@@ -60,6 +61,7 @@ public class WorldLoadProgressScreen extends Screen {
       int l = 30;
       func_238625_a_(matrixStack, this.tracker, j, k + 30, 2, 0);
       drawCenteredString(matrixStack, this.font, s, j, k - 9 / 2 - 30, 16777215);
+      drawString(matrixStack, this.font, "UwU I see you",j, k - 9 / 2 - 100, 16777215);
    }
 
    public static void func_238625_a_(MatrixStack p_238625_0_, TrackingChunkStatusListener p_238625_1_, int p_238625_2_, int p_238625_3_, int p_238625_4_, int p_238625_5_) {
