@@ -56,16 +56,132 @@ public class ResourceLoadProgressGui extends LoadingGui
     public static void loadLogoTexture(Minecraft mc)
     {
         mc.getTextureManager().loadTexture(MOJANG_LOGO_TEXTURE, new ResourceLoadProgressGui.MojangLogoTexture());
-        mc.getTextureManager().loadTexture(BLACKBURN_TEXTURE, new ResourceLoadProgressGui.BlackburnLogoTexture());
+        //mc.getTextureManager().loadTexture(BLACKBURN_TEXTURE, new ResourceLoadProgressGui.BlackburnLogoTexture());
     }
 
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks)
     {
-        renderMojangLogo(matrixStack,mouseX,mouseY,partialTicks);
+        renderBlackburnLogo(matrixStack,mouseX,mouseY,partialTicks);
+        //renderMojangLogo(matrixStack,mouseX,mouseY,partialTicks);
         
     }
+    /**
+     * This Renders The custom logo for the loading screen
+     */
+    public void renderBlackburnLogo(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
+        int i = this.mc.getMainWindow().getScaledWidth();
+        int j = this.mc.getMainWindow().getScaledHeight();
+        long k = Util.milliTime();
 
+        if (this.reloading && (this.asyncReloader.asyncPartDone() || this.mc.currentScreen != null) && this.fadeInStart == -1L)
+        {
+            this.fadeInStart = k;
+        }
 
+        float f = this.fadeOutStart > -1L ? (float)(k - this.fadeOutStart) / 1000.0F : -1.0F;
+        float f1 = this.fadeInStart > -1L ? (float)(k - this.fadeInStart) / 500.0F : -1.0F;
+        float f2;
+
+        if (f >= 1.0F)
+        {
+            this.fadeOut = true;
+
+            if (this.mc.currentScreen != null)
+            {
+                this.mc.currentScreen.render(matrixStack, 0, 0, partialTicks);
+            }
+
+            int l = MathHelper.ceil((1.0F - MathHelper.clamp(f - 1.0F, 0.0F, 1.0F)) * 255.0F);
+            fill(matrixStack, 0, 0, i, j, this.colorBackground | l << 24);
+            f2 = 1.0F - MathHelper.clamp(f - 1.0F, 0.0F, 1.0F);
+        }
+        else if (this.reloading)
+        {
+            if (this.mc.currentScreen != null && f1 < 1.0F)
+            {
+                this.mc.currentScreen.render(matrixStack, mouseX, mouseY, partialTicks);
+            }
+
+            int i2 = MathHelper.ceil(MathHelper.clamp((double)f1, 0.15D, 1.0D) * 255.0D);
+            fill(matrixStack, 0, 0, i, j, this.colorBackground | i2 << 24);
+            f2 = MathHelper.clamp(f1, 0.0F, 1.0F);
+        }
+        else
+        {
+            fill(matrixStack, 0, 0, i, j, this.colorBackground | -16777216);
+            f2 = 1.0F;
+        }
+
+        int j2 = (int)((double)this.mc.getMainWindow().getScaledWidth() * 0.5D);
+        int i1 = (int)((double)this.mc.getMainWindow().getScaledHeight() * 0.5D);
+        double d0 = Math.min((double)this.mc.getMainWindow().getScaledWidth() * 0.75D, (double)this.mc.getMainWindow().getScaledHeight()) * 0.25D;
+        int j1 = (int)(d0 * 0.5D);
+        double d1 = d0 * 4.0D;
+        int k1 = (int)(d1 * 0.5D);
+        this.mc.getTextureManager().bindTexture(BLACKBURN_TEXTURE);
+        //RenderSystem.enableBlend();
+        //RenderSystem.blendEquation(32774);
+       // RenderSystem.blendFunc(770, 1);
+        RenderSystem.alphaFunc(516, 0.0F);
+        //RenderSystem.color4f(1.0F, 1.0F, 1.0F, f2);
+        boolean flag = true;
+
+        if (this.blendState != null)
+        {
+            this.blendState.apply();
+
+            if (!this.blendState.isEnabled() && this.fadeOut)
+            {
+                flag = false;
+            }
+        }
+
+        if (flag)
+        {
+            
+            blit(matrixStack, j2 - k1 +  300 , i1 - j1 + 150, k1, (int)d0, -0.0625F, 0.0F, 120, 120, 120, 120);
+            //blit(matrixStack, j2, i1 - j1, k1, (int)d0, 0.0625F, 60.0F, 120, 60, 120, 120);
+           // drawString(matrixStack, this.font, "Optfine version 1.16.5-HD_U-G6 ", 2, this.mc.getMainWindow().getScaledHeight()- 10, 16777215);
+        }
+
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.defaultAlphaFunc();
+        RenderSystem.disableBlend();
+        int l1 = (int)((double)this.mc.getMainWindow().getScaledHeight() * 0.8325D);
+        float f3 = this.asyncReloader.estimateExecutionSpeed();
+        this.progress = MathHelper.clamp(this.progress * 0.95F + f3 * 0.050000012F, 0.0F, 1.0F);
+        Reflector.ClientModLoader_renderProgressText.call();
+        
+        if (f < 1.0F)
+        {
+            this.func_238629_a_(matrixStack, i / 2 - k1 , l1 - 5, i / 2 + k1, l1 + 5, 1.0F - MathHelper.clamp(f, 0.0F, 1.0F));
+        }
+
+        if (f >= 2.0F)
+        {
+            this.mc.setLoadingGui((LoadingGui)null);
+        }
+
+        if (this.fadeOutStart == -1L && this.asyncReloader.fullyDone() && (!this.reloading || f1 >= 2.0F))
+        {
+            this.fadeOutStart = Util.milliTime();
+
+            try
+            {
+                this.asyncReloader.join();
+                this.completedCallback.accept(Optional.empty());
+            }
+            catch (Throwable throwable)
+            {
+                this.completedCallback.accept(Optional.of(throwable));
+            }
+
+            if (this.mc.currentScreen != null)
+            {
+                this.mc.currentScreen.init(this.mc, this.mc.getMainWindow().getScaledWidth(), this.mc.getMainWindow().getScaledHeight());
+            }
+        }
+    }
     public void renderMojangLogo(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
         int i = this.mc.getMainWindow().getScaledWidth();
         int j = this.mc.getMainWindow().getScaledHeight();
@@ -138,6 +254,7 @@ public class ResourceLoadProgressGui extends LoadingGui
         {
             blit(matrixStack, j2 - k1, i1 - j1 - 50, k1, (int)d0, -0.0625F, 0.0F, 120, 60, 120, 120);
             blit(matrixStack, j2, i1 - j1- 50, k1, (int)d0, 0.0625F, 60.0F, 120, 60, 120, 120);
+           // drawString(matrixStack, this.font, "Optfine version 1.16.5-HD_U-G6 ", 2, this.mc.getMainWindow().getScaledHeight()- 10, 16777215);
         }
 
         RenderSystem.defaultBlendFunc();
@@ -147,7 +264,7 @@ public class ResourceLoadProgressGui extends LoadingGui
         float f3 = this.asyncReloader.estimateExecutionSpeed();
         this.progress = MathHelper.clamp(this.progress * 0.95F + f3 * 0.050000012F, 0.0F, 1.0F);
         Reflector.ClientModLoader_renderProgressText.call();
-
+        
         if (f < 1.0F)
         {
             this.func_238629_a_(matrixStack, i / 2 - k1, l1 - 5, i / 2 + k1, l1 + 5, 1.0F - MathHelper.clamp(f, 0.0F, 1.0F));
@@ -193,7 +310,6 @@ public class ResourceLoadProgressGui extends LoadingGui
         fill(p_238629_1_, p_238629_2_ + 1, p_238629_5_, p_238629_4_ - 1, p_238629_5_ - 1, i3);
         fill(p_238629_1_, p_238629_2_, p_238629_3_, p_238629_2_ + 1, p_238629_5_, i3);
         fill(p_238629_1_, p_238629_4_, p_238629_3_, p_238629_4_ - 1, p_238629_5_, i3);
-      
         i3 = ColorHelper.PackedColor.packColor(j, 0, 255, 30);
         fill(p_238629_1_, p_238629_2_ + 2, p_238629_3_ + 2, p_238629_2_ + i, p_238629_5_ - 2, i3);
     }
@@ -351,7 +467,7 @@ public class ResourceLoadProgressGui extends LoadingGui
         // gif loading Hopefully
         private static InputStream getGifInputStream(IResourceManager p_getLogoInputStream_0_, VanillaPack p_getLogoInputStream_1_) throws IOException
         {
-            return p_getLogoInputStream_0_.hasResource(ResourceLoadProgressGui.MOJANG_LOGO_TEXTURE) ? p_getLogoInputStream_0_.getResource(ResourceLoadProgressGui.MOJANG_LOGO_TEXTURE).getInputStream() : p_getLogoInputStream_1_.getResourceStream(ResourcePackType.CLIENT_RESOURCES, ResourceLoadProgressGui.MOJANG_LOGO_TEXTURE);
+            return p_getLogoInputStream_0_.hasResource(ResourceLoadProgressGui.MOJANG_LOGO_TEXTURE) ? p_getLogoInputStream_0_.getResource(ResourceLoadProgressGui.BLACKBURN_TEXTURE).getInputStream() : p_getLogoInputStream_1_.getResourceStream(ResourcePackType.CLIENT_RESOURCES, ResourceLoadProgressGui.MOJANG_LOGO_TEXTURE);
         }
     }
 
