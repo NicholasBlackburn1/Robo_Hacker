@@ -184,10 +184,13 @@ public class MainMenuScreen extends Screen
      }
   
      public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        
         //TODO: ADD DATE SWICHING FOR BACKGROUND IMAGE
         if (this.firstRenderTime == 0L && this.showFadeInAnimation) {
            this.firstRenderTime = Util.milliTime();
         }
+
+   
   
         float f = this.showFadeInAnimation ? (float)(Util.milliTime() - this.firstRenderTime) / 1000.0F : 1.0F;
         fill(matrixStack, 0, 0, this.width, this.height, -1);

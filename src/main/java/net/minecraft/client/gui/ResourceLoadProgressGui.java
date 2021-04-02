@@ -28,7 +28,7 @@ import net.optifine.util.PropertiesOrdered;
 public class ResourceLoadProgressGui extends LoadingGui
 {
     private static final ResourceLocation MOJANG_LOGO_TEXTURE = new ResourceLocation("textures/gui/title/mojangstudios.png");
-    private static final int field_238627_b_ = ColorHelper.PackedColor.packColor(255, 239, 50, 61);
+    private static final int field_238627_b_ = ColorHelper.PackedColor.packColor(255, 255, 50, 61);
     private static final int field_238628_c_ = field_238627_b_ & 16777215;
     private final Minecraft mc;
     private final IAsyncReloader asyncReloader;
@@ -38,7 +38,7 @@ public class ResourceLoadProgressGui extends LoadingGui
     private long fadeOutStart = -1L;
     private long fadeInStart = -1L;
     private int colorBackground = field_238628_c_;
-    private int colorBar = field_238628_c_;
+    private int colorBar = ColorHelper.PackedColor.packColor(255, 0, 50, 61);
     private int colorOutline = 16777215;
     private int colorProgress = 16777215;
     private GlBlendState blendState = null;
@@ -176,27 +176,17 @@ public class ResourceLoadProgressGui extends LoadingGui
         int i = MathHelper.ceil((float)(p_238629_4_ - p_238629_2_ - 2) * this.progress);
         int j = Math.round(p_238629_6_ * 255.0F);
 
-        if (this.colorBar != this.colorBackground)
-        {
-            int k = this.colorBar >> 16 & 255;
-            int l = this.colorBar >> 8 & 255;
-            int i1 = this.colorBar & 255;
-            int j1 = ColorHelper.PackedColor.packColor(j, k, l, i1);
-            fill(p_238629_1_, p_238629_2_, p_238629_3_, p_238629_4_, p_238629_5_, j1);
-        }
-
+       
         int j2 = this.colorOutline >> 16 & 255;
         int k2 = this.colorOutline >> 8 & 255;
         int l2 = this.colorOutline & 255;
-        int i3 = ColorHelper.PackedColor.packColor(j, j2, k2, l2);
+        int i3 = ColorHelper.PackedColor.packColor(255, 0, 0, 0);
         fill(p_238629_1_, p_238629_2_ + 1, p_238629_3_, p_238629_4_ - 1, p_238629_3_ + 1, i3);
         fill(p_238629_1_, p_238629_2_ + 1, p_238629_5_, p_238629_4_ - 1, p_238629_5_ - 1, i3);
         fill(p_238629_1_, p_238629_2_, p_238629_3_, p_238629_2_ + 1, p_238629_5_, i3);
         fill(p_238629_1_, p_238629_4_, p_238629_3_, p_238629_4_ - 1, p_238629_5_, i3);
-        int k1 = this.colorProgress >> 16 & 255;
-        int l1 = this.colorProgress >> 8 & 255;
-        int i2 = this.colorProgress & 255;
-        i3 = ColorHelper.PackedColor.packColor(j, k1, l1, i2);
+      
+        i3 = ColorHelper.PackedColor.packColor(j, 0, 255, 30);
         fill(p_238629_1_, p_238629_2_ + 2, p_238629_3_ + 2, p_238629_2_ + i, p_238629_5_ - 2, i3);
     }
 
