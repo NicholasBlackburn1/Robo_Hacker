@@ -243,7 +243,9 @@ public class MainMenuScreen extends Screen
               s = s + I18n.format("menu.modded");
            }
   
-           drawString(matrixStack, this.font, s, 2, this.height - 10, 16777215 | l);
+           drawString(matrixStack, this.font, s, 2, this.height - 20, 16777215 | l);
+           drawString(matrixStack, this.font, "Optfine version 1.16.5-HD_U-G6 ", 2, this.height - 10, 16777215 | l);
+
            drawString(matrixStack, this.font, "Copyright Nicholas Blackburn UwU!", this.widthCopyrightRest, this.height - 10, 16777215 | l);
            if (mouseX > this.widthCopyrightRest && mouseX < this.widthCopyrightRest + this.widthCopyright && mouseY > this.height - 10 && mouseY < this.height) {
               fill(matrixStack, this.widthCopyrightRest, this.height - 1, this.widthCopyrightRest + this.widthCopyright, this.height, 16777215 | l);
