@@ -56,10 +56,17 @@ public class ResourceLoadProgressGui extends LoadingGui
     public static void loadLogoTexture(Minecraft mc)
     {
         mc.getTextureManager().loadTexture(MOJANG_LOGO_TEXTURE, new ResourceLoadProgressGui.MojangLogoTexture());
+        mc.getTextureManager().loadTexture(BLACKBURN_TEXTURE, new ResourceLoadProgressGui.BlackburnLogoTexture());
     }
 
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks)
     {
+        renderMojangLogo(matrixStack,mouseX,mouseY,partialTicks);
+        
+    }
+
+
+    public void renderMojangLogo(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
         int i = this.mc.getMainWindow().getScaledWidth();
         int j = this.mc.getMainWindow().getScaledHeight();
         long k = Util.milliTime();
@@ -285,6 +292,31 @@ public class ResourceLoadProgressGui extends LoadingGui
         return this.fadeOut;
     }
 
+    
+    static class BlackburnLogoTexture extends SimpleTexture
+    {
+        public BlackburnLogoTexture()
+        {
+            super(ResourceLoadProgressGui.BLACKBURN_TEXTURE);
+        }
+
+        protected SimpleTexture.TextureData getTextureData(IResourceManager resourceManager)
+        {
+            Minecraft minecraft = Minecraft.getInstance();
+            VanillaPack vanillapack = minecraft.getPackFinder().getVanillaPack();
+
+            try (InputStream inputstream = getGifInputStream(resourceManager, vanillapack))
+            {
+                return new SimpleTexture.TextureData(new TextureMetadataSection(true, true), NativeImage.read(inputstream));
+            }
+            catch (IOException ioexception1)
+            {
+                return new SimpleTexture.TextureData(ioexception1);
+            }
+        }
+    }
+
+
     static class MojangLogoTexture extends SimpleTexture
     {
         public MojangLogoTexture()
@@ -306,6 +338,10 @@ public class ResourceLoadProgressGui extends LoadingGui
                 return new SimpleTexture.TextureData(ioexception1);
             }
         }
+    }
+
+
+        
 
         private static InputStream getLogoInputStream(IResourceManager p_getLogoInputStream_0_, VanillaPack p_getLogoInputStream_1_) throws IOException
         {
@@ -313,9 +349,9 @@ public class ResourceLoadProgressGui extends LoadingGui
         }
 
         // gif loading Hopefully
-        private static InputStream getLogoInputStream(IResourceManager p_getLogoInputStream_0_, VanillaPack p_getLogoInputStream_1_) throws IOException
+        private static InputStream getGifInputStream(IResourceManager p_getLogoInputStream_0_, VanillaPack p_getLogoInputStream_1_) throws IOException
         {
             return p_getLogoInputStream_0_.hasResource(ResourceLoadProgressGui.MOJANG_LOGO_TEXTURE) ? p_getLogoInputStream_0_.getResource(ResourceLoadProgressGui.MOJANG_LOGO_TEXTURE).getInputStream() : p_getLogoInputStream_1_.getResourceStream(ResourcePackType.CLIENT_RESOURCES, ResourceLoadProgressGui.MOJANG_LOGO_TEXTURE);
         }
     }
-}
+
