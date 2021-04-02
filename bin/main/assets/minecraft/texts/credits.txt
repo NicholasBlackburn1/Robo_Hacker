@@ -1,9 +1,7 @@
 [C]§f============
-[C]§eMinecraft Team
+[C]§e Furry Lovers and Minecraft Developers
 [C]§f============
 
-§7Original Creator
-§f          Markus Persson
 
-§7Chief Creative Officer/  Lead Developer
+§7 Creator UwU
 §f          Nicholas Blackburn

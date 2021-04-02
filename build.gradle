@@ -18,7 +18,8 @@ configurations {
     compile.extendsFrom shade
 }
 
-group = 'me.yourname'
+group = 'NicholasBlackbure'
+group = 'NicholasBlackbure'
 version = '1.0.0'
 
 ext {

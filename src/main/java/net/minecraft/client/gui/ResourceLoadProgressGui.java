@@ -43,6 +43,7 @@ public class ResourceLoadProgressGui extends LoadingGui {
 
    public static void loadLogoTexture(Minecraft mc) {
       mc.getTextureManager().loadTexture(MOJANG_LOGO_TEXTURE, new ResourceLoadProgressGui.MojangLogoTexture());
+   
    }
 
    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
@@ -83,7 +84,9 @@ public class ResourceLoadProgressGui extends LoadingGui {
       int j1 = (int)(d0 * 0.5D);
       double d1 = d0 * 4.0D;
       int k1 = (int)(d1 * 0.5D);
+      
       this.mc.getTextureManager().bindTexture(MOJANG_LOGO_TEXTURE);
+    //  this.mc.getTextureManager().loadTexture(textureLocation, textureObj);
       RenderSystem.enableBlend();
       RenderSystem.blendEquation(32774);
       RenderSystem.blendFunc(770, 1);
