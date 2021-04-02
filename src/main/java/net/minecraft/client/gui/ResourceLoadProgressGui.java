@@ -28,6 +28,7 @@ import net.optifine.util.PropertiesOrdered;
 public class ResourceLoadProgressGui extends LoadingGui
 {
     private static final ResourceLocation MOJANG_LOGO_TEXTURE = new ResourceLocation("textures/gui/title/mojangstudios.png");
+    private static final ResourceLocation BLACKBURN_TEXTURE = new ResourceLocation("textures/gui/title/loading2.png");
     private static final int field_238627_b_ = ColorHelper.PackedColor.packColor(255, 255, 50, 61);
     private static final int field_238628_c_ = field_238627_b_ & 16777215;
     private final Minecraft mc;
@@ -128,8 +129,8 @@ public class ResourceLoadProgressGui extends LoadingGui
 
         if (flag)
         {
-            blit(matrixStack, j2 - k1, i1 - j1, k1, (int)d0, -0.0625F, 0.0F, 120, 60, 120, 120);
-            blit(matrixStack, j2, i1 - j1, k1, (int)d0, 0.0625F, 60.0F, 120, 60, 120, 120);
+            blit(matrixStack, j2 - k1, i1 - j1 - 100, k1, (int)d0, -0.0625F, 0.0F, 120, 60, 120, 120);
+            blit(matrixStack, j2, i1 - j1- 100, k1, (int)d0, 0.0625F, 60.0F, 120, 60, 120, 120);
         }
 
         RenderSystem.defaultBlendFunc();
@@ -306,6 +307,12 @@ public class ResourceLoadProgressGui extends LoadingGui
             }
         }
 
+        private static InputStream getLogoInputStream(IResourceManager p_getLogoInputStream_0_, VanillaPack p_getLogoInputStream_1_) throws IOException
+        {
+            return p_getLogoInputStream_0_.hasResource(ResourceLoadProgressGui.MOJANG_LOGO_TEXTURE) ? p_getLogoInputStream_0_.getResource(ResourceLoadProgressGui.MOJANG_LOGO_TEXTURE).getInputStream() : p_getLogoInputStream_1_.getResourceStream(ResourcePackType.CLIENT_RESOURCES, ResourceLoadProgressGui.MOJANG_LOGO_TEXTURE);
+        }
+
+        // gif loading Hopefully
         private static InputStream getLogoInputStream(IResourceManager p_getLogoInputStream_0_, VanillaPack p_getLogoInputStream_1_) throws IOException
         {
             return p_getLogoInputStream_0_.hasResource(ResourceLoadProgressGui.MOJANG_LOGO_TEXTURE) ? p_getLogoInputStream_0_.getResource(ResourceLoadProgressGui.MOJANG_LOGO_TEXTURE).getInputStream() : p_getLogoInputStream_1_.getResourceStream(ResourcePackType.CLIENT_RESOURCES, ResourceLoadProgressGui.MOJANG_LOGO_TEXTURE);
