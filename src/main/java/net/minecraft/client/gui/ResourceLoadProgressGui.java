@@ -1,3 +1,16 @@
+/***
+ * opengl doesn't know gif
+[3:57 PM]
+but if you get the .gif image loaded as a series of frames
+[3:57 PM]
+you can use opengl to draw the gif
+[3:57 PM]
+but instead of opengl directly, I'd use minecraft's rendering code
+
+
+https://medium.com/@andreshj87/drawing-a-gui-screen-on-minecraft-forge-7e0059015596
+ */
+
 package net.minecraft.client.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -60,7 +73,8 @@ public class ResourceLoadProgressGui extends LoadingGui
     }
 
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks)
-    {
+    {   
+    
         renderBlackburnLogo(matrixStack,mouseX,mouseY,partialTicks);
         //renderMojangLogo(matrixStack,mouseX,mouseY,partialTicks);
         
@@ -139,7 +153,7 @@ public class ResourceLoadProgressGui extends LoadingGui
         if (flag)
         {
             
-            blit(matrixStack, j2 - k1 +  300 , i1 - j1 + 150, k1, (int)d0, -0.0625F, 0.0F, 120, 120, 120, 120);
+            blit(matrixStack, j2 - k1 +  300 , i1 - j1 + 130, k1, (int)d0, -0.0625F, 0.0F, 120, 120, 120, 120);
             //blit(matrixStack, j2, i1 - j1, k1, (int)d0, 0.0625F, 60.0F, 120, 60, 120, 120);
            // drawString(matrixStack, this.font, "Optfine version 1.16.5-HD_U-G6 ", 2, this.mc.getMainWindow().getScaledHeight()- 10, 16777215);
         }
