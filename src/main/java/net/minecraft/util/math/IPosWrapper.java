@@ -3,10 +3,11 @@ package net.minecraft.util.math;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.vector.Vector3d;
 
-public interface IPosWrapper {
-   Vector3d getPos();
+public interface IPosWrapper
+{
+    Vector3d getPos();
 
-   BlockPos getBlockPos();
+    BlockPos getBlockPos();
 
-   boolean isVisibleTo(LivingEntity entity);
+    boolean isVisibleTo(LivingEntity entity);
 }

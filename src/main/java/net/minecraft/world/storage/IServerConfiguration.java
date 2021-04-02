@@ -12,86 +12,106 @@ import net.minecraft.world.GameRules;
 import net.minecraft.world.GameType;
 import net.minecraft.world.WorldSettings;
 import net.minecraft.world.gen.settings.DimensionGeneratorSettings;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-public interface IServerConfiguration {
-   DatapackCodec getDatapackCodec();
+public interface IServerConfiguration
+{
+    DatapackCodec getDatapackCodec();
 
-   void setDatapackCodec(DatapackCodec codec);
+    void setDatapackCodec(DatapackCodec codec);
 
-   boolean isModded();
+    boolean isModded();
 
-   Set<String> getServerBranding();
+    Set<String> getServerBranding();
 
-   void addServerBranding(String name, boolean isModded);
+    void addServerBranding(String name, boolean isModded);
 
-   default void addToCrashReport(CrashReportCategory category) {
-      category.addDetail("Known server brands", () -> {
-         return String.join(", ", this.getServerBranding());
-      });
-      category.addDetail("Level was modded", () -> {
-         return Boolean.toString(this.isModded());
-      });
-      category.addDetail("Level storage version", () -> {
-         int i = this.getStorageVersionId();
-         return String.format("0x%05X - %s", i, this.getStorageVersionName(i));
-      });
-   }
+default void addToCrashReport(CrashReportCategory category)
+    {
+        category.addDetail("Known server brands", () ->
+        {
+            return String.join(", ", this.getServerBranding());
+        });
+        category.addDetail("Level was modded", () ->
+        {
+            return Boolean.toString(this.isModded());
+        });
+        category.addDetail("Level storage version", () ->
+        {
+            int i = this.getStorageVersionId();
+            return String.format("0x%05X - %s", i, this.getStorageVersionName(i));
+        });
+    }
 
-   default String getStorageVersionName(int storageVersionId) {
-      switch(storageVersionId) {
-      case 19132:
-         return "McRegion";
-      case 19133:
-         return "Anvil";
-      default:
-         return "Unknown?";
-      }
-   }
+default String getStorageVersionName(int storageVersionId)
+    {
+        switch (storageVersionId)
+        {
+            case 19132:
+                return "McRegion";
 
-   @Nullable
-   CompoundNBT getCustomBossEventData();
+            case 19133:
+                return "Anvil";
 
-   void setCustomBossEventData(@Nullable CompoundNBT nbt);
+            default:
+                return "Unknown?";
+        }
+    }
 
-   IServerWorldInfo getServerWorldInfo();
+    @Nullable
+    CompoundNBT getCustomBossEventData();
 
-   @OnlyIn(Dist.CLIENT)
-   WorldSettings getWorldSettings();
+    void setCustomBossEventData(@Nullable CompoundNBT nbt);
 
-   CompoundNBT serialize(DynamicRegistries registries, @Nullable CompoundNBT hostPlayerNBT);
+    IServerWorldInfo getServerWorldInfo();
 
-   boolean isHardcore();
+    WorldSettings getWorldSettings();
 
-   int getStorageVersionId();
+    CompoundNBT serialize(DynamicRegistries registries, @Nullable CompoundNBT hostPlayerNBT);
 
-   String getWorldName();
+    /**
+     * Returns true if hardcore mode is enabled, otherwise false
+     */
+    boolean isHardcore();
 
-   GameType getGameType();
+    int getStorageVersionId();
 
-   void setGameType(GameType type);
+    /**
+     * Get current world name
+     */
+    String getWorldName();
 
-   boolean areCommandsAllowed();
+    /**
+     * Gets the GameType.
+     */
+    GameType getGameType();
 
-   Difficulty getDifficulty();
+    void setGameType(GameType type);
 
-   void setDifficulty(Difficulty difficulty);
+    /**
+     * Returns true if commands are allowed on this World.
+     */
+    boolean areCommandsAllowed();
 
-   boolean isDifficultyLocked();
+    Difficulty getDifficulty();
 
-   void setDifficultyLocked(boolean locked);
+    void setDifficulty(Difficulty difficulty);
 
-   GameRules getGameRulesInstance();
+    boolean isDifficultyLocked();
 
-   CompoundNBT getHostPlayerNBT();
+    void setDifficultyLocked(boolean locked);
 
-   CompoundNBT getDragonFightData();
+    /**
+     * Gets the GameRules class Instance.
+     */
+    GameRules getGameRulesInstance();
 
-   void setDragonFightData(CompoundNBT nbt);
+    CompoundNBT getHostPlayerNBT();
 
-   DimensionGeneratorSettings getDimensionGeneratorSettings();
+    CompoundNBT getDragonFightData();
 
-   @OnlyIn(Dist.CLIENT)
-   Lifecycle getLifecycle();
+    void setDragonFightData(CompoundNBT nbt);
+
+    DimensionGeneratorSettings getDimensionGeneratorSettings();
+
+    Lifecycle getLifecycle();
 }

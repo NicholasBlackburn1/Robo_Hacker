@@ -3,39 +3,47 @@ package net.minecraft.potion;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.StringUtils;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-public final class EffectUtils {
-   @OnlyIn(Dist.CLIENT)
-   public static String getPotionDurationString(EffectInstance effect, float durationFactor) {
-      if (effect.getIsPotionDurationMax()) {
-         return "**:**";
-      } else {
-         int i = MathHelper.floor((float)effect.getDuration() * durationFactor);
-         return StringUtils.ticksToElapsedTime(i);
-      }
-   }
+public final class EffectUtils
+{
+    public static String getPotionDurationString(EffectInstance effect, float durationFactor)
+    {
+        if (effect.getIsPotionDurationMax())
+        {
+            return "**:**";
+        }
+        else
+        {
+            int i = MathHelper.floor((float)effect.getDuration() * durationFactor);
+            return StringUtils.ticksToElapsedTime(i);
+        }
+    }
 
-   public static boolean hasMiningSpeedup(LivingEntity entity) {
-      return entity.isPotionActive(Effects.HASTE) || entity.isPotionActive(Effects.CONDUIT_POWER);
-   }
+    public static boolean hasMiningSpeedup(LivingEntity entity)
+    {
+        return entity.isPotionActive(Effects.HASTE) || entity.isPotionActive(Effects.CONDUIT_POWER);
+    }
 
-   public static int getMiningSpeedup(LivingEntity entity) {
-      int i = 0;
-      int j = 0;
-      if (entity.isPotionActive(Effects.HASTE)) {
-         i = entity.getActivePotionEffect(Effects.HASTE).getAmplifier();
-      }
+    public static int getMiningSpeedup(LivingEntity entity)
+    {
+        int i = 0;
+        int j = 0;
 
-      if (entity.isPotionActive(Effects.CONDUIT_POWER)) {
-         j = entity.getActivePotionEffect(Effects.CONDUIT_POWER).getAmplifier();
-      }
+        if (entity.isPotionActive(Effects.HASTE))
+        {
+            i = entity.getActivePotionEffect(Effects.HASTE).getAmplifier();
+        }
 
-      return Math.max(i, j);
-   }
+        if (entity.isPotionActive(Effects.CONDUIT_POWER))
+        {
+            j = entity.getActivePotionEffect(Effects.CONDUIT_POWER).getAmplifier();
+        }
 
-   public static boolean canBreatheUnderwater(LivingEntity entity) {
-      return entity.isPotionActive(Effects.WATER_BREATHING) || entity.isPotionActive(Effects.CONDUIT_POWER);
-   }
+        return Math.max(i, j);
+    }
+
+    public static boolean canBreatheUnderwater(LivingEntity entity)
+    {
+        return entity.isPotionActive(Effects.WATER_BREATHING) || entity.isPotionActive(Effects.CONDUIT_POWER);
+    }
 }

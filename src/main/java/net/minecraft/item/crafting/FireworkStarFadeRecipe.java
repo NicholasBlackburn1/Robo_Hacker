@@ -9,71 +9,99 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class FireworkStarFadeRecipe extends SpecialRecipe {
-   private static final Ingredient INGREDIENT_FIREWORK_STAR = Ingredient.fromItems(Items.FIREWORK_STAR);
+public class FireworkStarFadeRecipe extends SpecialRecipe
+{
+    private static final Ingredient INGREDIENT_FIREWORK_STAR = Ingredient.fromItems(Items.FIREWORK_STAR);
 
-   public FireworkStarFadeRecipe(ResourceLocation idIn) {
-      super(idIn);
-   }
+    public FireworkStarFadeRecipe(ResourceLocation idIn)
+    {
+        super(idIn);
+    }
 
-   public boolean matches(CraftingInventory inv, World worldIn) {
-      boolean flag = false;
-      boolean flag1 = false;
+    /**
+     * Used to check if a recipe matches current crafting inventory
+     */
+    public boolean matches(CraftingInventory inv, World worldIn)
+    {
+        boolean flag = false;
+        boolean flag1 = false;
 
-      for(int i = 0; i < inv.getSizeInventory(); ++i) {
-         ItemStack itemstack = inv.getStackInSlot(i);
-         if (!itemstack.isEmpty()) {
-            if (itemstack.getItem() instanceof DyeItem) {
-               flag = true;
-            } else {
-               if (!INGREDIENT_FIREWORK_STAR.test(itemstack)) {
-                  return false;
-               }
+        for (int i = 0; i < inv.getSizeInventory(); ++i)
+        {
+            ItemStack itemstack = inv.getStackInSlot(i);
 
-               if (flag1) {
-                  return false;
-               }
+            if (!itemstack.isEmpty())
+            {
+                if (itemstack.getItem() instanceof DyeItem)
+                {
+                    flag = true;
+                }
+                else
+                {
+                    if (!INGREDIENT_FIREWORK_STAR.test(itemstack))
+                    {
+                        return false;
+                    }
 
-               flag1 = true;
+                    if (flag1)
+                    {
+                        return false;
+                    }
+
+                    flag1 = true;
+                }
             }
-         }
-      }
+        }
 
-      return flag1 && flag;
-   }
+        return flag1 && flag;
+    }
 
-   public ItemStack getCraftingResult(CraftingInventory inv) {
-      List<Integer> list = Lists.newArrayList();
-      ItemStack itemstack = null;
+    /**
+     * Returns an Item that is the result of this recipe
+     */
+    public ItemStack getCraftingResult(CraftingInventory inv)
+    {
+        List<Integer> list = Lists.newArrayList();
+        ItemStack itemstack = null;
 
-      for(int i = 0; i < inv.getSizeInventory(); ++i) {
-         ItemStack itemstack1 = inv.getStackInSlot(i);
-         Item item = itemstack1.getItem();
-         if (item instanceof DyeItem) {
-            list.add(((DyeItem)item).getDyeColor().getFireworkColor());
-         } else if (INGREDIENT_FIREWORK_STAR.test(itemstack1)) {
-            itemstack = itemstack1.copy();
-            itemstack.setCount(1);
-         }
-      }
+        for (int i = 0; i < inv.getSizeInventory(); ++i)
+        {
+            ItemStack itemstack1 = inv.getStackInSlot(i);
+            Item item = itemstack1.getItem();
 
-      if (itemstack != null && !list.isEmpty()) {
-         itemstack.getOrCreateChildTag("Explosion").putIntArray("FadeColors", list);
-         return itemstack;
-      } else {
-         return ItemStack.EMPTY;
-      }
-   }
+            if (item instanceof DyeItem)
+            {
+                list.add(((DyeItem)item).getDyeColor().getFireworkColor());
+            }
+            else if (INGREDIENT_FIREWORK_STAR.test(itemstack1))
+            {
+                itemstack = itemstack1.copy();
+                itemstack.setCount(1);
+            }
+        }
 
-   @OnlyIn(Dist.CLIENT)
-   public boolean canFit(int width, int height) {
-      return width * height >= 2;
-   }
+        if (itemstack != null && !list.isEmpty())
+        {
+            itemstack.getOrCreateChildTag("Explosion").putIntArray("FadeColors", list);
+            return itemstack;
+        }
+        else
+        {
+            return ItemStack.EMPTY;
+        }
+    }
 
-   public IRecipeSerializer<?> getSerializer() {
-      return IRecipeSerializer.CRAFTING_SPECIAL_FIREWORK_STAR_FADE;
-   }
+    /**
+     * Used to determine if this recipe can fit in a grid of the given width/height
+     */
+    public boolean canFit(int width, int height)
+    {
+        return width * height >= 2;
+    }
+
+    public IRecipeSerializer<?> getSerializer()
+    {
+        return IRecipeSerializer.CRAFTING_SPECIAL_FIREWORK_STAR_FADE;
+    }
 }

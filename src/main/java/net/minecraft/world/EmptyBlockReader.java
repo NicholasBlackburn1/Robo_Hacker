@@ -8,19 +8,23 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
-public enum EmptyBlockReader implements IBlockReader {
-   INSTANCE;
+public enum EmptyBlockReader implements IBlockReader
+{
+    INSTANCE;
 
-   @Nullable
-   public TileEntity getTileEntity(BlockPos pos) {
-      return null;
-   }
+    @Nullable
+    public TileEntity getTileEntity(BlockPos pos)
+    {
+        return null;
+    }
 
-   public BlockState getBlockState(BlockPos pos) {
-      return Blocks.AIR.getDefaultState();
-   }
+    public BlockState getBlockState(BlockPos pos)
+    {
+        return Blocks.AIR.getDefaultState();
+    }
 
-   public FluidState getFluidState(BlockPos pos) {
-      return Fluids.EMPTY.getDefaultState();
-   }
+    public FluidState getFluidState(BlockPos pos)
+    {
+        return Fluids.EMPTY.getDefaultState();
+    }
 }

@@ -8,92 +8,121 @@ import java.util.function.Consumer;
 import javax.annotation.Nullable;
 import net.minecraft.util.registry.Registry;
 
-public class AttributeModifierMap {
-   private final Map<Attribute, ModifiableAttributeInstance> attributeMap;
+public class AttributeModifierMap
+{
+    private final Map<Attribute, ModifiableAttributeInstance> attributeMap;
 
-   public AttributeModifierMap(Map<Attribute, ModifiableAttributeInstance> attributeMap) {
-      this.attributeMap = ImmutableMap.copyOf(attributeMap);
-   }
+    public AttributeModifierMap(Map<Attribute, ModifiableAttributeInstance> attributeMap)
+    {
+        this.attributeMap = ImmutableMap.copyOf(attributeMap);
+    }
 
-   private ModifiableAttributeInstance getModifier(Attribute attribute) {
-      ModifiableAttributeInstance modifiableattributeinstance = this.attributeMap.get(attribute);
-      if (modifiableattributeinstance == null) {
-         throw new IllegalArgumentException("Can't find attribute " + Registry.ATTRIBUTE.getKey(attribute));
-      } else {
-         return modifiableattributeinstance;
-      }
-   }
+    private ModifiableAttributeInstance getModifier(Attribute attribute)
+    {
+        ModifiableAttributeInstance modifiableattributeinstance = this.attributeMap.get(attribute);
 
-   public double getAttributeValue(Attribute attribute) {
-      return this.getModifier(attribute).getValue();
-   }
+        if (modifiableattributeinstance == null)
+        {
+            throw new IllegalArgumentException("Can't find attribute " + Registry.ATTRIBUTE.getKey(attribute));
+        }
+        else
+        {
+            return modifiableattributeinstance;
+        }
+    }
 
-   public double getAttributeBaseValue(Attribute attribute) {
-      return this.getModifier(attribute).getBaseValue();
-   }
+    public double getAttributeValue(Attribute attribute)
+    {
+        return this.getModifier(attribute).getValue();
+    }
 
-   public double getAttributeModifierValue(Attribute attribute, UUID id) {
-      AttributeModifier attributemodifier = this.getModifier(attribute).getModifier(id);
-      if (attributemodifier == null) {
-         throw new IllegalArgumentException("Can't find modifier " + id + " on attribute " + Registry.ATTRIBUTE.getKey(attribute));
-      } else {
-         return attributemodifier.getAmount();
-      }
-   }
+    public double getAttributeBaseValue(Attribute attribute)
+    {
+        return this.getModifier(attribute).getBaseValue();
+    }
 
-   @Nullable
-   public ModifiableAttributeInstance createImmutableAttributeInstance(Consumer<ModifiableAttributeInstance> onChangedCallback, Attribute attribute) {
-      ModifiableAttributeInstance modifiableattributeinstance = this.attributeMap.get(attribute);
-      if (modifiableattributeinstance == null) {
-         return null;
-      } else {
-         ModifiableAttributeInstance modifiableattributeinstance1 = new ModifiableAttributeInstance(attribute, onChangedCallback);
-         modifiableattributeinstance1.copyValuesFromInstance(modifiableattributeinstance);
-         return modifiableattributeinstance1;
-      }
-   }
+    public double getAttributeModifierValue(Attribute attribute, UUID id)
+    {
+        AttributeModifier attributemodifier = this.getModifier(attribute).getModifier(id);
 
-   public static AttributeModifierMap.MutableAttribute createMutableAttribute() {
-      return new AttributeModifierMap.MutableAttribute();
-   }
+        if (attributemodifier == null)
+        {
+            throw new IllegalArgumentException("Can't find modifier " + id + " on attribute " + Registry.ATTRIBUTE.getKey(attribute));
+        }
+        else
+        {
+            return attributemodifier.getAmount();
+        }
+    }
 
-   public boolean hasAttribute(Attribute attribute) {
-      return this.attributeMap.containsKey(attribute);
-   }
+    @Nullable
+    public ModifiableAttributeInstance createImmutableAttributeInstance(Consumer<ModifiableAttributeInstance> onChangedCallback, Attribute attribute)
+    {
+        ModifiableAttributeInstance modifiableattributeinstance = this.attributeMap.get(attribute);
 
-   public boolean hasModifier(Attribute attribute, UUID id) {
-      ModifiableAttributeInstance modifiableattributeinstance = this.attributeMap.get(attribute);
-      return modifiableattributeinstance != null && modifiableattributeinstance.getModifier(id) != null;
-   }
+        if (modifiableattributeinstance == null)
+        {
+            return null;
+        }
+        else
+        {
+            ModifiableAttributeInstance modifiableattributeinstance1 = new ModifiableAttributeInstance(attribute, onChangedCallback);
+            modifiableattributeinstance1.copyValuesFromInstance(modifiableattributeinstance);
+            return modifiableattributeinstance1;
+        }
+    }
 
-   public static class MutableAttribute {
-      private final Map<Attribute, ModifiableAttributeInstance> attributeMap = Maps.newHashMap();
-      private boolean edited;
+    public static AttributeModifierMap.MutableAttribute createMutableAttribute()
+    {
+        return new AttributeModifierMap.MutableAttribute();
+    }
 
-      private ModifiableAttributeInstance createAttributeInstance(Attribute attribute) {
-         ModifiableAttributeInstance modifiableattributeinstance = new ModifiableAttributeInstance(attribute, (p_233816_2_) -> {
-            if (this.edited) {
-               throw new UnsupportedOperationException("Tried to change value for default attribute instance: " + Registry.ATTRIBUTE.getKey(attribute));
-            }
-         });
-         this.attributeMap.put(attribute, modifiableattributeinstance);
-         return modifiableattributeinstance;
-      }
+    public boolean hasAttribute(Attribute attribute)
+    {
+        return this.attributeMap.containsKey(attribute);
+    }
 
-      public AttributeModifierMap.MutableAttribute createMutableAttribute(Attribute attribute) {
-         this.createAttributeInstance(attribute);
-         return this;
-      }
+    public boolean hasModifier(Attribute attribute, UUID id)
+    {
+        ModifiableAttributeInstance modifiableattributeinstance = this.attributeMap.get(attribute);
+        return modifiableattributeinstance != null && modifiableattributeinstance.getModifier(id) != null;
+    }
 
-      public AttributeModifierMap.MutableAttribute createMutableAttribute(Attribute attribute, double value) {
-         ModifiableAttributeInstance modifiableattributeinstance = this.createAttributeInstance(attribute);
-         modifiableattributeinstance.setBaseValue(value);
-         return this;
-      }
+    public static class MutableAttribute
+    {
+        private final Map<Attribute, ModifiableAttributeInstance> attributeMap = Maps.newHashMap();
+        private boolean edited;
 
-      public AttributeModifierMap create() {
-         this.edited = true;
-         return new AttributeModifierMap(this.attributeMap);
-      }
-   }
+        private ModifiableAttributeInstance createAttributeInstance(Attribute attribute)
+        {
+            ModifiableAttributeInstance modifiableattributeinstance = new ModifiableAttributeInstance(attribute, (modifiableInstance) ->
+            {
+                if (this.edited)
+                {
+                    throw new UnsupportedOperationException("Tried to change value for default attribute instance: " + Registry.ATTRIBUTE.getKey(attribute));
+                }
+            });
+            this.attributeMap.put(attribute, modifiableattributeinstance);
+            return modifiableattributeinstance;
+        }
+
+        public AttributeModifierMap.MutableAttribute createMutableAttribute(Attribute attribute)
+        {
+            this.createAttributeInstance(attribute);
+            return this;
+        }
+
+        public AttributeModifierMap.MutableAttribute createMutableAttribute(Attribute attribute, double value)
+        {
+            ModifiableAttributeInstance modifiableattributeinstance = this.createAttributeInstance(attribute);
+            modifiableattributeinstance.setBaseValue(value);
+            return this;
+        }
+
+        public AttributeModifierMap create()
+        {
+            this.edited = true;
+            return new AttributeModifierMap(this.attributeMap);
+        }
+    }
 }

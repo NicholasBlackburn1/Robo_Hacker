@@ -5,78 +5,109 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class MapCloningRecipe extends SpecialRecipe {
-   public MapCloningRecipe(ResourceLocation idIn) {
-      super(idIn);
-   }
+public class MapCloningRecipe extends SpecialRecipe
+{
+    public MapCloningRecipe(ResourceLocation idIn)
+    {
+        super(idIn);
+    }
 
-   public boolean matches(CraftingInventory inv, World worldIn) {
-      int i = 0;
-      ItemStack itemstack = ItemStack.EMPTY;
+    /**
+     * Used to check if a recipe matches current crafting inventory
+     */
+    public boolean matches(CraftingInventory inv, World worldIn)
+    {
+        int i = 0;
+        ItemStack itemstack = ItemStack.EMPTY;
 
-      for(int j = 0; j < inv.getSizeInventory(); ++j) {
-         ItemStack itemstack1 = inv.getStackInSlot(j);
-         if (!itemstack1.isEmpty()) {
-            if (itemstack1.getItem() == Items.FILLED_MAP) {
-               if (!itemstack.isEmpty()) {
-                  return false;
-               }
+        for (int j = 0; j < inv.getSizeInventory(); ++j)
+        {
+            ItemStack itemstack1 = inv.getStackInSlot(j);
 
-               itemstack = itemstack1;
-            } else {
-               if (itemstack1.getItem() != Items.MAP) {
-                  return false;
-               }
+            if (!itemstack1.isEmpty())
+            {
+                if (itemstack1.getItem() == Items.FILLED_MAP)
+                {
+                    if (!itemstack.isEmpty())
+                    {
+                        return false;
+                    }
 
-               ++i;
+                    itemstack = itemstack1;
+                }
+                else
+                {
+                    if (itemstack1.getItem() != Items.MAP)
+                    {
+                        return false;
+                    }
+
+                    ++i;
+                }
             }
-         }
-      }
+        }
 
-      return !itemstack.isEmpty() && i > 0;
-   }
+        return !itemstack.isEmpty() && i > 0;
+    }
 
-   public ItemStack getCraftingResult(CraftingInventory inv) {
-      int i = 0;
-      ItemStack itemstack = ItemStack.EMPTY;
+    /**
+     * Returns an Item that is the result of this recipe
+     */
+    public ItemStack getCraftingResult(CraftingInventory inv)
+    {
+        int i = 0;
+        ItemStack itemstack = ItemStack.EMPTY;
 
-      for(int j = 0; j < inv.getSizeInventory(); ++j) {
-         ItemStack itemstack1 = inv.getStackInSlot(j);
-         if (!itemstack1.isEmpty()) {
-            if (itemstack1.getItem() == Items.FILLED_MAP) {
-               if (!itemstack.isEmpty()) {
-                  return ItemStack.EMPTY;
-               }
+        for (int j = 0; j < inv.getSizeInventory(); ++j)
+        {
+            ItemStack itemstack1 = inv.getStackInSlot(j);
 
-               itemstack = itemstack1;
-            } else {
-               if (itemstack1.getItem() != Items.MAP) {
-                  return ItemStack.EMPTY;
-               }
+            if (!itemstack1.isEmpty())
+            {
+                if (itemstack1.getItem() == Items.FILLED_MAP)
+                {
+                    if (!itemstack.isEmpty())
+                    {
+                        return ItemStack.EMPTY;
+                    }
 
-               ++i;
+                    itemstack = itemstack1;
+                }
+                else
+                {
+                    if (itemstack1.getItem() != Items.MAP)
+                    {
+                        return ItemStack.EMPTY;
+                    }
+
+                    ++i;
+                }
             }
-         }
-      }
+        }
 
-      if (!itemstack.isEmpty() && i >= 1) {
-         ItemStack itemstack2 = itemstack.copy();
-         itemstack2.setCount(i + 1);
-         return itemstack2;
-      } else {
-         return ItemStack.EMPTY;
-      }
-   }
+        if (!itemstack.isEmpty() && i >= 1)
+        {
+            ItemStack itemstack2 = itemstack.copy();
+            itemstack2.setCount(i + 1);
+            return itemstack2;
+        }
+        else
+        {
+            return ItemStack.EMPTY;
+        }
+    }
 
-   @OnlyIn(Dist.CLIENT)
-   public boolean canFit(int width, int height) {
-      return width >= 3 && height >= 3;
-   }
+    /**
+     * Used to determine if this recipe can fit in a grid of the given width/height
+     */
+    public boolean canFit(int width, int height)
+    {
+        return width >= 3 && height >= 3;
+    }
 
-   public IRecipeSerializer<?> getSerializer() {
-      return IRecipeSerializer.CRAFTING_SPECIAL_MAPCLONING;
-   }
+    public IRecipeSerializer<?> getSerializer()
+    {
+        return IRecipeSerializer.CRAFTING_SPECIAL_MAPCLONING;
+    }
 }

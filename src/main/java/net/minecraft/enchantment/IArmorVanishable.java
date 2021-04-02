@@ -1,4 +1,5 @@
 package net.minecraft.enchantment;
 
-public interface IArmorVanishable extends IVanishable {
+public interface IArmorVanishable extends IVanishable
+{
 }

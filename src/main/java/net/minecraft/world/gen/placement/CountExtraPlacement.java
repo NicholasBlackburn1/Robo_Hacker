@@ -6,15 +6,19 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import net.minecraft.util.math.BlockPos;
 
-public class CountExtraPlacement extends SimplePlacement<AtSurfaceWithExtraConfig> {
-   public CountExtraPlacement(Codec<AtSurfaceWithExtraConfig> codec) {
-      super(codec);
-   }
+public class CountExtraPlacement extends SimplePlacement<AtSurfaceWithExtraConfig>
+{
+    public CountExtraPlacement(Codec<AtSurfaceWithExtraConfig> p_i242018_1_)
+    {
+        super(p_i242018_1_);
+    }
 
-   public Stream<BlockPos> getPositions(Random random, AtSurfaceWithExtraConfig config, BlockPos pos) {
-      int i = config.count + (random.nextFloat() < config.extraChance ? config.extraCount : 0);
-      return IntStream.range(0, i).mapToObj((p_242880_1_) -> {
-         return pos;
-      });
-   }
+    public Stream<BlockPos> getPositions(Random random, AtSurfaceWithExtraConfig p_212852_2_, BlockPos pos)
+    {
+        int i = p_212852_2_.count + (random.nextFloat() < p_212852_2_.extraChance ? p_212852_2_.extraCount : 0);
+        return IntStream.range(0, i).mapToObj((p_242880_1_) ->
+        {
+            return pos;
+        });
+    }
 }

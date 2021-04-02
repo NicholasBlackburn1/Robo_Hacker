@@ -1,4 +1,5 @@
 package net.minecraft.enchantment;
 
-public interface IVanishable {
+public interface IVanishable
+{
 }

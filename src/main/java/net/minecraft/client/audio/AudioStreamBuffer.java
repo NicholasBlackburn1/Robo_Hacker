@@ -4,63 +4,74 @@ import java.nio.ByteBuffer;
 import java.util.OptionalInt;
 import javax.annotation.Nullable;
 import javax.sound.sampled.AudioFormat;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.lwjgl.openal.AL10;
 
-@OnlyIn(Dist.CLIENT)
-public class AudioStreamBuffer {
-   @Nullable
-   private ByteBuffer inputBuffer;
-   private final AudioFormat audioFormat;
-   private boolean hasBuffer;
-   private int buffer;
+public class AudioStreamBuffer
+{
+    @Nullable
+    private ByteBuffer inputBuffer;
+    private final AudioFormat audioFormat;
+    private boolean hasBuffer;
+    private int buffer;
 
-   public AudioStreamBuffer(ByteBuffer buffer, AudioFormat format) {
-      this.inputBuffer = buffer;
-      this.audioFormat = format;
-   }
+    public AudioStreamBuffer(ByteBuffer buffer, AudioFormat format)
+    {
+        this.inputBuffer = buffer;
+        this.audioFormat = format;
+    }
 
-   OptionalInt getBuffer() {
-      if (!this.hasBuffer) {
-         if (this.inputBuffer == null) {
-            return OptionalInt.empty();
-         }
+    OptionalInt getBuffer()
+    {
+        if (!this.hasBuffer)
+        {
+            if (this.inputBuffer == null)
+            {
+                return OptionalInt.empty();
+            }
 
-         int i = ALUtils.getFormat(this.audioFormat);
-         int[] aint = new int[1];
-         AL10.alGenBuffers(aint);
-         if (ALUtils.checkALError("Creating buffer")) {
-            return OptionalInt.empty();
-         }
+            int i = ALUtils.getFormat(this.audioFormat);
+            int[] aint = new int[1];
+            AL10.alGenBuffers(aint);
 
-         AL10.alBufferData(aint[0], i, this.inputBuffer, (int)this.audioFormat.getSampleRate());
-         if (ALUtils.checkALError("Assigning buffer data")) {
-            return OptionalInt.empty();
-         }
+            if (ALUtils.checkALError("Creating buffer"))
+            {
+                return OptionalInt.empty();
+            }
 
-         this.buffer = aint[0];
-         this.hasBuffer = true;
-         this.inputBuffer = null;
-      }
+            AL10.alBufferData(aint[0], i, this.inputBuffer, (int)this.audioFormat.getSampleRate());
 
-      return OptionalInt.of(this.buffer);
-   }
+            if (ALUtils.checkALError("Assigning buffer data"))
+            {
+                return OptionalInt.empty();
+            }
 
-   public void deleteBuffer() {
-      if (this.hasBuffer) {
-         AL10.alDeleteBuffers(new int[]{this.buffer});
-         if (ALUtils.checkALError("Deleting stream buffers")) {
-            return;
-         }
-      }
+            this.buffer = aint[0];
+            this.hasBuffer = true;
+            this.inputBuffer = null;
+        }
 
-      this.hasBuffer = false;
-   }
+        return OptionalInt.of(this.buffer);
+    }
 
-   public OptionalInt getUntrackedBuffer() {
-      OptionalInt optionalint = this.getBuffer();
-      this.hasBuffer = false;
-      return optionalint;
-   }
+    public void deleteBuffer()
+    {
+        if (this.hasBuffer)
+        {
+            AL10.alDeleteBuffers(new int[] {this.buffer});
+
+            if (ALUtils.checkALError("Deleting stream buffers"))
+            {
+                return;
+            }
+        }
+
+        this.hasBuffer = false;
+    }
+
+    public OptionalInt getUntrackedBuffer()
+    {
+        OptionalInt optionalint = this.getBuffer();
+        this.hasBuffer = false;
+        return optionalint;
+    }
 }

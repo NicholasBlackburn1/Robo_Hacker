@@ -9,36 +9,42 @@ import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.list.OptionsRowList;
 import net.minecraft.util.IReorderingProcessor;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
-public class SettingsScreen extends Screen {
-   protected final Screen parentScreen;
-   protected final GameSettings gameSettings;
+public class SettingsScreen extends Screen
+{
+    protected final Screen parentScreen;
+    protected final GameSettings gameSettings;
 
-   public SettingsScreen(Screen previousScreen, GameSettings gameSettingsObj, ITextComponent textComponent) {
-      super(textComponent);
-      this.parentScreen = previousScreen;
-      this.gameSettings = gameSettingsObj;
-   }
+    public SettingsScreen(Screen previousScreen, GameSettings gameSettingsObj, ITextComponent textComponent)
+    {
+        super(textComponent);
+        this.parentScreen = previousScreen;
+        this.gameSettings = gameSettingsObj;
+    }
 
-   public void onClose() {
-      this.minecraft.gameSettings.saveOptions();
-   }
+    public void onClose()
+    {
+        this.minecraft.gameSettings.saveOptions();
+    }
 
-   public void closeScreen() {
-      this.minecraft.displayGuiScreen(this.parentScreen);
-   }
+    public void closeScreen()
+    {
+        this.minecraft.displayGuiScreen(this.parentScreen);
+    }
 
-   @Nullable
-   public static List<IReorderingProcessor> func_243293_a(OptionsRowList p_243293_0_, int p_243293_1_, int p_243293_2_) {
-      Optional<Widget> optional = p_243293_0_.func_238518_c_((double)p_243293_1_, (double)p_243293_2_);
-      if (optional.isPresent() && optional.get() instanceof IBidiTooltip) {
-         Optional<List<IReorderingProcessor>> optional1 = ((IBidiTooltip)optional.get()).func_241867_d();
-         return optional1.orElse((List<IReorderingProcessor>)null);
-      } else {
-         return null;
-      }
-   }
+    @Nullable
+    public static List<IReorderingProcessor> func_243293_a(OptionsRowList p_243293_0_, int p_243293_1_, int p_243293_2_)
+    {
+        Optional<Widget> optional = p_243293_0_.func_238518_c_((double)p_243293_1_, (double)p_243293_2_);
+
+        if (optional.isPresent() && optional.get() instanceof IBidiTooltip)
+        {
+            Optional<List<IReorderingProcessor>> optional1 = ((IBidiTooltip)optional.get()).func_241867_d();
+            return optional1.orElse((List<IReorderingProcessor>)null);
+        }
+        else
+        {
+            return null;
+        }
+    }
 }

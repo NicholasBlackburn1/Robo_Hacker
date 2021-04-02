@@ -19,45 +19,60 @@ import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class AdvancementProvider implements IDataProvider {
-   private static final Logger LOGGER = LogManager.getLogger();
-   private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
-   private final DataGenerator generator;
-   private final List<Consumer<Consumer<Advancement>>> advancements = ImmutableList.of(new EndAdvancements(), new HusbandryAdvancements(), new AdventureAdvancements(), new NetherAdvancements(), new StoryAdvancements());
+public class AdvancementProvider implements IDataProvider
+{
+    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Gson GSON = (new GsonBuilder()).setPrettyPrinting().create();
+    private final DataGenerator generator;
+    private final List<Consumer<Consumer<Advancement>>> advancements = ImmutableList.of(new EndAdvancements(), new HusbandryAdvancements(), new AdventureAdvancements(), new NetherAdvancements(), new StoryAdvancements());
 
-   public AdvancementProvider(DataGenerator generatorIn) {
-      this.generator = generatorIn;
-   }
+    public AdvancementProvider(DataGenerator generatorIn)
+    {
+        this.generator = generatorIn;
+    }
 
-   public void act(DirectoryCache cache) throws IOException {
-      Path path = this.generator.getOutputFolder();
-      Set<ResourceLocation> set = Sets.newHashSet();
-      Consumer<Advancement> consumer = (p_204017_3_) -> {
-         if (!set.add(p_204017_3_.getId())) {
-            throw new IllegalStateException("Duplicate advancement " + p_204017_3_.getId());
-         } else {
-            Path path1 = getPath(path, p_204017_3_);
-
-            try {
-               IDataProvider.save(GSON, cache, p_204017_3_.copy().serialize(), path1);
-            } catch (IOException ioexception) {
-               LOGGER.error("Couldn't save advancement {}", path1, ioexception);
+    /**
+     * Performs this provider's action.
+     */
+    public void act(DirectoryCache cache) throws IOException
+    {
+        Path path = this.generator.getOutputFolder();
+        Set<ResourceLocation> set = Sets.newHashSet();
+        Consumer<Advancement> consumer = (advancement) ->
+        {
+            if (!set.add(advancement.getId()))
+            {
+                throw new IllegalStateException("Duplicate advancement " + advancement.getId());
             }
+            else {
+                Path path1 = getPath(path, advancement);
 
-         }
-      };
+                try {
+                    IDataProvider.save(GSON, cache, advancement.copy().serialize(), path1);
+                }
+                catch (IOException ioexception)
+                {
+                    LOGGER.error("Couldn't save advancement {}", path1, ioexception);
+                }
+            }
+        };
 
-      for(Consumer<Consumer<Advancement>> consumer1 : this.advancements) {
-         consumer1.accept(consumer);
-      }
+        for (Consumer<Consumer<Advancement>> consumer1 : this.advancements)
+        {
+            consumer1.accept(consumer);
+        }
+    }
 
-   }
+    private static Path getPath(Path pathIn, Advancement advancementIn)
+    {
+        return pathIn.resolve("data/" + advancementIn.getId().getNamespace() + "/advancements/" + advancementIn.getId().getPath() + ".json");
+    }
 
-   private static Path getPath(Path pathIn, Advancement advancementIn) {
-      return pathIn.resolve("data/" + advancementIn.getId().getNamespace() + "/advancements/" + advancementIn.getId().getPath() + ".json");
-   }
-
-   public String getName() {
-      return "Advancements";
-   }
+    /**
+     * Gets a name for this provider, to use in logging.
+     */
+    public String getName()
+    {
+        return "Advancements";
+    }
 }

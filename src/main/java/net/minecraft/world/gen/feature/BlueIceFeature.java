@@ -10,55 +10,77 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ISeedReader;
 import net.minecraft.world.gen.ChunkGenerator;
 
-public class BlueIceFeature extends Feature<NoFeatureConfig> {
-   public BlueIceFeature(Codec<NoFeatureConfig> p_i231933_1_) {
-      super(p_i231933_1_);
-   }
+public class BlueIceFeature extends Feature<NoFeatureConfig>
+{
+    public BlueIceFeature(Codec<NoFeatureConfig> p_i231933_1_)
+    {
+        super(p_i231933_1_);
+    }
 
-   public boolean generate(ISeedReader reader, ChunkGenerator generator, Random rand, BlockPos pos, NoFeatureConfig config) {
-      if (pos.getY() > reader.getSeaLevel() - 1) {
-         return false;
-      } else if (!reader.getBlockState(pos).isIn(Blocks.WATER) && !reader.getBlockState(pos.down()).isIn(Blocks.WATER)) {
-         return false;
-      } else {
-         boolean flag = false;
-
-         for(Direction direction : Direction.values()) {
-            if (direction != Direction.DOWN && reader.getBlockState(pos.offset(direction)).isIn(Blocks.PACKED_ICE)) {
-               flag = true;
-               break;
-            }
-         }
-
-         if (!flag) {
+    public boolean func_241855_a(ISeedReader p_241855_1_, ChunkGenerator p_241855_2_, Random p_241855_3_, BlockPos p_241855_4_, NoFeatureConfig p_241855_5_)
+    {
+        if (p_241855_4_.getY() > p_241855_1_.getSeaLevel() - 1)
+        {
             return false;
-         } else {
-            reader.setBlockState(pos, Blocks.BLUE_ICE.getDefaultState(), 2);
+        }
+        else if (!p_241855_1_.getBlockState(p_241855_4_).isIn(Blocks.WATER) && !p_241855_1_.getBlockState(p_241855_4_.down()).isIn(Blocks.WATER))
+        {
+            return false;
+        }
+        else
+        {
+            boolean flag = false;
 
-            for(int i = 0; i < 200; ++i) {
-               int j = rand.nextInt(5) - rand.nextInt(6);
-               int k = 3;
-               if (j < 2) {
-                  k += j / 2;
-               }
-
-               if (k >= 1) {
-                  BlockPos blockpos = pos.add(rand.nextInt(k) - rand.nextInt(k), j, rand.nextInt(k) - rand.nextInt(k));
-                  BlockState blockstate = reader.getBlockState(blockpos);
-                  if (blockstate.getMaterial() == Material.AIR || blockstate.isIn(Blocks.WATER) || blockstate.isIn(Blocks.PACKED_ICE) || blockstate.isIn(Blocks.ICE)) {
-                     for(Direction direction1 : Direction.values()) {
-                        BlockState blockstate1 = reader.getBlockState(blockpos.offset(direction1));
-                        if (blockstate1.isIn(Blocks.BLUE_ICE)) {
-                           reader.setBlockState(blockpos, Blocks.BLUE_ICE.getDefaultState(), 2);
-                           break;
-                        }
-                     }
-                  }
-               }
+            for (Direction direction : Direction.values())
+            {
+                if (direction != Direction.DOWN && p_241855_1_.getBlockState(p_241855_4_.offset(direction)).isIn(Blocks.PACKED_ICE))
+                {
+                    flag = true;
+                    break;
+                }
             }
 
-            return true;
-         }
-      }
-   }
+            if (!flag)
+            {
+                return false;
+            }
+            else
+            {
+                p_241855_1_.setBlockState(p_241855_4_, Blocks.BLUE_ICE.getDefaultState(), 2);
+
+                for (int i = 0; i < 200; ++i)
+                {
+                    int j = p_241855_3_.nextInt(5) - p_241855_3_.nextInt(6);
+                    int k = 3;
+
+                    if (j < 2)
+                    {
+                        k += j / 2;
+                    }
+
+                    if (k >= 1)
+                    {
+                        BlockPos blockpos = p_241855_4_.add(p_241855_3_.nextInt(k) - p_241855_3_.nextInt(k), j, p_241855_3_.nextInt(k) - p_241855_3_.nextInt(k));
+                        BlockState blockstate = p_241855_1_.getBlockState(blockpos);
+
+                        if (blockstate.getMaterial() == Material.AIR || blockstate.isIn(Blocks.WATER) || blockstate.isIn(Blocks.PACKED_ICE) || blockstate.isIn(Blocks.ICE))
+                        {
+                            for (Direction direction1 : Direction.values())
+                            {
+                                BlockState blockstate1 = p_241855_1_.getBlockState(blockpos.offset(direction1));
+
+                                if (blockstate1.isIn(Blocks.BLUE_ICE))
+                                {
+                                    p_241855_1_.setBlockState(blockpos, Blocks.BLUE_ICE.getDefaultState(), 2);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return true;
+            }
+        }
+    }
 }

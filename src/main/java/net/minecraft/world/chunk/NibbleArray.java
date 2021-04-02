@@ -3,97 +3,132 @@ package net.minecraft.world.chunk;
 import javax.annotation.Nullable;
 import net.minecraft.util.Util;
 
-public class NibbleArray {
-   @Nullable
-   protected byte[] data;
+public class NibbleArray
+{
+    @Nullable
+    protected byte[] data;
 
-   public NibbleArray() {
-   }
+    public NibbleArray()
+    {
+    }
 
-   public NibbleArray(byte[] storageArray) {
-      this.data = storageArray;
-      if (storageArray.length != 2048) {
-         throw (IllegalArgumentException)Util.pauseDevMode(new IllegalArgumentException("ChunkNibbleArrays should be 2048 bytes not: " + storageArray.length));
-      }
-   }
+    public NibbleArray(byte[] storageArray)
+    {
+        this.data = storageArray;
 
-   protected NibbleArray(int size) {
-      this.data = new byte[size];
-   }
+        if (storageArray.length != 2048)
+        {
+            throw(IllegalArgumentException)Util.pauseDevMode(new IllegalArgumentException("ChunkNibbleArrays should be 2048 bytes not: " + storageArray.length));
+        }
+    }
 
-   public int get(int x, int y, int z) {
-      return this.getFromIndex(this.getCoordinateIndex(x, y, z));
-   }
+    protected NibbleArray(int size)
+    {
+        this.data = new byte[size];
+    }
 
-   public void set(int x, int y, int z, int value) {
-      this.setIndex(this.getCoordinateIndex(x, y, z), value);
-   }
+    /**
+     * Returns the nibble of data corresponding to the passed in x, y, z. y is at most 6 bits, z is at most 4.
+     */
+    public int get(int x, int y, int z)
+    {
+        return this.getFromIndex(this.getCoordinateIndex(x, y, z));
+    }
 
-   protected int getCoordinateIndex(int x, int y, int z) {
-      return y << 8 | z << 4 | x;
-   }
+    /**
+     * Arguments are x, y, z, val. Sets the nibble of data at x << 11 | z << 7 | y to val.
+     */
+    public void set(int x, int y, int z, int value)
+    {
+        this.setIndex(this.getCoordinateIndex(x, y, z), value);
+    }
 
-   private int getFromIndex(int index) {
-      if (this.data == null) {
-         return 0;
-      } else {
-         int i = this.getNibbleIndex(index);
-         return this.isLowerNibble(index) ? this.data[i] & 15 : this.data[i] >> 4 & 15;
-      }
-   }
+    protected int getCoordinateIndex(int x, int y, int z)
+    {
+        return y << 8 | z << 4 | x;
+    }
 
-   private void setIndex(int index, int value) {
-      if (this.data == null) {
-         this.data = new byte[2048];
-      }
+    private int getFromIndex(int index)
+    {
+        if (this.data == null)
+        {
+            return 0;
+        }
+        else
+        {
+            int i = this.getNibbleIndex(index);
+            return this.isLowerNibble(index) ? this.data[i] & 15 : this.data[i] >> 4 & 15;
+        }
+    }
 
-      int i = this.getNibbleIndex(index);
-      if (this.isLowerNibble(index)) {
-         this.data[i] = (byte)(this.data[i] & 240 | value & 15);
-      } else {
-         this.data[i] = (byte)(this.data[i] & 15 | (value & 15) << 4);
-      }
+    private void setIndex(int index, int value)
+    {
+        if (this.data == null)
+        {
+            this.data = new byte[2048];
+        }
 
-   }
+        int i = this.getNibbleIndex(index);
 
-   private boolean isLowerNibble(int index) {
-      return (index & 1) == 0;
-   }
+        if (this.isLowerNibble(index))
+        {
+            this.data[i] = (byte)(this.data[i] & 240 | value & 15);
+        }
+        else
+        {
+            this.data[i] = (byte)(this.data[i] & 15 | (value & 15) << 4);
+        }
+    }
 
-   private int getNibbleIndex(int index) {
-      return index >> 1;
-   }
+    private boolean isLowerNibble(int index)
+    {
+        return (index & 1) == 0;
+    }
 
-   public byte[] getData() {
-      if (this.data == null) {
-         this.data = new byte[2048];
-      }
+    private int getNibbleIndex(int index)
+    {
+        return index >> 1;
+    }
 
-      return this.data;
-   }
+    public byte[] getData()
+    {
+        if (this.data == null)
+        {
+            this.data = new byte[2048];
+        }
 
-   public NibbleArray copy() {
-      return this.data == null ? new NibbleArray() : new NibbleArray((byte[])this.data.clone());
-   }
+        return this.data;
+    }
 
-   public String toString() {
-      StringBuilder stringbuilder = new StringBuilder();
+    public NibbleArray copy()
+    {
+        return this.data == null ? new NibbleArray() : new NibbleArray((byte[])this.data.clone());
+    }
 
-      for(int i = 0; i < 4096; ++i) {
-         stringbuilder.append(Integer.toHexString(this.getFromIndex(i)));
-         if ((i & 15) == 15) {
-            stringbuilder.append("\n");
-         }
+    public String toString()
+    {
+        StringBuilder stringbuilder = new StringBuilder();
 
-         if ((i & 255) == 255) {
-            stringbuilder.append("\n");
-         }
-      }
+        for (int i = 0; i < 4096; ++i)
+        {
+            stringbuilder.append(Integer.toHexString(this.getFromIndex(i)));
 
-      return stringbuilder.toString();
-   }
+            if ((i & 15) == 15)
+            {
+                stringbuilder.append("\n");
+            }
 
-   public boolean isEmpty() {
-      return this.data == null;
-   }
+            if ((i & 255) == 255)
+            {
+                stringbuilder.append("\n");
+            }
+        }
+
+        return stringbuilder.toString();
+    }
+
+    public boolean isEmpty()
+    {
+        return this.data == null;
+    }
 }

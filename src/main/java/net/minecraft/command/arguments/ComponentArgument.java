@@ -12,38 +12,52 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
-public class ComponentArgument implements ArgumentType<ITextComponent> {
-   private static final Collection<String> EXAMPLES = Arrays.asList("\"hello world\"", "\"\"", "\"{\"text\":\"hello world\"}", "[\"\"]");
-   public static final DynamicCommandExceptionType COMPONENT_INVALID = new DynamicCommandExceptionType((p_208660_0_) -> {
-      return new TranslationTextComponent("argument.component.invalid", p_208660_0_);
-   });
+public class ComponentArgument implements ArgumentType<ITextComponent>
+{
+    private static final Collection<String> EXAMPLES = Arrays.asList("\"hello world\"", "\"\"", "\"{\"text\":\"hello world\"}", "[\"\"]");
+    public static final DynamicCommandExceptionType COMPONENT_INVALID = new DynamicCommandExceptionType((textComponent) ->
+    {
+        return new TranslationTextComponent("argument.component.invalid", textComponent);
+    });
 
-   private ComponentArgument() {
-   }
+    private ComponentArgument()
+    {
+    }
 
-   public static ITextComponent getComponent(CommandContext<CommandSource> context, String name) {
-      return context.getArgument(name, ITextComponent.class);
-   }
+    public static ITextComponent getComponent(CommandContext<CommandSource> context, String name)
+    {
+        return context.getArgument(name, ITextComponent.class);
+    }
 
-   public static ComponentArgument component() {
-      return new ComponentArgument();
-   }
+    public static ComponentArgument component()
+    {
+        return new ComponentArgument();
+    }
 
-   public ITextComponent parse(StringReader p_parse_1_) throws CommandSyntaxException {
-      try {
-         ITextComponent itextcomponent = ITextComponent.Serializer.getComponentFromReader(p_parse_1_);
-         if (itextcomponent == null) {
-            throw COMPONENT_INVALID.createWithContext(p_parse_1_, "empty");
-         } else {
-            return itextcomponent;
-         }
-      } catch (JsonParseException jsonparseexception) {
-         String s = jsonparseexception.getCause() != null ? jsonparseexception.getCause().getMessage() : jsonparseexception.getMessage();
-         throw COMPONENT_INVALID.createWithContext(p_parse_1_, s);
-      }
-   }
+    public ITextComponent parse(StringReader p_parse_1_) throws CommandSyntaxException
+    {
+        try
+        {
+            ITextComponent itextcomponent = ITextComponent.Serializer.getComponentFromReader(p_parse_1_);
 
-   public Collection<String> getExamples() {
-      return EXAMPLES;
-   }
+            if (itextcomponent == null)
+            {
+                throw COMPONENT_INVALID.createWithContext(p_parse_1_, "empty");
+            }
+            else
+            {
+                return itextcomponent;
+            }
+        }
+        catch (JsonParseException jsonparseexception)
+        {
+            String s = jsonparseexception.getCause() != null ? jsonparseexception.getCause().getMessage() : jsonparseexception.getMessage();
+            throw COMPONENT_INVALID.createWithContext(p_parse_1_, s);
+        }
+    }
+
+    public Collection<String> getExamples()
+    {
+        return EXAMPLES;
+    }
 }

@@ -8,25 +8,23 @@ import java.util.function.Predicate;
 import javax.annotation.Nullable;
 import net.minecraft.resources.data.IMetadataSectionSerializer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-public interface IResourcePack extends AutoCloseable {
-   @OnlyIn(Dist.CLIENT)
-   InputStream getRootResourceStream(String fileName) throws IOException;
+public interface IResourcePack extends AutoCloseable
+{
+    InputStream getRootResourceStream(String fileName) throws IOException;
 
-   InputStream getResourceStream(ResourcePackType type, ResourceLocation location) throws IOException;
+    InputStream getResourceStream(ResourcePackType type, ResourceLocation location) throws IOException;
 
-   Collection<ResourceLocation> getAllResourceLocations(ResourcePackType type, String namespaceIn, String pathIn, int maxDepthIn, Predicate<String> filterIn);
+    Collection<ResourceLocation> getAllResourceLocations(ResourcePackType type, String namespaceIn, String pathIn, int maxDepthIn, Predicate<String> filterIn);
 
-   boolean resourceExists(ResourcePackType type, ResourceLocation location);
+    boolean resourceExists(ResourcePackType type, ResourceLocation location);
 
-   Set<String> getResourceNamespaces(ResourcePackType type);
+    Set<String> getResourceNamespaces(ResourcePackType type);
 
-   @Nullable
-   <T> T getMetadata(IMetadataSectionSerializer<T> deserializer) throws IOException;
+    @Nullable
+    <T> T getMetadata(IMetadataSectionSerializer<T> deserializer) throws IOException;
 
-   String getName();
+    String getName();
 
-   void close();
+    void close();
 }

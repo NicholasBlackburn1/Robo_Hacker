@@ -33,221 +33,313 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-public class LecternBlock extends ContainerBlock {
-   public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
-   public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
-   public static final BooleanProperty HAS_BOOK = BlockStateProperties.HAS_BOOK;
-   public static final VoxelShape BASE_SHAPE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D);
-   public static final VoxelShape POST_SHAPE = Block.makeCuboidShape(4.0D, 2.0D, 4.0D, 12.0D, 14.0D, 12.0D);
-   public static final VoxelShape COMMON_SHAPE = VoxelShapes.or(BASE_SHAPE, POST_SHAPE);
-   public static final VoxelShape TOP_PLATE_SHAPE = Block.makeCuboidShape(0.0D, 15.0D, 0.0D, 16.0D, 15.0D, 16.0D);
-   public static final VoxelShape COLLISION_SHAPE = VoxelShapes.or(COMMON_SHAPE, TOP_PLATE_SHAPE);
-   public static final VoxelShape WEST_SHAPE = VoxelShapes.or(Block.makeCuboidShape(1.0D, 10.0D, 0.0D, 5.333333D, 14.0D, 16.0D), Block.makeCuboidShape(5.333333D, 12.0D, 0.0D, 9.666667D, 16.0D, 16.0D), Block.makeCuboidShape(9.666667D, 14.0D, 0.0D, 14.0D, 18.0D, 16.0D), COMMON_SHAPE);
-   public static final VoxelShape NORTH_SHAPE = VoxelShapes.or(Block.makeCuboidShape(0.0D, 10.0D, 1.0D, 16.0D, 14.0D, 5.333333D), Block.makeCuboidShape(0.0D, 12.0D, 5.333333D, 16.0D, 16.0D, 9.666667D), Block.makeCuboidShape(0.0D, 14.0D, 9.666667D, 16.0D, 18.0D, 14.0D), COMMON_SHAPE);
-   public static final VoxelShape EAST_SHAPE = VoxelShapes.or(Block.makeCuboidShape(15.0D, 10.0D, 0.0D, 10.666667D, 14.0D, 16.0D), Block.makeCuboidShape(10.666667D, 12.0D, 0.0D, 6.333333D, 16.0D, 16.0D), Block.makeCuboidShape(6.333333D, 14.0D, 0.0D, 2.0D, 18.0D, 16.0D), COMMON_SHAPE);
-   public static final VoxelShape SOUTH_SHAPE = VoxelShapes.or(Block.makeCuboidShape(0.0D, 10.0D, 15.0D, 16.0D, 14.0D, 10.666667D), Block.makeCuboidShape(0.0D, 12.0D, 10.666667D, 16.0D, 16.0D, 6.333333D), Block.makeCuboidShape(0.0D, 14.0D, 6.333333D, 16.0D, 18.0D, 2.0D), COMMON_SHAPE);
+public class LecternBlock extends ContainerBlock
+{
+    public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+    public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
+    public static final BooleanProperty HAS_BOOK = BlockStateProperties.HAS_BOOK;
+    public static final VoxelShape BASE_SHAPE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D);
+    public static final VoxelShape POST_SHAPE = Block.makeCuboidShape(4.0D, 2.0D, 4.0D, 12.0D, 14.0D, 12.0D);
+    public static final VoxelShape COMMON_SHAPE = VoxelShapes.or(BASE_SHAPE, POST_SHAPE);
+    public static final VoxelShape TOP_PLATE_SHAPE = Block.makeCuboidShape(0.0D, 15.0D, 0.0D, 16.0D, 15.0D, 16.0D);
+    public static final VoxelShape COLLISION_SHAPE = VoxelShapes.or(COMMON_SHAPE, TOP_PLATE_SHAPE);
+    public static final VoxelShape WEST_SHAPE = VoxelShapes.or(Block.makeCuboidShape(1.0D, 10.0D, 0.0D, 5.333333D, 14.0D, 16.0D), Block.makeCuboidShape(5.333333D, 12.0D, 0.0D, 9.666667D, 16.0D, 16.0D), Block.makeCuboidShape(9.666667D, 14.0D, 0.0D, 14.0D, 18.0D, 16.0D), COMMON_SHAPE);
+    public static final VoxelShape NORTH_SHAPE = VoxelShapes.or(Block.makeCuboidShape(0.0D, 10.0D, 1.0D, 16.0D, 14.0D, 5.333333D), Block.makeCuboidShape(0.0D, 12.0D, 5.333333D, 16.0D, 16.0D, 9.666667D), Block.makeCuboidShape(0.0D, 14.0D, 9.666667D, 16.0D, 18.0D, 14.0D), COMMON_SHAPE);
+    public static final VoxelShape EAST_SHAPE = VoxelShapes.or(Block.makeCuboidShape(15.0D, 10.0D, 0.0D, 10.666667D, 14.0D, 16.0D), Block.makeCuboidShape(10.666667D, 12.0D, 0.0D, 6.333333D, 16.0D, 16.0D), Block.makeCuboidShape(6.333333D, 14.0D, 0.0D, 2.0D, 18.0D, 16.0D), COMMON_SHAPE);
+    public static final VoxelShape SOUTH_SHAPE = VoxelShapes.or(Block.makeCuboidShape(0.0D, 10.0D, 15.0D, 16.0D, 14.0D, 10.666667D), Block.makeCuboidShape(0.0D, 12.0D, 10.666667D, 16.0D, 16.0D, 6.333333D), Block.makeCuboidShape(0.0D, 14.0D, 6.333333D, 16.0D, 18.0D, 2.0D), COMMON_SHAPE);
 
-   protected LecternBlock(AbstractBlock.Properties properties) {
-      super(properties);
-      this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(POWERED, Boolean.valueOf(false)).with(HAS_BOOK, Boolean.valueOf(false)));
-   }
+    protected LecternBlock(AbstractBlock.Properties properties)
+    {
+        super(properties);
+        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(POWERED, Boolean.valueOf(false)).with(HAS_BOOK, Boolean.valueOf(false)));
+    }
 
-   public BlockRenderType getRenderType(BlockState state) {
-      return BlockRenderType.MODEL;
-   }
+    /**
+     * The type of render function called. MODEL for mixed tesr and static model, MODELBLOCK_ANIMATED for TESR-only,
+     * LIQUID for vanilla liquids, INVISIBLE to skip all rendering
+     * @deprecated call via {@link IBlockState#getRenderType()} whenever possible. Implementing/overriding is fine.
+     */
+    public BlockRenderType getRenderType(BlockState state)
+    {
+        return BlockRenderType.MODEL;
+    }
 
-   public VoxelShape getRenderShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
-      return COMMON_SHAPE;
-   }
+    public VoxelShape getRenderShape(BlockState state, IBlockReader worldIn, BlockPos pos)
+    {
+        return COMMON_SHAPE;
+    }
 
-   public boolean isTransparent(BlockState state) {
-      return true;
-   }
+    public boolean isTransparent(BlockState state)
+    {
+        return true;
+    }
 
-   public BlockState getStateForPlacement(BlockItemUseContext context) {
-      World world = context.getWorld();
-      ItemStack itemstack = context.getItem();
-      CompoundNBT compoundnbt = itemstack.getTag();
-      PlayerEntity playerentity = context.getPlayer();
-      boolean flag = false;
-      if (!world.isRemote && playerentity != null && compoundnbt != null && playerentity.canUseCommandBlock() && compoundnbt.contains("BlockEntityTag")) {
-         CompoundNBT compoundnbt1 = compoundnbt.getCompound("BlockEntityTag");
-         if (compoundnbt1.contains("Book")) {
-            flag = true;
-         }
-      }
+    public BlockState getStateForPlacement(BlockItemUseContext context)
+    {
+        World world = context.getWorld();
+        ItemStack itemstack = context.getItem();
+        CompoundNBT compoundnbt = itemstack.getTag();
+        PlayerEntity playerentity = context.getPlayer();
+        boolean flag = false;
 
-      return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite()).with(HAS_BOOK, Boolean.valueOf(flag));
-   }
+        if (!world.isRemote && playerentity != null && compoundnbt != null && playerentity.canUseCommandBlock() && compoundnbt.contains("BlockEntityTag"))
+        {
+            CompoundNBT compoundnbt1 = compoundnbt.getCompound("BlockEntityTag");
 
-   public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-      return COLLISION_SHAPE;
-   }
+            if (compoundnbt1.contains("Book"))
+            {
+                flag = true;
+            }
+        }
 
-   public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-      switch((Direction)state.get(FACING)) {
-      case NORTH:
-         return NORTH_SHAPE;
-      case SOUTH:
-         return SOUTH_SHAPE;
-      case EAST:
-         return EAST_SHAPE;
-      case WEST:
-         return WEST_SHAPE;
-      default:
-         return COMMON_SHAPE;
-      }
-   }
+        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite()).with(HAS_BOOK, Boolean.valueOf(flag));
+    }
 
-   public BlockState rotate(BlockState state, Rotation rot) {
-      return state.with(FACING, rot.rotate(state.get(FACING)));
-   }
+    public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
+    {
+        return COLLISION_SHAPE;
+    }
 
-   public BlockState mirror(BlockState state, Mirror mirrorIn) {
-      return state.rotate(mirrorIn.toRotation(state.get(FACING)));
-   }
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context)
+    {
+        switch ((Direction)state.get(FACING))
+        {
+            case NORTH:
+                return NORTH_SHAPE;
 
-   protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-      builder.add(FACING, POWERED, HAS_BOOK);
-   }
+            case SOUTH:
+                return SOUTH_SHAPE;
 
-   @Nullable
-   public TileEntity createNewTileEntity(IBlockReader worldIn) {
-      return new LecternTileEntity();
-   }
+            case EAST:
+                return EAST_SHAPE;
 
-   public static boolean tryPlaceBook(World worldIn, BlockPos pos, BlockState state, ItemStack stack) {
-      if (!state.get(HAS_BOOK)) {
-         if (!worldIn.isRemote) {
-            placeBook(worldIn, pos, state, stack);
-         }
+            case WEST:
+                return WEST_SHAPE;
 
-         return true;
-      } else {
-         return false;
-      }
-   }
+            default:
+                return COMMON_SHAPE;
+        }
+    }
 
-   private static void placeBook(World worldIn, BlockPos pos, BlockState state, ItemStack stack) {
-      TileEntity tileentity = worldIn.getTileEntity(pos);
-      if (tileentity instanceof LecternTileEntity) {
-         LecternTileEntity lecterntileentity = (LecternTileEntity)tileentity;
-         lecterntileentity.setBook(stack.split(1));
-         setHasBook(worldIn, pos, state, true);
-         worldIn.playSound((PlayerEntity)null, pos, SoundEvents.ITEM_BOOK_PUT, SoundCategory.BLOCKS, 1.0F, 1.0F);
-      }
+    /**
+     * Returns the blockstate with the given rotation from the passed blockstate. If inapplicable, returns the passed
+     * blockstate.
+     * @deprecated call via {@link IBlockState#withRotation(Rotation)} whenever possible. Implementing/overriding is
+     * fine.
+     */
+    public BlockState rotate(BlockState state, Rotation rot)
+    {
+        return state.with(FACING, rot.rotate(state.get(FACING)));
+    }
 
-   }
+    /**
+     * Returns the blockstate with the given mirror of the passed blockstate. If inapplicable, returns the passed
+     * blockstate.
+     * @deprecated call via {@link IBlockState#withMirror(Mirror)} whenever possible. Implementing/overriding is fine.
+     */
+    public BlockState mirror(BlockState state, Mirror mirrorIn)
+    {
+        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+    }
 
-   public static void setHasBook(World worldIn, BlockPos pos, BlockState state, boolean hasBook) {
-      worldIn.setBlockState(pos, state.with(POWERED, Boolean.valueOf(false)).with(HAS_BOOK, Boolean.valueOf(hasBook)), 3);
-      notifyNeighbors(worldIn, pos, state);
-   }
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    {
+        builder.add(FACING, POWERED, HAS_BOOK);
+    }
 
-   public static void pulse(World worldIn, BlockPos pos, BlockState state) {
-      setPowered(worldIn, pos, state, true);
-      worldIn.getPendingBlockTicks().scheduleTick(pos, state.getBlock(), 2);
-      worldIn.playEvent(1043, pos, 0);
-   }
+    @Nullable
+    public TileEntity createNewTileEntity(IBlockReader worldIn)
+    {
+        return new LecternTileEntity();
+    }
 
-   private static void setPowered(World worldIn, BlockPos pos, BlockState state, boolean powered) {
-      worldIn.setBlockState(pos, state.with(POWERED, Boolean.valueOf(powered)), 3);
-      notifyNeighbors(worldIn, pos, state);
-   }
+    public static boolean tryPlaceBook(World worldIn, BlockPos pos, BlockState state, ItemStack stack)
+    {
+        if (!state.get(HAS_BOOK))
+        {
+            if (!worldIn.isRemote)
+            {
+                placeBook(worldIn, pos, state, stack);
+            }
 
-   private static void notifyNeighbors(World worldIn, BlockPos pos, BlockState state) {
-      worldIn.notifyNeighborsOfStateChange(pos.down(), state.getBlock());
-   }
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
-   public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
-      setPowered(worldIn, pos, state, false);
-   }
+    private static void placeBook(World worldIn, BlockPos pos, BlockState state, ItemStack stack)
+    {
+        TileEntity tileentity = worldIn.getTileEntity(pos);
 
-   public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-      if (!state.isIn(newState.getBlock())) {
-         if (state.get(HAS_BOOK)) {
-            this.dropBook(state, worldIn, pos);
-         }
+        if (tileentity instanceof LecternTileEntity)
+        {
+            LecternTileEntity lecterntileentity = (LecternTileEntity)tileentity;
+            lecterntileentity.setBook(stack.split(1));
+            setHasBook(worldIn, pos, state, true);
+            worldIn.playSound((PlayerEntity)null, pos, SoundEvents.ITEM_BOOK_PUT, SoundCategory.BLOCKS, 1.0F, 1.0F);
+        }
+    }
 
-         if (state.get(POWERED)) {
-            worldIn.notifyNeighborsOfStateChange(pos.down(), this);
-         }
+    public static void setHasBook(World worldIn, BlockPos pos, BlockState state, boolean hasBook)
+    {
+        worldIn.setBlockState(pos, state.with(POWERED, Boolean.valueOf(false)).with(HAS_BOOK, Boolean.valueOf(hasBook)), 3);
+        notifyNeighbors(worldIn, pos, state);
+    }
 
-         super.onReplaced(state, worldIn, pos, newState, isMoving);
-      }
-   }
+    public static void pulse(World worldIn, BlockPos pos, BlockState state)
+    {
+        setPowered(worldIn, pos, state, true);
+        worldIn.getPendingBlockTicks().scheduleTick(pos, state.getBlock(), 2);
+        worldIn.playEvent(1043, pos, 0);
+    }
 
-   private void dropBook(BlockState state, World world, BlockPos pos) {
-      TileEntity tileentity = world.getTileEntity(pos);
-      if (tileentity instanceof LecternTileEntity) {
-         LecternTileEntity lecterntileentity = (LecternTileEntity)tileentity;
-         Direction direction = state.get(FACING);
-         ItemStack itemstack = lecterntileentity.getBook().copy();
-         float f = 0.25F * (float)direction.getXOffset();
-         float f1 = 0.25F * (float)direction.getZOffset();
-         ItemEntity itementity = new ItemEntity(world, (double)pos.getX() + 0.5D + (double)f, (double)(pos.getY() + 1), (double)pos.getZ() + 0.5D + (double)f1, itemstack);
-         itementity.setDefaultPickupDelay();
-         world.addEntity(itementity);
-         lecterntileentity.clear();
-      }
+    private static void setPowered(World worldIn, BlockPos pos, BlockState state, boolean powered)
+    {
+        worldIn.setBlockState(pos, state.with(POWERED, Boolean.valueOf(powered)), 3);
+        notifyNeighbors(worldIn, pos, state);
+    }
 
-   }
+    private static void notifyNeighbors(World worldIn, BlockPos pos, BlockState state)
+    {
+        worldIn.notifyNeighborsOfStateChange(pos.down(), state.getBlock());
+    }
 
-   public boolean canProvidePower(BlockState state) {
-      return true;
-   }
+    public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand)
+    {
+        setPowered(worldIn, pos, state, false);
+    }
 
-   public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-      return blockState.get(POWERED) ? 15 : 0;
-   }
+    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving)
+    {
+        if (!state.isIn(newState.getBlock()))
+        {
+            if (state.get(HAS_BOOK))
+            {
+                this.dropBook(state, worldIn, pos);
+            }
 
-   public int getStrongPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-      return side == Direction.UP && blockState.get(POWERED) ? 15 : 0;
-   }
+            if (state.get(POWERED))
+            {
+                worldIn.notifyNeighborsOfStateChange(pos.down(), this);
+            }
 
-   public boolean hasComparatorInputOverride(BlockState state) {
-      return true;
-   }
+            super.onReplaced(state, worldIn, pos, newState, isMoving);
+        }
+    }
 
-   public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
-      if (blockState.get(HAS_BOOK)) {
-         TileEntity tileentity = worldIn.getTileEntity(pos);
-         if (tileentity instanceof LecternTileEntity) {
-            return ((LecternTileEntity)tileentity).getComparatorSignalLevel();
-         }
-      }
+    private void dropBook(BlockState state, World world, BlockPos pos)
+    {
+        TileEntity tileentity = world.getTileEntity(pos);
 
-      return 0;
-   }
+        if (tileentity instanceof LecternTileEntity)
+        {
+            LecternTileEntity lecterntileentity = (LecternTileEntity)tileentity;
+            Direction direction = state.get(FACING);
+            ItemStack itemstack = lecterntileentity.getBook().copy();
+            float f = 0.25F * (float)direction.getXOffset();
+            float f1 = 0.25F * (float)direction.getZOffset();
+            ItemEntity itementity = new ItemEntity(world, (double)pos.getX() + 0.5D + (double)f, (double)(pos.getY() + 1), (double)pos.getZ() + 0.5D + (double)f1, itemstack);
+            itementity.setDefaultPickupDelay();
+            world.addEntity(itementity);
+            lecterntileentity.clear();
+        }
+    }
 
-   public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-      if (state.get(HAS_BOOK)) {
-         if (!worldIn.isRemote) {
-            this.openContainer(worldIn, pos, player);
-         }
+    /**
+     * Can this block provide power. Only wire currently seems to have this change based on its state.
+     * @deprecated call via {@link IBlockState#canProvidePower()} whenever possible. Implementing/overriding is fine.
+     */
+    public boolean canProvidePower(BlockState state)
+    {
+        return true;
+    }
 
-         return ActionResultType.func_233537_a_(worldIn.isRemote);
-      } else {
-         ItemStack itemstack = player.getHeldItem(handIn);
-         return !itemstack.isEmpty() && !itemstack.getItem().isIn(ItemTags.LECTERN_BOOKS) ? ActionResultType.CONSUME : ActionResultType.PASS;
-      }
-   }
+    /**
+     * @deprecated call via {@link IBlockState#getWeakPower(IBlockAccess,BlockPos,EnumFacing)} whenever possible.
+     * Implementing/overriding is fine.
+     */
+    public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side)
+    {
+        return blockState.get(POWERED) ? 15 : 0;
+    }
 
-   @Nullable
-   public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos) {
-      return !state.get(HAS_BOOK) ? null : super.getContainer(state, worldIn, pos);
-   }
+    /**
+     * @deprecated call via {@link IBlockState#getStrongPower(IBlockAccess,BlockPos,EnumFacing)} whenever possible.
+     * Implementing/overriding is fine.
+     */
+    public int getStrongPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side)
+    {
+        return side == Direction.UP && blockState.get(POWERED) ? 15 : 0;
+    }
 
-   private void openContainer(World world, BlockPos pos, PlayerEntity player) {
-      TileEntity tileentity = world.getTileEntity(pos);
-      if (tileentity instanceof LecternTileEntity) {
-         player.openContainer((LecternTileEntity)tileentity);
-         player.addStat(Stats.INTERACT_WITH_LECTERN);
-      }
+    /**
+     * @deprecated call via {@link IBlockState#hasComparatorInputOverride()} whenever possible. Implementing/overriding
+     * is fine.
+     */
+    public boolean hasComparatorInputOverride(BlockState state)
+    {
+        return true;
+    }
 
-   }
+    /**
+     * @deprecated call via {@link IBlockState#getComparatorInputOverride(World,BlockPos)} whenever possible.
+     * Implementing/overriding is fine.
+     */
+    public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos)
+    {
+        if (blockState.get(HAS_BOOK))
+        {
+            TileEntity tileentity = worldIn.getTileEntity(pos);
 
-   public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
-      return false;
-   }
+            if (tileentity instanceof LecternTileEntity)
+            {
+                return ((LecternTileEntity)tileentity).getComparatorSignalLevel();
+            }
+        }
+
+        return 0;
+    }
+
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
+    {
+        if (state.get(HAS_BOOK))
+        {
+            if (!worldIn.isRemote)
+            {
+                this.openContainer(worldIn, pos, player);
+            }
+
+            return ActionResultType.func_233537_a_(worldIn.isRemote);
+        }
+        else
+        {
+            ItemStack itemstack = player.getHeldItem(handIn);
+            return !itemstack.isEmpty() && !itemstack.getItem().isIn(ItemTags.LECTERN_BOOKS) ? ActionResultType.CONSUME : ActionResultType.PASS;
+        }
+    }
+
+    @Nullable
+    public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos)
+    {
+        return !state.get(HAS_BOOK) ? null : super.getContainer(state, worldIn, pos);
+    }
+
+    private void openContainer(World world, BlockPos pos, PlayerEntity player)
+    {
+        TileEntity tileentity = world.getTileEntity(pos);
+
+        if (tileentity instanceof LecternTileEntity)
+        {
+            player.openContainer((LecternTileEntity)tileentity);
+            player.addStat(Stats.INTERACT_WITH_LECTERN);
+        }
+    }
+
+    public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type)
+    {
+        return false;
+    }
 }

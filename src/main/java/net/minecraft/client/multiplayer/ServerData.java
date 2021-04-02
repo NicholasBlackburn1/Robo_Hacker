@@ -8,110 +8,147 @@ import net.minecraft.util.SharedConstants;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
-public class ServerData {
-   public String serverName;
-   public String serverIP;
-   public ITextComponent populationInfo;
-   public ITextComponent serverMOTD;
-   public long pingToServer;
-   public int version = SharedConstants.getVersion().getProtocolVersion();
-   public ITextComponent gameVersion = new StringTextComponent(SharedConstants.getVersion().getName());
-   public boolean pinged;
-   public List<ITextComponent> playerList = Collections.emptyList();
-   private ServerData.ServerResourceMode resourceMode = ServerData.ServerResourceMode.PROMPT;
-   @Nullable
-   private String serverIcon;
-   private boolean lanServer;
+public class ServerData
+{
+    public String serverName;
+    public String serverIP;
+    public ITextComponent populationInfo;
+    public ITextComponent serverMOTD;
+    public long pingToServer;
+    public int version = SharedConstants.getVersion().getProtocolVersion();
+    public ITextComponent gameVersion = new StringTextComponent(SharedConstants.getVersion().getName());
+    public boolean pinged;
+    public List<ITextComponent> playerList = Collections.emptyList();
+    private ServerData.ServerResourceMode resourceMode = ServerData.ServerResourceMode.PROMPT;
+    @Nullable
+    private String serverIcon;
 
-   public ServerData(String name, String ip, boolean isLan) {
-      this.serverName = name;
-      this.serverIP = ip;
-      this.lanServer = isLan;
-   }
+    /** True if the server is a LAN server */
+    private boolean lanServer;
 
-   public CompoundNBT getNBTCompound() {
-      CompoundNBT compoundnbt = new CompoundNBT();
-      compoundnbt.putString("name", this.serverName);
-      compoundnbt.putString("ip", this.serverIP);
-      if (this.serverIcon != null) {
-         compoundnbt.putString("icon", this.serverIcon);
-      }
+    public ServerData(String name, String ip, boolean isLan)
+    {
+        this.serverName = name;
+        this.serverIP = ip;
+        this.lanServer = isLan;
+    }
 
-      if (this.resourceMode == ServerData.ServerResourceMode.ENABLED) {
-         compoundnbt.putBoolean("acceptTextures", true);
-      } else if (this.resourceMode == ServerData.ServerResourceMode.DISABLED) {
-         compoundnbt.putBoolean("acceptTextures", false);
-      }
+    /**
+     * Returns an NBTTagCompound with the server's name, IP and maybe acceptTextures.
+     */
+    public CompoundNBT getNBTCompound()
+    {
+        CompoundNBT compoundnbt = new CompoundNBT();
+        compoundnbt.putString("name", this.serverName);
+        compoundnbt.putString("ip", this.serverIP);
 
-      return compoundnbt;
-   }
+        if (this.serverIcon != null)
+        {
+            compoundnbt.putString("icon", this.serverIcon);
+        }
 
-   public ServerData.ServerResourceMode getResourceMode() {
-      return this.resourceMode;
-   }
+        if (this.resourceMode == ServerData.ServerResourceMode.ENABLED)
+        {
+            compoundnbt.putBoolean("acceptTextures", true);
+        }
+        else if (this.resourceMode == ServerData.ServerResourceMode.DISABLED)
+        {
+            compoundnbt.putBoolean("acceptTextures", false);
+        }
 
-   public void setResourceMode(ServerData.ServerResourceMode mode) {
-      this.resourceMode = mode;
-   }
+        return compoundnbt;
+    }
 
-   public static ServerData getServerDataFromNBTCompound(CompoundNBT nbtCompound) {
-      ServerData serverdata = new ServerData(nbtCompound.getString("name"), nbtCompound.getString("ip"), false);
-      if (nbtCompound.contains("icon", 8)) {
-         serverdata.setBase64EncodedIconData(nbtCompound.getString("icon"));
-      }
+    public ServerData.ServerResourceMode getResourceMode()
+    {
+        return this.resourceMode;
+    }
 
-      if (nbtCompound.contains("acceptTextures", 1)) {
-         if (nbtCompound.getBoolean("acceptTextures")) {
-            serverdata.setResourceMode(ServerData.ServerResourceMode.ENABLED);
-         } else {
-            serverdata.setResourceMode(ServerData.ServerResourceMode.DISABLED);
-         }
-      } else {
-         serverdata.setResourceMode(ServerData.ServerResourceMode.PROMPT);
-      }
+    public void setResourceMode(ServerData.ServerResourceMode mode)
+    {
+        this.resourceMode = mode;
+    }
 
-      return serverdata;
-   }
+    /**
+     * Takes an NBTTagCompound with 'name' and 'ip' keys, returns a ServerData instance.
+     */
+    public static ServerData getServerDataFromNBTCompound(CompoundNBT nbtCompound)
+    {
+        ServerData serverdata = new ServerData(nbtCompound.getString("name"), nbtCompound.getString("ip"), false);
 
-   @Nullable
-   public String getBase64EncodedIconData() {
-      return this.serverIcon;
-   }
+        if (nbtCompound.contains("icon", 8))
+        {
+            serverdata.setBase64EncodedIconData(nbtCompound.getString("icon"));
+        }
 
-   public void setBase64EncodedIconData(@Nullable String icon) {
-      this.serverIcon = icon;
-   }
+        if (nbtCompound.contains("acceptTextures", 1))
+        {
+            if (nbtCompound.getBoolean("acceptTextures"))
+            {
+                serverdata.setResourceMode(ServerData.ServerResourceMode.ENABLED);
+            }
+            else
+            {
+                serverdata.setResourceMode(ServerData.ServerResourceMode.DISABLED);
+            }
+        }
+        else
+        {
+            serverdata.setResourceMode(ServerData.ServerResourceMode.PROMPT);
+        }
 
-   public boolean isOnLAN() {
-      return this.lanServer;
-   }
+        return serverdata;
+    }
 
-   public void copyFrom(ServerData serverDataIn) {
-      this.serverIP = serverDataIn.serverIP;
-      this.serverName = serverDataIn.serverName;
-      this.setResourceMode(serverDataIn.getResourceMode());
-      this.serverIcon = serverDataIn.serverIcon;
-      this.lanServer = serverDataIn.lanServer;
-   }
+    @Nullable
 
-   @OnlyIn(Dist.CLIENT)
-   public static enum ServerResourceMode {
-      ENABLED("enabled"),
-      DISABLED("disabled"),
-      PROMPT("prompt");
+    /**
+     * Returns the base-64 encoded representation of the server's icon, or null if not available
+     */
+    public String getBase64EncodedIconData()
+    {
+        return this.serverIcon;
+    }
 
-      private final ITextComponent motd;
+    public void setBase64EncodedIconData(@Nullable String icon)
+    {
+        this.serverIcon = icon;
+    }
 
-      private ServerResourceMode(String name) {
-         this.motd = new TranslationTextComponent("addServer.resourcePack." + name);
-      }
+    /**
+     * Return true if the server is a LAN server
+     */
+    public boolean isOnLAN()
+    {
+        return this.lanServer;
+    }
 
-      public ITextComponent getMotd() {
-         return this.motd;
-      }
-   }
+    public void copyFrom(ServerData serverDataIn)
+    {
+        this.serverIP = serverDataIn.serverIP;
+        this.serverName = serverDataIn.serverName;
+        this.setResourceMode(serverDataIn.getResourceMode());
+        this.serverIcon = serverDataIn.serverIcon;
+        this.lanServer = serverDataIn.lanServer;
+    }
+
+    public static enum ServerResourceMode
+    {
+        ENABLED("enabled"),
+        DISABLED("disabled"),
+        PROMPT("prompt");
+
+        private final ITextComponent motd;
+
+        private ServerResourceMode(String name)
+        {
+            this.motd = new TranslationTextComponent("addServer.resourcePack." + name);
+        }
+
+        public ITextComponent getMotd()
+        {
+            return this.motd;
+        }
+    }
 }

@@ -9,59 +9,75 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import net.minecraft.network.PacketBuffer;
 
-public class CriterionProgress {
-   private static final SimpleDateFormat DATE_TIME_FORMATTER = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
-   private Date obtained;
+public class CriterionProgress
+{
+    private static final SimpleDateFormat DATE_TIME_FORMATTER = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+    private Date obtained;
 
-   public boolean isObtained() {
-      return this.obtained != null;
-   }
+    public boolean isObtained()
+    {
+        return this.obtained != null;
+    }
 
-   public void obtain() {
-      this.obtained = new Date();
-   }
+    public void obtain()
+    {
+        this.obtained = new Date();
+    }
 
-   public void reset() {
-      this.obtained = null;
-   }
+    public void reset()
+    {
+        this.obtained = null;
+    }
 
-   public Date getObtained() {
-      return this.obtained;
-   }
+    public Date getObtained()
+    {
+        return this.obtained;
+    }
 
-   public String toString() {
-      return "CriterionProgress{obtained=" + (this.obtained == null ? "false" : this.obtained) + '}';
-   }
+    public String toString()
+    {
+        return "CriterionProgress{obtained=" + (this.obtained == null ? "false" : this.obtained) + '}';
+    }
 
-   public void write(PacketBuffer buf) {
-      buf.writeBoolean(this.obtained != null);
-      if (this.obtained != null) {
-         buf.writeTime(this.obtained);
-      }
+    public void write(PacketBuffer buf)
+    {
+        buf.writeBoolean(this.obtained != null);
 
-   }
+        if (this.obtained != null)
+        {
+            buf.writeTime(this.obtained);
+        }
+    }
 
-   public JsonElement serialize() {
-      return (JsonElement)(this.obtained != null ? new JsonPrimitive(DATE_TIME_FORMATTER.format(this.obtained)) : JsonNull.INSTANCE);
-   }
+    public JsonElement serialize()
+    {
+        return (JsonElement)(this.obtained != null ? new JsonPrimitive(DATE_TIME_FORMATTER.format(this.obtained)) : JsonNull.INSTANCE);
+    }
 
-   public static CriterionProgress read(PacketBuffer buf) {
-      CriterionProgress criterionprogress = new CriterionProgress();
-      if (buf.readBoolean()) {
-         criterionprogress.obtained = buf.readTime();
-      }
+    public static CriterionProgress read(PacketBuffer buf)
+    {
+        CriterionProgress criterionprogress = new CriterionProgress();
 
-      return criterionprogress;
-   }
+        if (buf.readBoolean())
+        {
+            criterionprogress.obtained = buf.readTime();
+        }
 
-   public static CriterionProgress fromJson(String dateTime) {
-      CriterionProgress criterionprogress = new CriterionProgress();
+        return criterionprogress;
+    }
 
-      try {
-         criterionprogress.obtained = DATE_TIME_FORMATTER.parse(dateTime);
-         return criterionprogress;
-      } catch (ParseException parseexception) {
-         throw new JsonSyntaxException("Invalid datetime: " + dateTime, parseexception);
-      }
-   }
+    public static CriterionProgress fromJson(String dateTime)
+    {
+        CriterionProgress criterionprogress = new CriterionProgress();
+
+        try
+        {
+            criterionprogress.obtained = DATE_TIME_FORMATTER.parse(dateTime);
+            return criterionprogress;
+        }
+        catch (ParseException parseexception)
+        {
+            throw new JsonSyntaxException("Invalid datetime: " + dateTime, parseexception);
+        }
+    }
 }

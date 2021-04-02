@@ -8,46 +8,61 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class BlockModelDefinition implements Supplier<JsonElement> {
-   private final Map<BlockModeInfo<?>, BlockModeInfo<?>.Field> infoToInfoFieldMap = Maps.newLinkedHashMap();
+public class BlockModelDefinition implements Supplier<JsonElement>
+{
+    private final Map < BlockModeInfo<?>, BlockModeInfo<?>.Field > infoToInfoFieldMap = Maps.newLinkedHashMap();
 
-   public <T> BlockModelDefinition replaceInfoValue(BlockModeInfo<T> info, T value) {
-      BlockModeInfo<?>.Field blockmodeinfo = this.infoToInfoFieldMap.put(info, info.getFieldInfo(value));
-      if (blockmodeinfo != null) {
-         throw new IllegalStateException("Replacing value of " + blockmodeinfo + " with " + value);
-      } else {
-         return this;
-      }
-   }
+    public <T> BlockModelDefinition replaceInfoValue(BlockModeInfo<T> info, T value)
+    {
+        BlockModeInfo<?>.Field blockmodeinfo = this.infoToInfoFieldMap.put(info, info.getFieldInfo(value));
 
-   public static BlockModelDefinition getNewModelDefinition() {
-      return new BlockModelDefinition();
-   }
+        if (blockmodeinfo != null)
+        {
+            throw new IllegalStateException("Replacing value of " + blockmodeinfo + " with " + value);
+        }
+        else
+        {
+            return this;
+        }
+    }
 
-   public static BlockModelDefinition mergeDefinitions(BlockModelDefinition definition1, BlockModelDefinition definition2) {
-      BlockModelDefinition blockmodeldefinition = new BlockModelDefinition();
-      blockmodeldefinition.infoToInfoFieldMap.putAll(definition1.infoToInfoFieldMap);
-      blockmodeldefinition.infoToInfoFieldMap.putAll(definition2.infoToInfoFieldMap);
-      return blockmodeldefinition;
-   }
+    public static BlockModelDefinition getNewModelDefinition()
+    {
+        return new BlockModelDefinition();
+    }
 
-   public JsonElement get() {
-      JsonObject jsonobject = new JsonObject();
-      this.infoToInfoFieldMap.values().forEach((p_240196_1_) -> {
-         p_240196_1_.serialize(jsonobject);
-      });
-      return jsonobject;
-   }
+    public static BlockModelDefinition mergeDefinitions(BlockModelDefinition definition1, BlockModelDefinition definition2)
+    {
+        BlockModelDefinition blockmodeldefinition = new BlockModelDefinition();
+        blockmodeldefinition.infoToInfoFieldMap.putAll(definition1.infoToInfoFieldMap);
+        blockmodeldefinition.infoToInfoFieldMap.putAll(definition2.infoToInfoFieldMap);
+        return blockmodeldefinition;
+    }
 
-   public static JsonElement serialize(List<BlockModelDefinition> definitions) {
-      if (definitions.size() == 1) {
-         return definitions.get(0).get();
-      } else {
-         JsonArray jsonarray = new JsonArray();
-         definitions.forEach((p_240195_1_) -> {
-            jsonarray.add(p_240195_1_.get());
-         });
-         return jsonarray;
-      }
-   }
+    public JsonElement get()
+    {
+        JsonObject jsonobject = new JsonObject();
+        this.infoToInfoFieldMap.values().forEach((field) ->
+        {
+            field.serialize(jsonobject);
+        });
+        return jsonobject;
+    }
+
+    public static JsonElement serialize(List<BlockModelDefinition> definitions)
+    {
+        if (definitions.size() == 1)
+        {
+            return definitions.get(0).get();
+        }
+        else
+        {
+            JsonArray jsonarray = new JsonArray();
+            definitions.forEach((definition) ->
+            {
+                jsonarray.add(definition.get());
+            });
+            return jsonarray;
+        }
+    }
 }

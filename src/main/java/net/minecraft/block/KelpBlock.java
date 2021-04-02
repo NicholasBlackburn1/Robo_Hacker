@@ -9,24 +9,30 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 
-public class KelpBlock extends AbstractBodyPlantBlock implements ILiquidContainer {
-   protected KelpBlock(AbstractBlock.Properties properties) {
-      super(properties, Direction.UP, VoxelShapes.fullCube(), true);
-   }
+public class KelpBlock extends AbstractBodyPlantBlock implements ILiquidContainer
+{
+    protected KelpBlock(AbstractBlock.Properties properties)
+    {
+        super(properties, Direction.UP, VoxelShapes.fullCube(), true);
+    }
 
-   protected AbstractTopPlantBlock getTopPlantBlock() {
-      return (AbstractTopPlantBlock)Blocks.KELP;
-   }
+    protected AbstractTopPlantBlock getTopPlantBlock()
+    {
+        return (AbstractTopPlantBlock)Blocks.KELP;
+    }
 
-   public FluidState getFluidState(BlockState state) {
-      return Fluids.WATER.getStillFluidState(false);
-   }
+    public FluidState getFluidState(BlockState state)
+    {
+        return Fluids.WATER.getStillFluidState(false);
+    }
 
-   public boolean canContainFluid(IBlockReader worldIn, BlockPos pos, BlockState state, Fluid fluidIn) {
-      return false;
-   }
+    public boolean canContainFluid(IBlockReader worldIn, BlockPos pos, BlockState state, Fluid fluidIn)
+    {
+        return false;
+    }
 
-   public boolean receiveFluid(IWorld worldIn, BlockPos pos, BlockState state, FluidState fluidStateIn) {
-      return false;
-   }
+    public boolean receiveFluid(IWorld worldIn, BlockPos pos, BlockState state, FluidState fluidStateIn)
+    {
+        return false;
+    }
 }

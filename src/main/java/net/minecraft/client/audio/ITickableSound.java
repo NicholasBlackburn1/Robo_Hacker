@@ -1,11 +1,8 @@
 package net.minecraft.client.audio;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+public interface ITickableSound extends ISound
+{
+    boolean isDonePlaying();
 
-@OnlyIn(Dist.CLIENT)
-public interface ITickableSound extends ISound {
-   boolean isDonePlaying();
-
-   void tick();
+    void tick();
 }

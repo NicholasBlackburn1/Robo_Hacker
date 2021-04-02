@@ -8,43 +8,52 @@ import net.minecraft.entity.ai.brain.schedule.Activity;
 import net.minecraft.entity.merchant.villager.VillagerEntity;
 import net.minecraft.world.server.ServerWorld;
 
-public class PanicTask extends Task<VillagerEntity> {
-   public PanicTask() {
-      super(ImmutableMap.of());
-   }
+public class PanicTask extends Task<VillagerEntity>
+{
+    public PanicTask()
+    {
+        super(ImmutableMap.of());
+    }
 
-   protected boolean shouldContinueExecuting(ServerWorld worldIn, VillagerEntity entityIn, long gameTimeIn) {
-      return hasBeenHurt(entityIn) || hostileNearby(entityIn);
-   }
+    protected boolean shouldContinueExecuting(ServerWorld worldIn, VillagerEntity entityIn, long gameTimeIn)
+    {
+        return hasBeenHurt(entityIn) || hostileNearby(entityIn);
+    }
 
-   protected void startExecuting(ServerWorld worldIn, VillagerEntity entityIn, long gameTimeIn) {
-      if (hasBeenHurt(entityIn) || hostileNearby(entityIn)) {
-         Brain<?> brain = entityIn.getBrain();
-         if (!brain.hasActivity(Activity.PANIC)) {
-            brain.removeMemory(MemoryModuleType.PATH);
-            brain.removeMemory(MemoryModuleType.WALK_TARGET);
-            brain.removeMemory(MemoryModuleType.LOOK_TARGET);
-            brain.removeMemory(MemoryModuleType.BREED_TARGET);
-            brain.removeMemory(MemoryModuleType.INTERACTION_TARGET);
-         }
+    protected void startExecuting(ServerWorld worldIn, VillagerEntity entityIn, long gameTimeIn)
+    {
+        if (hasBeenHurt(entityIn) || hostileNearby(entityIn))
+        {
+            Brain<?> brain = entityIn.getBrain();
 
-         brain.switchTo(Activity.PANIC);
-      }
+            if (!brain.hasActivity(Activity.PANIC))
+            {
+                brain.removeMemory(MemoryModuleType.PATH);
+                brain.removeMemory(MemoryModuleType.WALK_TARGET);
+                brain.removeMemory(MemoryModuleType.LOOK_TARGET);
+                brain.removeMemory(MemoryModuleType.BREED_TARGET);
+                brain.removeMemory(MemoryModuleType.INTERACTION_TARGET);
+            }
 
-   }
+            brain.switchTo(Activity.PANIC);
+        }
+    }
 
-   protected void updateTask(ServerWorld worldIn, VillagerEntity owner, long gameTime) {
-      if (gameTime % 100L == 0L) {
-         owner.func_242367_a(worldIn, gameTime, 3);
-      }
+    protected void updateTask(ServerWorld worldIn, VillagerEntity owner, long gameTime)
+    {
+        if (gameTime % 100L == 0L)
+        {
+            owner.func_242367_a(worldIn, gameTime, 3);
+        }
+    }
 
-   }
+    public static boolean hostileNearby(LivingEntity entity)
+    {
+        return entity.getBrain().hasMemory(MemoryModuleType.NEAREST_HOSTILE);
+    }
 
-   public static boolean hostileNearby(LivingEntity entity) {
-      return entity.getBrain().hasMemory(MemoryModuleType.NEAREST_HOSTILE);
-   }
-
-   public static boolean hasBeenHurt(LivingEntity entity) {
-      return entity.getBrain().hasMemory(MemoryModuleType.HURT_BY);
-   }
+    public static boolean hasBeenHurt(LivingEntity entity)
+    {
+        return entity.getBrain().hasMemory(MemoryModuleType.HURT_BY);
+    }
 }

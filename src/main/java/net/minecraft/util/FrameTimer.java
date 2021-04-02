@@ -1,52 +1,78 @@
 package net.minecraft.util;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+public class FrameTimer
+{
+    /** An array with the last 240 frames */
+    private final long[] frames = new long[240];
 
-public class FrameTimer {
-   private final long[] frames = new long[240];
-   private int lastIndex;
-   private int counter;
-   private int index;
+    /** The last index used when 240 frames have been set */
+    private int lastIndex;
 
-   public void addFrame(long runningTime) {
-      this.frames[this.index] = runningTime;
-      ++this.index;
-      if (this.index == 240) {
-         this.index = 0;
-      }
+    /** A counter */
+    private int counter;
 
-      if (this.counter < 240) {
-         this.lastIndex = 0;
-         ++this.counter;
-      } else {
-         this.lastIndex = this.parseIndex(this.index + 1);
-      }
+    /** The next index to use in the array */
+    private int index;
 
-   }
+    /**
+     * Add a frame at the next index in the array frames
+     */
+    public void addFrame(long runningTime)
+    {
+        this.frames[this.index] = runningTime;
+        ++this.index;
 
-   @OnlyIn(Dist.CLIENT)
-   public int getLineHeight(long valueIn, int scale, int divisor) {
-      double d0 = (double)valueIn / (double)(1000000000L / (long)divisor);
-      return (int)(d0 * (double)scale);
-   }
+        if (this.index == 240)
+        {
+            this.index = 0;
+        }
 
-   @OnlyIn(Dist.CLIENT)
-   public int getLastIndex() {
-      return this.lastIndex;
-   }
+        if (this.counter < 240)
+        {
+            this.lastIndex = 0;
+            ++this.counter;
+        }
+        else
+        {
+            this.lastIndex = this.parseIndex(this.index + 1);
+        }
+    }
 
-   @OnlyIn(Dist.CLIENT)
-   public int getIndex() {
-      return this.index;
-   }
+    public int getLineHeight(long valueIn, int scale, int divisor)
+    {
+        double d0 = (double)valueIn / (double)(1000000000L / (long)divisor);
+        return (int)(d0 * (double)scale);
+    }
 
-   public int parseIndex(int rawIndex) {
-      return rawIndex % 240;
-   }
+    /**
+     * Return the last index used when 240 frames have been set
+     */
+    public int getLastIndex()
+    {
+        return this.lastIndex;
+    }
 
-   @OnlyIn(Dist.CLIENT)
-   public long[] getFrames() {
-      return this.frames;
-   }
+    /**
+     * Return the index of the next frame in the array
+     */
+    public int getIndex()
+    {
+        return this.index;
+    }
+
+    /**
+     * Change 240 to 0
+     */
+    public int parseIndex(int rawIndex)
+    {
+        return rawIndex % 240;
+    }
+
+    /**
+     * Return the array of frames
+     */
+    public long[] getFrames()
+    {
+        return this.frames;
+    }
 }

@@ -2,21 +2,25 @@ package net.minecraft.state.properties;
 
 import net.minecraft.util.IStringSerializable;
 
-public enum BedPart implements IStringSerializable {
-   HEAD("head"),
-   FOOT("foot");
+public enum BedPart implements IStringSerializable
+{
+    HEAD("head"),
+    FOOT("foot");
 
-   private final String name;
+    private final String name;
 
-   private BedPart(String name) {
-      this.name = name;
-   }
+    private BedPart(String name)
+    {
+        this.name = name;
+    }
 
-   public String toString() {
-      return this.name;
-   }
+    public String toString()
+    {
+        return this.name;
+    }
 
-   public String getString() {
-      return this.name;
-   }
+    public String getString()
+    {
+        return this.name;
+    }
 }

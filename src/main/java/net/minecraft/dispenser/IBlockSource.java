@@ -5,18 +5,23 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.server.ServerWorld;
 
-public interface IBlockSource extends IPosition {
-   double getX();
+public interface IBlockSource extends IPosition
+{
+    double getX();
 
-   double getY();
+    double getY();
 
-   double getZ();
+    double getZ();
 
-   BlockPos getBlockPos();
+    BlockPos getBlockPos();
 
-   BlockState getBlockState();
+    /**
+     * Gets the block state of this position and returns it.
+     *  @return Block state in this position
+     */
+    BlockState getBlockState();
 
-   <T extends TileEntity> T getBlockTileEntity();
+    <T extends TileEntity> T getBlockTileEntity();
 
-   ServerWorld getWorld();
+    ServerWorld getWorld();
 }

@@ -22,74 +22,125 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 
-public abstract class AbstractFurnaceBlock extends ContainerBlock {
-   public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
-   public static final BooleanProperty LIT = BlockStateProperties.LIT;
+public abstract class AbstractFurnaceBlock extends ContainerBlock
+{
+    public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+    public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
-   protected AbstractFurnaceBlock(AbstractBlock.Properties properties) {
-      super(properties);
-      this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(LIT, Boolean.valueOf(false)));
-   }
+    protected AbstractFurnaceBlock(AbstractBlock.Properties properties)
+    {
+        super(properties);
+        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(LIT, Boolean.valueOf(false)));
+    }
 
-   public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-      if (worldIn.isRemote) {
-         return ActionResultType.SUCCESS;
-      } else {
-         this.interactWith(worldIn, pos, player);
-         return ActionResultType.CONSUME;
-      }
-   }
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
+    {
+        if (worldIn.isRemote)
+        {
+            return ActionResultType.SUCCESS;
+        }
+        else
+        {
+            this.interactWith(worldIn, pos, player);
+            return ActionResultType.CONSUME;
+        }
+    }
 
-   protected abstract void interactWith(World worldIn, BlockPos pos, PlayerEntity player);
+    /**
+     * Interface for handling interaction with blocks that impliment AbstractFurnaceBlock. Called in onBlockActivated
+     * inside AbstractFurnaceBlock.
+     */
+    protected abstract void interactWith(World worldIn, BlockPos pos, PlayerEntity player);
 
-   public BlockState getStateForPlacement(BlockItemUseContext context) {
-      return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite());
-   }
+    public BlockState getStateForPlacement(BlockItemUseContext context)
+    {
+        return this.getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite());
+    }
 
-   public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-      if (stack.hasDisplayName()) {
-         TileEntity tileentity = worldIn.getTileEntity(pos);
-         if (tileentity instanceof AbstractFurnaceTileEntity) {
-            ((AbstractFurnaceTileEntity)tileentity).setCustomName(stack.getDisplayName());
-         }
-      }
+    /**
+     * Called by ItemBlocks after a block is set in the world, to allow post-place logic
+     */
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack)
+    {
+        if (stack.hasDisplayName())
+        {
+            TileEntity tileentity = worldIn.getTileEntity(pos);
 
-   }
+            if (tileentity instanceof AbstractFurnaceTileEntity)
+            {
+                ((AbstractFurnaceTileEntity)tileentity).setCustomName(stack.getDisplayName());
+            }
+        }
+    }
 
-   public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-      if (!state.isIn(newState.getBlock())) {
-         TileEntity tileentity = worldIn.getTileEntity(pos);
-         if (tileentity instanceof AbstractFurnaceTileEntity) {
-            InventoryHelper.dropInventoryItems(worldIn, pos, (AbstractFurnaceTileEntity)tileentity);
-            ((AbstractFurnaceTileEntity)tileentity).grantStoredRecipeExperience(worldIn, Vector3d.copyCentered(pos));
-            worldIn.updateComparatorOutputLevel(pos, this);
-         }
+    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving)
+    {
+        if (!state.isIn(newState.getBlock()))
+        {
+            TileEntity tileentity = worldIn.getTileEntity(pos);
 
-         super.onReplaced(state, worldIn, pos, newState, isMoving);
-      }
-   }
+            if (tileentity instanceof AbstractFurnaceTileEntity)
+            {
+                InventoryHelper.dropInventoryItems(worldIn, pos, (AbstractFurnaceTileEntity)tileentity);
+                ((AbstractFurnaceTileEntity)tileentity).grantStoredRecipeExperience(worldIn, Vector3d.copyCentered(pos));
+                worldIn.updateComparatorOutputLevel(pos, this);
+            }
 
-   public boolean hasComparatorInputOverride(BlockState state) {
-      return true;
-   }
+            super.onReplaced(state, worldIn, pos, newState, isMoving);
+        }
+    }
 
-   public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos) {
-      return Container.calcRedstone(worldIn.getTileEntity(pos));
-   }
+    /**
+     * @deprecated call via {@link IBlockState#hasComparatorInputOverride()} whenever possible. Implementing/overriding
+     * is fine.
+     */
+    public boolean hasComparatorInputOverride(BlockState state)
+    {
+        return true;
+    }
 
-   public BlockRenderType getRenderType(BlockState state) {
-      return BlockRenderType.MODEL;
-   }
+    /**
+     * @deprecated call via {@link IBlockState#getComparatorInputOverride(World,BlockPos)} whenever possible.
+     * Implementing/overriding is fine.
+     */
+    public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos)
+    {
+        return Container.calcRedstone(worldIn.getTileEntity(pos));
+    }
 
-   public BlockState rotate(BlockState state, Rotation rot) {
-      return state.with(FACING, rot.rotate(state.get(FACING)));
-   }
+    /**
+     * The type of render function called. MODEL for mixed tesr and static model, MODELBLOCK_ANIMATED for TESR-only,
+     * LIQUID for vanilla liquids, INVISIBLE to skip all rendering
+     * @deprecated call via {@link IBlockState#getRenderType()} whenever possible. Implementing/overriding is fine.
+     */
+    public BlockRenderType getRenderType(BlockState state)
+    {
+        return BlockRenderType.MODEL;
+    }
 
-   public BlockState mirror(BlockState state, Mirror mirrorIn) {
-      return state.rotate(mirrorIn.toRotation(state.get(FACING)));
-   }
+    /**
+     * Returns the blockstate with the given rotation from the passed blockstate. If inapplicable, returns the passed
+     * blockstate.
+     * @deprecated call via {@link IBlockState#withRotation(Rotation)} whenever possible. Implementing/overriding is
+     * fine.
+     */
+    public BlockState rotate(BlockState state, Rotation rot)
+    {
+        return state.with(FACING, rot.rotate(state.get(FACING)));
+    }
 
-   protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-      builder.add(FACING, LIT);
-   }
+    /**
+     * Returns the blockstate with the given mirror of the passed blockstate. If inapplicable, returns the passed
+     * blockstate.
+     * @deprecated call via {@link IBlockState#withMirror(Mirror)} whenever possible. Implementing/overriding is fine.
+     */
+    public BlockState mirror(BlockState state, Mirror mirrorIn)
+    {
+        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+    }
+
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    {
+        builder.add(FACING, LIT);
+    }
 }

@@ -6,108 +6,142 @@ import java.io.IOException;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
-public class ShortNBT extends NumberNBT {
-   public static final INBTType<ShortNBT> TYPE = new INBTType<ShortNBT>() {
-      public ShortNBT readNBT(DataInput input, int depth, NBTSizeTracker accounter) throws IOException {
-         accounter.read(80L);
-         return ShortNBT.valueOf(input.readShort());
-      }
+public class ShortNBT extends NumberNBT
+{
+    public static final INBTType<ShortNBT> TYPE = new INBTType<ShortNBT>()
+    {
+        public ShortNBT readNBT(DataInput input, int depth, NBTSizeTracker accounter) throws IOException
+        {
+            accounter.read(80L);
+            return ShortNBT.valueOf(input.readShort());
+        }
+        public String getName()
+        {
+            return "SHORT";
+        }
+        public String getTagName()
+        {
+            return "TAG_Short";
+        }
+        public boolean isPrimitive()
+        {
+            return true;
+        }
+    };
+    private final short data;
 
-      public String getName() {
-         return "SHORT";
-      }
+    private ShortNBT(short data)
+    {
+        this.data = data;
+    }
 
-      public String getTagName() {
-         return "TAG_Short";
-      }
+    public static ShortNBT valueOf(short value)
+    {
+        return value >= -128 && value <= 1024 ? ShortNBT.Cache.CACHE[value + 128] : new ShortNBT(value);
+    }
 
-      public boolean isPrimitive() {
-         return true;
-      }
-   };
-   private final short data;
+    /**
+     * Write the actual data contents of the tag, implemented in NBT extension classes
+     */
+    public void write(DataOutput output) throws IOException
+    {
+        output.writeShort(this.data);
+    }
 
-   private ShortNBT(short data) {
-      this.data = data;
-   }
+    /**
+     * Gets the type byte for the tag.
+     */
+    public byte getId()
+    {
+        return 2;
+    }
 
-   public static ShortNBT valueOf(short value) {
-      return value >= -128 && value <= 1024 ? ShortNBT.Cache.CACHE[value + 128] : new ShortNBT(value);
-   }
+    public INBTType<ShortNBT> getType()
+    {
+        return TYPE;
+    }
 
-   public void write(DataOutput output) throws IOException {
-      output.writeShort(this.data);
-   }
+    public String toString()
+    {
+        return this.data + "s";
+    }
 
-   public byte getId() {
-      return 2;
-   }
+    /**
+     * Creates a clone of the tag.
+     */
+    public ShortNBT copy()
+    {
+        return this;
+    }
 
-   public INBTType<ShortNBT> getType() {
-      return TYPE;
-   }
+    public boolean equals(Object p_equals_1_)
+    {
+        if (this == p_equals_1_)
+        {
+            return true;
+        }
+        else
+        {
+            return p_equals_1_ instanceof ShortNBT && this.data == ((ShortNBT)p_equals_1_).data;
+        }
+    }
 
-   public String toString() {
-      return this.data + "s";
-   }
+    public int hashCode()
+    {
+        return this.data;
+    }
 
-   public ShortNBT copy() {
-      return this;
-   }
+    public ITextComponent toFormattedComponent(String indentation, int indentDepth)
+    {
+        ITextComponent itextcomponent = (new StringTextComponent("s")).mergeStyle(SYNTAX_HIGHLIGHTING_NUMBER_TYPE);
+        return (new StringTextComponent(String.valueOf((int)this.data))).append(itextcomponent).mergeStyle(SYNTAX_HIGHLIGHTING_NUMBER);
+    }
 
-   public boolean equals(Object p_equals_1_) {
-      if (this == p_equals_1_) {
-         return true;
-      } else {
-         return p_equals_1_ instanceof ShortNBT && this.data == ((ShortNBT)p_equals_1_).data;
-      }
-   }
+    public long getLong()
+    {
+        return (long)this.data;
+    }
 
-   public int hashCode() {
-      return this.data;
-   }
+    public int getInt()
+    {
+        return this.data;
+    }
 
-   public ITextComponent toFormattedComponent(String indentation, int indentDepth) {
-      ITextComponent itextcomponent = (new StringTextComponent("s")).mergeStyle(SYNTAX_HIGHLIGHTING_NUMBER_TYPE);
-      return (new StringTextComponent(String.valueOf((int)this.data))).append(itextcomponent).mergeStyle(SYNTAX_HIGHLIGHTING_NUMBER);
-   }
+    public short getShort()
+    {
+        return this.data;
+    }
 
-   public long getLong() {
-      return (long)this.data;
-   }
+    public byte getByte()
+    {
+        return (byte)(this.data & 255);
+    }
 
-   public int getInt() {
-      return this.data;
-   }
+    public double getDouble()
+    {
+        return (double)this.data;
+    }
 
-   public short getShort() {
-      return this.data;
-   }
+    public float getFloat()
+    {
+        return (float)this.data;
+    }
 
-   public byte getByte() {
-      return (byte)(this.data & 255);
-   }
+    public Number getAsNumber()
+    {
+        return this.data;
+    }
 
-   public double getDouble() {
-      return (double)this.data;
-   }
+    static class Cache
+    {
+        static final ShortNBT[] CACHE = new ShortNBT[1153];
 
-   public float getFloat() {
-      return (float)this.data;
-   }
-
-   public Number getAsNumber() {
-      return this.data;
-   }
-
-   static class Cache {
-      static final ShortNBT[] CACHE = new ShortNBT[1153];
-
-      static {
-         for(int i = 0; i < CACHE.length; ++i) {
-            CACHE[i] = new ShortNBT((short)(-128 + i));
-         }
-
-      }
-   }
+        static
+        {
+            for (int i = 0; i < CACHE.length; ++i)
+            {
+                CACHE[i] = new ShortNBT((short)(-128 + i));
+            }
+        }
+    }
 }

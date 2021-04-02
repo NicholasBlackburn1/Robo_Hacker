@@ -10,41 +10,56 @@ import net.minecraft.world.ISeedReader;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.Heightmap;
 
-public class KelpFeature extends Feature<NoFeatureConfig> {
-   public KelpFeature(Codec<NoFeatureConfig> p_i231967_1_) {
-      super(p_i231967_1_);
-   }
+public class KelpFeature extends Feature<NoFeatureConfig>
+{
+    public KelpFeature(Codec<NoFeatureConfig> p_i231967_1_)
+    {
+        super(p_i231967_1_);
+    }
 
-   public boolean generate(ISeedReader reader, ChunkGenerator generator, Random rand, BlockPos pos, NoFeatureConfig config) {
-      int i = 0;
-      int j = reader.getHeight(Heightmap.Type.OCEAN_FLOOR, pos.getX(), pos.getZ());
-      BlockPos blockpos = new BlockPos(pos.getX(), j, pos.getZ());
-      if (reader.getBlockState(blockpos).isIn(Blocks.WATER)) {
-         BlockState blockstate = Blocks.KELP.getDefaultState();
-         BlockState blockstate1 = Blocks.KELP_PLANT.getDefaultState();
-         int k = 1 + rand.nextInt(10);
+    public boolean func_241855_a(ISeedReader p_241855_1_, ChunkGenerator p_241855_2_, Random p_241855_3_, BlockPos p_241855_4_, NoFeatureConfig p_241855_5_)
+    {
+        int i = 0;
+        int j = p_241855_1_.getHeight(Heightmap.Type.OCEAN_FLOOR, p_241855_4_.getX(), p_241855_4_.getZ());
+        BlockPos blockpos = new BlockPos(p_241855_4_.getX(), j, p_241855_4_.getZ());
 
-         for(int l = 0; l <= k; ++l) {
-            if (reader.getBlockState(blockpos).isIn(Blocks.WATER) && reader.getBlockState(blockpos.up()).isIn(Blocks.WATER) && blockstate1.isValidPosition(reader, blockpos)) {
-               if (l == k) {
-                  reader.setBlockState(blockpos, blockstate.with(KelpTopBlock.AGE, Integer.valueOf(rand.nextInt(4) + 20)), 2);
-                  ++i;
-               } else {
-                  reader.setBlockState(blockpos, blockstate1, 2);
-               }
-            } else if (l > 0) {
-               BlockPos blockpos1 = blockpos.down();
-               if (blockstate.isValidPosition(reader, blockpos1) && !reader.getBlockState(blockpos1.down()).isIn(Blocks.KELP)) {
-                  reader.setBlockState(blockpos1, blockstate.with(KelpTopBlock.AGE, Integer.valueOf(rand.nextInt(4) + 20)), 2);
-                  ++i;
-               }
-               break;
+        if (p_241855_1_.getBlockState(blockpos).isIn(Blocks.WATER))
+        {
+            BlockState blockstate = Blocks.KELP.getDefaultState();
+            BlockState blockstate1 = Blocks.KELP_PLANT.getDefaultState();
+            int k = 1 + p_241855_3_.nextInt(10);
+
+            for (int l = 0; l <= k; ++l)
+            {
+                if (p_241855_1_.getBlockState(blockpos).isIn(Blocks.WATER) && p_241855_1_.getBlockState(blockpos.up()).isIn(Blocks.WATER) && blockstate1.isValidPosition(p_241855_1_, blockpos))
+                {
+                    if (l == k)
+                    {
+                        p_241855_1_.setBlockState(blockpos, blockstate.with(KelpTopBlock.AGE, Integer.valueOf(p_241855_3_.nextInt(4) + 20)), 2);
+                        ++i;
+                    }
+                    else
+                    {
+                        p_241855_1_.setBlockState(blockpos, blockstate1, 2);
+                    }
+                }
+                else if (l > 0)
+                {
+                    BlockPos blockpos1 = blockpos.down();
+
+                    if (blockstate.isValidPosition(p_241855_1_, blockpos1) && !p_241855_1_.getBlockState(blockpos1.down()).isIn(Blocks.KELP))
+                    {
+                        p_241855_1_.setBlockState(blockpos1, blockstate.with(KelpTopBlock.AGE, Integer.valueOf(p_241855_3_.nextInt(4) + 20)), 2);
+                        ++i;
+                    }
+
+                    break;
+                }
+
+                blockpos = blockpos.up();
             }
+        }
 
-            blockpos = blockpos.up();
-         }
-      }
-
-      return i > 0;
-   }
+        return i > 0;
+    }
 }

@@ -1,4 +1,5 @@
 package net.minecraft.entity.monster;
 
-public interface IMob {
+public interface IMob
+{
 }

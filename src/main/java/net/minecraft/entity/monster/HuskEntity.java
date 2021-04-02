@@ -16,58 +16,73 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 
-public class HuskEntity extends ZombieEntity {
-   public HuskEntity(EntityType<? extends HuskEntity> type, World worldIn) {
-      super(type, worldIn);
-   }
+public class HuskEntity extends ZombieEntity
+{
+    public HuskEntity(EntityType <? extends HuskEntity > type, World worldIn)
+    {
+        super(type, worldIn);
+    }
 
-   public static boolean func_223334_b(EntityType<HuskEntity> p_223334_0_, IServerWorld p_223334_1_, SpawnReason reason, BlockPos p_223334_3_, Random p_223334_4_) {
-      return canMonsterSpawnInLight(p_223334_0_, p_223334_1_, reason, p_223334_3_, p_223334_4_) && (reason == SpawnReason.SPAWNER || p_223334_1_.canSeeSky(p_223334_3_));
-   }
+    public static boolean func_223334_b(EntityType<HuskEntity> p_223334_0_, IServerWorld p_223334_1_, SpawnReason reason, BlockPos p_223334_3_, Random p_223334_4_)
+    {
+        return canMonsterSpawnInLight(p_223334_0_, p_223334_1_, reason, p_223334_3_, p_223334_4_) && (reason == SpawnReason.SPAWNER || p_223334_1_.canSeeSky(p_223334_3_));
+    }
 
-   protected boolean shouldBurnInDay() {
-      return false;
-   }
+    protected boolean shouldBurnInDay()
+    {
+        return false;
+    }
 
-   protected SoundEvent getAmbientSound() {
-      return SoundEvents.ENTITY_HUSK_AMBIENT;
-   }
+    protected SoundEvent getAmbientSound()
+    {
+        return SoundEvents.ENTITY_HUSK_AMBIENT;
+    }
 
-   protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-      return SoundEvents.ENTITY_HUSK_HURT;
-   }
+    protected SoundEvent getHurtSound(DamageSource damageSourceIn)
+    {
+        return SoundEvents.ENTITY_HUSK_HURT;
+    }
 
-   protected SoundEvent getDeathSound() {
-      return SoundEvents.ENTITY_HUSK_DEATH;
-   }
+    protected SoundEvent getDeathSound()
+    {
+        return SoundEvents.ENTITY_HUSK_DEATH;
+    }
 
-   protected SoundEvent getStepSound() {
-      return SoundEvents.ENTITY_HUSK_STEP;
-   }
+    protected SoundEvent getStepSound()
+    {
+        return SoundEvents.ENTITY_HUSK_STEP;
+    }
 
-   public boolean attackEntityAsMob(Entity entityIn) {
-      boolean flag = super.attackEntityAsMob(entityIn);
-      if (flag && this.getHeldItemMainhand().isEmpty() && entityIn instanceof LivingEntity) {
-         float f = this.world.getDifficultyForLocation(this.getPosition()).getAdditionalDifficulty();
-         ((LivingEntity)entityIn).addPotionEffect(new EffectInstance(Effects.HUNGER, 140 * (int)f));
-      }
+    public boolean attackEntityAsMob(Entity entityIn)
+    {
+        boolean flag = super.attackEntityAsMob(entityIn);
 
-      return flag;
-   }
+        if (flag && this.getHeldItemMainhand().isEmpty() && entityIn instanceof LivingEntity)
+        {
+            float f = this.world.getDifficultyForLocation(this.getPosition()).getAdditionalDifficulty();
+            ((LivingEntity)entityIn).addPotionEffect(new EffectInstance(Effects.HUNGER, 140 * (int)f));
+        }
 
-   protected boolean shouldDrown() {
-      return true;
-   }
+        return flag;
+    }
 
-   protected void onDrowned() {
-      this.func_234341_c_(EntityType.ZOMBIE);
-      if (!this.isSilent()) {
-         this.world.playEvent((PlayerEntity)null, 1041, this.getPosition(), 0);
-      }
+    protected boolean shouldDrown()
+    {
+        return true;
+    }
 
-   }
+    protected void onDrowned()
+    {
+        this.func_234341_c_(EntityType.ZOMBIE);
 
-   protected ItemStack getSkullDrop() {
-      return ItemStack.EMPTY;
-   }
+        if (!this.isSilent())
+        {
+            this.world.playEvent((PlayerEntity)null, 1041, this.getPosition(), 0);
+        }
+    }
+
+    protected ItemStack getSkullDrop()
+    {
+        return ItemStack.EMPTY;
+    }
 }

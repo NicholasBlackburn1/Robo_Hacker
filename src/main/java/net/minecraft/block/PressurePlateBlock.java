@@ -15,73 +15,93 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 
-public class PressurePlateBlock extends AbstractPressurePlateBlock {
-   public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
-   private final PressurePlateBlock.Sensitivity sensitivity;
+public class PressurePlateBlock extends AbstractPressurePlateBlock
+{
+    public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
+    private final PressurePlateBlock.Sensitivity sensitivity;
 
-   protected PressurePlateBlock(PressurePlateBlock.Sensitivity sensitivityIn, AbstractBlock.Properties propertiesIn) {
-      super(propertiesIn);
-      this.setDefaultState(this.stateContainer.getBaseState().with(POWERED, Boolean.valueOf(false)));
-      this.sensitivity = sensitivityIn;
-   }
+    protected PressurePlateBlock(PressurePlateBlock.Sensitivity sensitivityIn, AbstractBlock.Properties propertiesIn)
+    {
+        super(propertiesIn);
+        this.setDefaultState(this.stateContainer.getBaseState().with(POWERED, Boolean.valueOf(false)));
+        this.sensitivity = sensitivityIn;
+    }
 
-   protected int getRedstoneStrength(BlockState state) {
-      return state.get(POWERED) ? 15 : 0;
-   }
+    protected int getRedstoneStrength(BlockState state)
+    {
+        return state.get(POWERED) ? 15 : 0;
+    }
 
-   protected BlockState setRedstoneStrength(BlockState state, int strength) {
-      return state.with(POWERED, Boolean.valueOf(strength > 0));
-   }
+    protected BlockState setRedstoneStrength(BlockState state, int strength)
+    {
+        return state.with(POWERED, Boolean.valueOf(strength > 0));
+    }
 
-   protected void playClickOnSound(IWorld worldIn, BlockPos pos) {
-      if (this.material != Material.WOOD && this.material != Material.NETHER_WOOD) {
-         worldIn.playSound((PlayerEntity)null, pos, SoundEvents.BLOCK_STONE_PRESSURE_PLATE_CLICK_ON, SoundCategory.BLOCKS, 0.3F, 0.6F);
-      } else {
-         worldIn.playSound((PlayerEntity)null, pos, SoundEvents.BLOCK_WOODEN_PRESSURE_PLATE_CLICK_ON, SoundCategory.BLOCKS, 0.3F, 0.8F);
-      }
+    protected void playClickOnSound(IWorld worldIn, BlockPos pos)
+    {
+        if (this.material != Material.WOOD && this.material != Material.NETHER_WOOD)
+        {
+            worldIn.playSound((PlayerEntity)null, pos, SoundEvents.BLOCK_STONE_PRESSURE_PLATE_CLICK_ON, SoundCategory.BLOCKS, 0.3F, 0.6F);
+        }
+        else
+        {
+            worldIn.playSound((PlayerEntity)null, pos, SoundEvents.BLOCK_WOODEN_PRESSURE_PLATE_CLICK_ON, SoundCategory.BLOCKS, 0.3F, 0.8F);
+        }
+    }
 
-   }
+    protected void playClickOffSound(IWorld worldIn, BlockPos pos)
+    {
+        if (this.material != Material.WOOD && this.material != Material.NETHER_WOOD)
+        {
+            worldIn.playSound((PlayerEntity)null, pos, SoundEvents.BLOCK_STONE_PRESSURE_PLATE_CLICK_OFF, SoundCategory.BLOCKS, 0.3F, 0.5F);
+        }
+        else
+        {
+            worldIn.playSound((PlayerEntity)null, pos, SoundEvents.BLOCK_WOODEN_PRESSURE_PLATE_CLICK_OFF, SoundCategory.BLOCKS, 0.3F, 0.7F);
+        }
+    }
 
-   protected void playClickOffSound(IWorld worldIn, BlockPos pos) {
-      if (this.material != Material.WOOD && this.material != Material.NETHER_WOOD) {
-         worldIn.playSound((PlayerEntity)null, pos, SoundEvents.BLOCK_STONE_PRESSURE_PLATE_CLICK_OFF, SoundCategory.BLOCKS, 0.3F, 0.5F);
-      } else {
-         worldIn.playSound((PlayerEntity)null, pos, SoundEvents.BLOCK_WOODEN_PRESSURE_PLATE_CLICK_OFF, SoundCategory.BLOCKS, 0.3F, 0.7F);
-      }
+    protected int computeRedstoneStrength(World worldIn, BlockPos pos)
+    {
+        AxisAlignedBB axisalignedbb = PRESSURE_AABB.offset(pos);
+        List <? extends Entity > list;
 
-   }
+        switch (this.sensitivity)
+        {
+            case EVERYTHING:
+                list = worldIn.getEntitiesWithinAABBExcludingEntity((Entity)null, axisalignedbb);
+                break;
 
-   protected int computeRedstoneStrength(World worldIn, BlockPos pos) {
-      AxisAlignedBB axisalignedbb = PRESSURE_AABB.offset(pos);
-      List<? extends Entity> list;
-      switch(this.sensitivity) {
-      case EVERYTHING:
-         list = worldIn.getEntitiesWithinAABBExcludingEntity((Entity)null, axisalignedbb);
-         break;
-      case MOBS:
-         list = worldIn.getEntitiesWithinAABB(LivingEntity.class, axisalignedbb);
-         break;
-      default:
-         return 0;
-      }
+            case MOBS:
+                list = worldIn.getEntitiesWithinAABB(LivingEntity.class, axisalignedbb);
+                break;
 
-      if (!list.isEmpty()) {
-         for(Entity entity : list) {
-            if (!entity.doesEntityNotTriggerPressurePlate()) {
-               return 15;
+            default:
+                return 0;
+        }
+
+        if (!list.isEmpty())
+        {
+            for (Entity entity : list)
+            {
+                if (!entity.doesEntityNotTriggerPressurePlate())
+                {
+                    return 15;
+                }
             }
-         }
-      }
+        }
 
-      return 0;
-   }
+        return 0;
+    }
 
-   protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-      builder.add(POWERED);
-   }
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    {
+        builder.add(POWERED);
+    }
 
-   public static enum Sensitivity {
-      EVERYTHING,
-      MOBS;
-   }
+    public static enum Sensitivity
+    {
+        EVERYTHING,
+        MOBS;
+    }
 }

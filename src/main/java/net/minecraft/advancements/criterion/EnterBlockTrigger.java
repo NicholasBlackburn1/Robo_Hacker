@@ -12,73 +12,96 @@ import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 
-public class EnterBlockTrigger extends AbstractCriterionTrigger<EnterBlockTrigger.Instance> {
-   private static final ResourceLocation ID = new ResourceLocation("enter_block");
+public class EnterBlockTrigger extends AbstractCriterionTrigger<EnterBlockTrigger.Instance>
+{
+    private static final ResourceLocation ID = new ResourceLocation("enter_block");
 
-   public ResourceLocation getId() {
-      return ID;
-   }
+    public ResourceLocation getId()
+    {
+        return ID;
+    }
 
-   public EnterBlockTrigger.Instance deserializeTrigger(JsonObject json, EntityPredicate.AndPredicate entityPredicate, ConditionArrayParser conditionsParser) {
-      Block block = deserializeBlock(json);
-      StatePropertiesPredicate statepropertiespredicate = StatePropertiesPredicate.deserializeProperties(json.get("state"));
-      if (block != null) {
-         statepropertiespredicate.forEachNotPresent(block.getStateContainer(), (p_226548_1_) -> {
-            throw new JsonSyntaxException("Block " + block + " has no property " + p_226548_1_);
-         });
-      }
+    public EnterBlockTrigger.Instance deserializeTrigger(JsonObject json, EntityPredicate.AndPredicate entityPredicate, ConditionArrayParser conditionsParser)
+    {
+        Block block = deserializeBlock(json);
+        StatePropertiesPredicate statepropertiespredicate = StatePropertiesPredicate.deserializeProperties(json.get("state"));
 
-      return new EnterBlockTrigger.Instance(entityPredicate, block, statepropertiespredicate);
-   }
+        if (block != null)
+        {
+            statepropertiespredicate.forEachNotPresent(block.getStateContainer(), (property) ->
+            {
+                throw new JsonSyntaxException("Block " + block + " has no property " + property);
+            });
+        }
 
-   @Nullable
-   private static Block deserializeBlock(JsonObject jsonObject) {
-      if (jsonObject.has("block")) {
-         ResourceLocation resourcelocation = new ResourceLocation(JSONUtils.getString(jsonObject, "block"));
-         return Registry.BLOCK.getOptional(resourcelocation).orElseThrow(() -> {
-            return new JsonSyntaxException("Unknown block type '" + resourcelocation + "'");
-         });
-      } else {
-         return null;
-      }
-   }
+        return new EnterBlockTrigger.Instance(entityPredicate, block, statepropertiespredicate);
+    }
 
-   public void trigger(ServerPlayerEntity player, BlockState state) {
-      this.triggerListeners(player, (p_226549_1_) -> {
-         return p_226549_1_.test(state);
-      });
-   }
+    @Nullable
+    private static Block deserializeBlock(JsonObject jsonObject)
+    {
+        if (jsonObject.has("block"))
+        {
+            ResourceLocation resourcelocation = new ResourceLocation(JSONUtils.getString(jsonObject, "block"));
+            return Registry.BLOCK.getOptional(resourcelocation).orElseThrow(() ->
+            {
+                return new JsonSyntaxException("Unknown block type '" + resourcelocation + "'");
+            });
+        }
+        else
+        {
+            return null;
+        }
+    }
 
-   public static class Instance extends CriterionInstance {
-      private final Block block;
-      private final StatePropertiesPredicate properties;
+    public void trigger(ServerPlayerEntity player, BlockState state)
+    {
+        this.triggerListeners(player, (instance) ->
+        {
+            return instance.test(state);
+        });
+    }
 
-      public Instance(EntityPredicate.AndPredicate player, @Nullable Block block, StatePropertiesPredicate stateCondition) {
-         super(EnterBlockTrigger.ID, player);
-         this.block = block;
-         this.properties = stateCondition;
-      }
+    public static class Instance extends CriterionInstance
+    {
+        private final Block block;
+        private final StatePropertiesPredicate properties;
 
-      public static EnterBlockTrigger.Instance forBlock(Block block) {
-         return new EnterBlockTrigger.Instance(EntityPredicate.AndPredicate.ANY_AND, block, StatePropertiesPredicate.EMPTY);
-      }
+        public Instance(EntityPredicate.AndPredicate player, @Nullable Block block, StatePropertiesPredicate stateCondition)
+        {
+            super(EnterBlockTrigger.ID, player);
+            this.block = block;
+            this.properties = stateCondition;
+        }
 
-      public JsonObject serialize(ConditionArraySerializer conditions) {
-         JsonObject jsonobject = super.serialize(conditions);
-         if (this.block != null) {
-            jsonobject.addProperty("block", Registry.BLOCK.getKey(this.block).toString());
-         }
+        public static EnterBlockTrigger.Instance forBlock(Block block)
+        {
+            return new EnterBlockTrigger.Instance(EntityPredicate.AndPredicate.ANY_AND, block, StatePropertiesPredicate.EMPTY);
+        }
 
-         jsonobject.add("state", this.properties.toJsonElement());
-         return jsonobject;
-      }
+        public JsonObject serialize(ConditionArraySerializer conditions)
+        {
+            JsonObject jsonobject = super.serialize(conditions);
 
-      public boolean test(BlockState state) {
-         if (this.block != null && !state.isIn(this.block)) {
-            return false;
-         } else {
-            return this.properties.matches(state);
-         }
-      }
-   }
+            if (this.block != null)
+            {
+                jsonobject.addProperty("block", Registry.BLOCK.getKey(this.block).toString());
+            }
+
+            jsonobject.add("state", this.properties.toJsonElement());
+            return jsonobject;
+        }
+
+        public boolean test(BlockState state)
+        {
+            if (this.block != null && !state.isIn(this.block))
+            {
+                return false;
+            }
+            else
+            {
+                return this.properties.matches(state);
+            }
+        }
+    }
 }

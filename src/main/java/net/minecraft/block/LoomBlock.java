@@ -16,34 +16,44 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 
-public class LoomBlock extends HorizontalBlock {
-   private static final ITextComponent CONTAINER_NAME = new TranslationTextComponent("container.loom");
+public class LoomBlock extends HorizontalBlock
+{
+    private static final ITextComponent CONTAINER_NAME = new TranslationTextComponent("container.loom");
 
-   protected LoomBlock(AbstractBlock.Properties properties) {
-      super(properties);
-   }
+    protected LoomBlock(AbstractBlock.Properties properties)
+    {
+        super(properties);
+    }
 
-   public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-      if (worldIn.isRemote) {
-         return ActionResultType.SUCCESS;
-      } else {
-         player.openContainer(state.getContainer(worldIn, pos));
-         player.addStat(Stats.INTERACT_WITH_LOOM);
-         return ActionResultType.CONSUME;
-      }
-   }
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
+    {
+        if (worldIn.isRemote)
+        {
+            return ActionResultType.SUCCESS;
+        }
+        else
+        {
+            player.openContainer(state.getContainer(worldIn, pos));
+            player.addStat(Stats.INTERACT_WITH_LOOM);
+            return ActionResultType.CONSUME;
+        }
+    }
 
-   public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos) {
-      return new SimpleNamedContainerProvider((p_220254_2_, p_220254_3_, p_220254_4_) -> {
-         return new LoomContainer(p_220254_2_, p_220254_3_, IWorldPosCallable.of(worldIn, pos));
-      }, CONTAINER_NAME);
-   }
+    public INamedContainerProvider getContainer(BlockState state, World worldIn, BlockPos pos)
+    {
+        return new SimpleNamedContainerProvider((id, inventory, player) ->
+        {
+            return new LoomContainer(id, inventory, IWorldPosCallable.of(worldIn, pos));
+        }, CONTAINER_NAME);
+    }
 
-   public BlockState getStateForPlacement(BlockItemUseContext context) {
-      return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
-   }
+    public BlockState getStateForPlacement(BlockItemUseContext context)
+    {
+        return this.getDefaultState().with(HORIZONTAL_FACING, context.getPlacementHorizontalFacing().getOpposite());
+    }
 
-   protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-      builder.add(HORIZONTAL_FACING);
-   }
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    {
+        builder.add(HORIZONTAL_FACING);
+    }
 }

@@ -8,23 +8,28 @@ import net.minecraft.world.ISeedReader;
 import net.minecraft.world.gen.ChunkGenerator;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 
-public class DecoratedFeature extends Feature<DecoratedFeatureConfig> {
-   public DecoratedFeature(Codec<DecoratedFeatureConfig> p_i231943_1_) {
-      super(p_i231943_1_);
-   }
+public class DecoratedFeature extends Feature<DecoratedFeatureConfig>
+{
+    public DecoratedFeature(Codec<DecoratedFeatureConfig> p_i231943_1_)
+    {
+        super(p_i231943_1_);
+    }
 
-   public boolean generate(ISeedReader reader, ChunkGenerator generator, Random rand, BlockPos pos, DecoratedFeatureConfig config) {
-      MutableBoolean mutableboolean = new MutableBoolean();
-      config.decorator.func_242876_a(new WorldDecoratingHelper(reader, generator), rand, pos).forEach((p_242772_5_) -> {
-         if (config.feature.get().generate(reader, generator, rand, p_242772_5_)) {
-            mutableboolean.setTrue();
-         }
+    public boolean func_241855_a(ISeedReader p_241855_1_, ChunkGenerator p_241855_2_, Random p_241855_3_, BlockPos p_241855_4_, DecoratedFeatureConfig p_241855_5_)
+    {
+        MutableBoolean mutableboolean = new MutableBoolean();
+        p_241855_5_.decorator.func_242876_a(new WorldDecoratingHelper(p_241855_1_, p_241855_2_), p_241855_3_, p_241855_4_).forEach((p_242772_5_) ->
+        {
+            if (p_241855_5_.feature.get().func_242765_a(p_241855_1_, p_241855_2_, p_241855_3_, p_242772_5_))
+            {
+                mutableboolean.setTrue();
+            }
+        });
+        return mutableboolean.isTrue();
+    }
 
-      });
-      return mutableboolean.isTrue();
-   }
-
-   public String toString() {
-      return String.format("< %s [%s] >", this.getClass().getSimpleName(), Registry.FEATURE.getKey(this));
-   }
+    public String toString()
+    {
+        return String.format("< %s [%s] >", this.getClass().getSimpleName(), Registry.FEATURE.getKey(this));
+    }
 }

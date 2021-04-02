@@ -16,45 +16,57 @@ import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class KnowledgeBookItem extends Item {
-   private static final Logger LOGGER = LogManager.getLogger();
+public class KnowledgeBookItem extends Item
+{
+    private static final Logger LOGGER = LogManager.getLogger();
 
-   public KnowledgeBookItem(Item.Properties builder) {
-      super(builder);
-   }
+    public KnowledgeBookItem(Item.Properties builder)
+    {
+        super(builder);
+    }
 
-   public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-      ItemStack itemstack = playerIn.getHeldItem(handIn);
-      CompoundNBT compoundnbt = itemstack.getTag();
-      if (!playerIn.abilities.isCreativeMode) {
-         playerIn.setHeldItem(handIn, ItemStack.EMPTY);
-      }
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn)
+    {
+        ItemStack itemstack = playerIn.getHeldItem(handIn);
+        CompoundNBT compoundnbt = itemstack.getTag();
 
-      if (compoundnbt != null && compoundnbt.contains("Recipes", 9)) {
-         if (!worldIn.isRemote) {
-            ListNBT listnbt = compoundnbt.getList("Recipes", 8);
-            List<IRecipe<?>> list = Lists.newArrayList();
-            RecipeManager recipemanager = worldIn.getServer().getRecipeManager();
+        if (!playerIn.abilities.isCreativeMode)
+        {
+            playerIn.setHeldItem(handIn, ItemStack.EMPTY);
+        }
 
-            for(int i = 0; i < listnbt.size(); ++i) {
-               String s = listnbt.getString(i);
-               Optional<? extends IRecipe<?>> optional = recipemanager.getRecipe(new ResourceLocation(s));
-               if (!optional.isPresent()) {
-                  LOGGER.error("Invalid recipe: {}", (Object)s);
-                  return ActionResult.resultFail(itemstack);
-               }
+        if (compoundnbt != null && compoundnbt.contains("Recipes", 9))
+        {
+            if (!worldIn.isRemote)
+            {
+                ListNBT listnbt = compoundnbt.getList("Recipes", 8);
+                List < IRecipe<? >> list = Lists.newArrayList();
+                RecipeManager recipemanager = worldIn.getServer().getRecipeManager();
 
-               list.add(optional.get());
+                for (int i = 0; i < listnbt.size(); ++i)
+                {
+                    String s = listnbt.getString(i);
+                    Optional <? extends IRecipe<? >> optional = recipemanager.getRecipe(new ResourceLocation(s));
+
+                    if (!optional.isPresent())
+                    {
+                        LOGGER.error("Invalid recipe: {}", (Object)s);
+                        return ActionResult.resultFail(itemstack);
+                    }
+
+                    list.add(optional.get());
+                }
+
+                playerIn.unlockRecipes(list);
+                playerIn.addStat(Stats.ITEM_USED.get(this));
             }
 
-            playerIn.unlockRecipes(list);
-            playerIn.addStat(Stats.ITEM_USED.get(this));
-         }
-
-         return ActionResult.func_233538_a_(itemstack, worldIn.isRemote());
-      } else {
-         LOGGER.error("Tag not valid: {}", (Object)compoundnbt);
-         return ActionResult.resultFail(itemstack);
-      }
-   }
+            return ActionResult.func_233538_a_(itemstack, worldIn.isRemote());
+        }
+        else
+        {
+            LOGGER.error("Tag not valid: {}", (Object)compoundnbt);
+            return ActionResult.resultFail(itemstack);
+        }
+    }
 }

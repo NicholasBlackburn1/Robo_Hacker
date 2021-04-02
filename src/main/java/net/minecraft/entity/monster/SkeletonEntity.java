@@ -8,37 +8,47 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.world.World;
 
-public class SkeletonEntity extends AbstractSkeletonEntity {
-   public SkeletonEntity(EntityType<? extends SkeletonEntity> p_i50194_1_, World p_i50194_2_) {
-      super(p_i50194_1_, p_i50194_2_);
-   }
+public class SkeletonEntity extends AbstractSkeletonEntity
+{
+    public SkeletonEntity(EntityType <? extends SkeletonEntity > p_i50194_1_, World p_i50194_2_)
+    {
+        super(p_i50194_1_, p_i50194_2_);
+    }
 
-   protected SoundEvent getAmbientSound() {
-      return SoundEvents.ENTITY_SKELETON_AMBIENT;
-   }
+    protected SoundEvent getAmbientSound()
+    {
+        return SoundEvents.ENTITY_SKELETON_AMBIENT;
+    }
 
-   protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-      return SoundEvents.ENTITY_SKELETON_HURT;
-   }
+    protected SoundEvent getHurtSound(DamageSource damageSourceIn)
+    {
+        return SoundEvents.ENTITY_SKELETON_HURT;
+    }
 
-   protected SoundEvent getDeathSound() {
-      return SoundEvents.ENTITY_SKELETON_DEATH;
-   }
+    protected SoundEvent getDeathSound()
+    {
+        return SoundEvents.ENTITY_SKELETON_DEATH;
+    }
 
-   SoundEvent getStepSound() {
-      return SoundEvents.ENTITY_SKELETON_STEP;
-   }
+    SoundEvent getStepSound()
+    {
+        return SoundEvents.ENTITY_SKELETON_STEP;
+    }
 
-   protected void dropSpecialItems(DamageSource source, int looting, boolean recentlyHitIn) {
-      super.dropSpecialItems(source, looting, recentlyHitIn);
-      Entity entity = source.getTrueSource();
-      if (entity instanceof CreeperEntity) {
-         CreeperEntity creeperentity = (CreeperEntity)entity;
-         if (creeperentity.ableToCauseSkullDrop()) {
-            creeperentity.incrementDroppedSkulls();
-            this.entityDropItem(Items.SKELETON_SKULL);
-         }
-      }
+    protected void dropSpecialItems(DamageSource source, int looting, boolean recentlyHitIn)
+    {
+        super.dropSpecialItems(source, looting, recentlyHitIn);
+        Entity entity = source.getTrueSource();
 
-   }
+        if (entity instanceof CreeperEntity)
+        {
+            CreeperEntity creeperentity = (CreeperEntity)entity;
+
+            if (creeperentity.ableToCauseSkullDrop())
+            {
+                creeperentity.incrementDroppedSkulls();
+                this.entityDropItem(Items.SKELETON_SKULL);
+            }
+        }
+    }
 }

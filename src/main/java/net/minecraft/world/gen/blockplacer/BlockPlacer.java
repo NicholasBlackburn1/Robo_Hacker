@@ -7,10 +7,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.IWorld;
 
-public abstract class BlockPlacer {
-   public static final Codec<BlockPlacer> CODEC = Registry.BLOCK_PLACER_TYPE.dispatch(BlockPlacer::getBlockPlacerType, BlockPlacerType::getCodec);
+public abstract class BlockPlacer
+{
+    public static final Codec<BlockPlacer> CODEC = Registry.BLOCK_PLACER_TYPE.dispatch(BlockPlacer::getBlockPlacerType, BlockPlacerType::getCodec);
 
-   public abstract void place(IWorld world, BlockPos pos, BlockState state, Random random);
+    public abstract void place(IWorld world, BlockPos pos, BlockState state, Random random);
 
-   protected abstract BlockPlacerType<?> getBlockPlacerType();
+    protected abstract BlockPlacerType<?> getBlockPlacerType();
 }

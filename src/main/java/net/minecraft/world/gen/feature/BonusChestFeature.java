@@ -17,40 +17,50 @@ import net.minecraft.world.ISeedReader;
 import net.minecraft.world.gen.ChunkGenerator;
 import net.minecraft.world.gen.Heightmap;
 
-public class BonusChestFeature extends Feature<NoFeatureConfig> {
-   public BonusChestFeature(Codec<NoFeatureConfig> p_i231934_1_) {
-      super(p_i231934_1_);
-   }
+public class BonusChestFeature extends Feature<NoFeatureConfig>
+{
+    public BonusChestFeature(Codec<NoFeatureConfig> p_i231934_1_)
+    {
+        super(p_i231934_1_);
+    }
 
-   public boolean generate(ISeedReader reader, ChunkGenerator generator, Random rand, BlockPos pos, NoFeatureConfig config) {
-      ChunkPos chunkpos = new ChunkPos(pos);
-      List<Integer> list = IntStream.rangeClosed(chunkpos.getXStart(), chunkpos.getXEnd()).boxed().collect(Collectors.toList());
-      Collections.shuffle(list, rand);
-      List<Integer> list1 = IntStream.rangeClosed(chunkpos.getZStart(), chunkpos.getZEnd()).boxed().collect(Collectors.toList());
-      Collections.shuffle(list1, rand);
-      BlockPos.Mutable blockpos$mutable = new BlockPos.Mutable();
+    public boolean func_241855_a(ISeedReader p_241855_1_, ChunkGenerator p_241855_2_, Random p_241855_3_, BlockPos p_241855_4_, NoFeatureConfig p_241855_5_)
+    {
+        ChunkPos chunkpos = new ChunkPos(p_241855_4_);
+        List<Integer> list = IntStream.rangeClosed(chunkpos.getXStart(), chunkpos.getXEnd()).boxed().collect(Collectors.toList());
+        Collections.shuffle(list, p_241855_3_);
+        List<Integer> list1 = IntStream.rangeClosed(chunkpos.getZStart(), chunkpos.getZEnd()).boxed().collect(Collectors.toList());
+        Collections.shuffle(list1, p_241855_3_);
+        BlockPos.Mutable blockpos$mutable = new BlockPos.Mutable();
 
-      for(Integer integer : list) {
-         for(Integer integer1 : list1) {
-            blockpos$mutable.setPos(integer, 0, integer1);
-            BlockPos blockpos = reader.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, blockpos$mutable);
-            if (reader.isAirBlock(blockpos) || reader.getBlockState(blockpos).getCollisionShape(reader, blockpos).isEmpty()) {
-               reader.setBlockState(blockpos, Blocks.CHEST.getDefaultState(), 2);
-               LockableLootTileEntity.setLootTable(reader, rand, blockpos, LootTables.CHESTS_SPAWN_BONUS_CHEST);
-               BlockState blockstate = Blocks.TORCH.getDefaultState();
+        for (Integer integer : list)
+        {
+            for (Integer integer1 : list1)
+            {
+                blockpos$mutable.setPos(integer, 0, integer1);
+                BlockPos blockpos = p_241855_1_.getHeight(Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, blockpos$mutable);
 
-               for(Direction direction : Direction.Plane.HORIZONTAL) {
-                  BlockPos blockpos1 = blockpos.offset(direction);
-                  if (blockstate.isValidPosition(reader, blockpos1)) {
-                     reader.setBlockState(blockpos1, blockstate, 2);
-                  }
-               }
+                if (p_241855_1_.isAirBlock(blockpos) || p_241855_1_.getBlockState(blockpos).getCollisionShape(p_241855_1_, blockpos).isEmpty())
+                {
+                    p_241855_1_.setBlockState(blockpos, Blocks.CHEST.getDefaultState(), 2);
+                    LockableLootTileEntity.setLootTable(p_241855_1_, p_241855_3_, blockpos, LootTables.CHESTS_SPAWN_BONUS_CHEST);
+                    BlockState blockstate = Blocks.TORCH.getDefaultState();
 
-               return true;
+                    for (Direction direction : Direction.Plane.HORIZONTAL)
+                    {
+                        BlockPos blockpos1 = blockpos.offset(direction);
+
+                        if (blockstate.isValidPosition(p_241855_1_, blockpos1))
+                        {
+                            p_241855_1_.setBlockState(blockpos1, blockstate, 2);
+                        }
+                    }
+
+                    return true;
+                }
             }
-         }
-      }
+        }
 
-      return false;
-   }
+        return false;
+    }
 }

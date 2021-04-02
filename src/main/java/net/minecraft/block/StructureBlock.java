@@ -19,80 +19,114 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-public class StructureBlock extends ContainerBlock {
-   public static final EnumProperty<StructureMode> MODE = BlockStateProperties.STRUCTURE_BLOCK_MODE;
+public class StructureBlock extends ContainerBlock
+{
+    public static final EnumProperty<StructureMode> MODE = BlockStateProperties.STRUCTURE_BLOCK_MODE;
 
-   protected StructureBlock(AbstractBlock.Properties properties) {
-      super(properties);
-   }
+    protected StructureBlock(AbstractBlock.Properties properties)
+    {
+        super(properties);
+    }
 
-   public TileEntity createNewTileEntity(IBlockReader worldIn) {
-      return new StructureBlockTileEntity();
-   }
+    public TileEntity createNewTileEntity(IBlockReader worldIn)
+    {
+        return new StructureBlockTileEntity();
+    }
 
-   public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-      TileEntity tileentity = worldIn.getTileEntity(pos);
-      if (tileentity instanceof StructureBlockTileEntity) {
-         return ((StructureBlockTileEntity)tileentity).usedBy(player) ? ActionResultType.func_233537_a_(worldIn.isRemote) : ActionResultType.PASS;
-      } else {
-         return ActionResultType.PASS;
-      }
-   }
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit)
+    {
+        TileEntity tileentity = worldIn.getTileEntity(pos);
 
-   public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-      if (!worldIn.isRemote) {
-         if (placer != null) {
+        if (tileentity instanceof StructureBlockTileEntity)
+        {
+            return ((StructureBlockTileEntity)tileentity).usedBy(player) ? ActionResultType.func_233537_a_(worldIn.isRemote) : ActionResultType.PASS;
+        }
+        else
+        {
+            return ActionResultType.PASS;
+        }
+    }
+
+    /**
+     * Called by ItemBlocks after a block is set in the world, to allow post-place logic
+     */
+    public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack)
+    {
+        if (!worldIn.isRemote)
+        {
+            if (placer != null)
+            {
+                TileEntity tileentity = worldIn.getTileEntity(pos);
+
+                if (tileentity instanceof StructureBlockTileEntity)
+                {
+                    ((StructureBlockTileEntity)tileentity).createdBy(placer);
+                }
+            }
+        }
+    }
+
+    /**
+     * The type of render function called. MODEL for mixed tesr and static model, MODELBLOCK_ANIMATED for TESR-only,
+     * LIQUID for vanilla liquids, INVISIBLE to skip all rendering
+     * @deprecated call via {@link IBlockState#getRenderType()} whenever possible. Implementing/overriding is fine.
+     */
+    public BlockRenderType getRenderType(BlockState state)
+    {
+        return BlockRenderType.MODEL;
+    }
+
+    public BlockState getStateForPlacement(BlockItemUseContext context)
+    {
+        return this.getDefaultState().with(MODE, StructureMode.DATA);
+    }
+
+    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+    {
+        builder.add(MODE);
+    }
+
+    public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving)
+    {
+        if (worldIn instanceof ServerWorld)
+        {
             TileEntity tileentity = worldIn.getTileEntity(pos);
-            if (tileentity instanceof StructureBlockTileEntity) {
-               ((StructureBlockTileEntity)tileentity).createdBy(placer);
+
+            if (tileentity instanceof StructureBlockTileEntity)
+            {
+                StructureBlockTileEntity structureblocktileentity = (StructureBlockTileEntity)tileentity;
+                boolean flag = worldIn.isBlockPowered(pos);
+                boolean flag1 = structureblocktileentity.isPowered();
+
+                if (flag && !flag1)
+                {
+                    structureblocktileentity.setPowered(true);
+                    this.execute((ServerWorld)worldIn, structureblocktileentity);
+                }
+                else if (!flag && flag1)
+                {
+                    structureblocktileentity.setPowered(false);
+                }
             }
-         }
+        }
+    }
 
-      }
-   }
+    private void execute(ServerWorld world, StructureBlockTileEntity structureBlock)
+    {
+        switch (structureBlock.getMode())
+        {
+            case SAVE:
+                structureBlock.save(false);
+                break;
 
-   public BlockRenderType getRenderType(BlockState state) {
-      return BlockRenderType.MODEL;
-   }
+            case LOAD:
+                structureBlock.func_242688_a(world, false);
+                break;
 
-   public BlockState getStateForPlacement(BlockItemUseContext context) {
-      return this.getDefaultState().with(MODE, StructureMode.DATA);
-   }
+            case CORNER:
+                structureBlock.unloadStructure();
 
-   protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-      builder.add(MODE);
-   }
-
-   public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-      if (worldIn instanceof ServerWorld) {
-         TileEntity tileentity = worldIn.getTileEntity(pos);
-         if (tileentity instanceof StructureBlockTileEntity) {
-            StructureBlockTileEntity structureblocktileentity = (StructureBlockTileEntity)tileentity;
-            boolean flag = worldIn.isBlockPowered(pos);
-            boolean flag1 = structureblocktileentity.isPowered();
-            if (flag && !flag1) {
-               structureblocktileentity.setPowered(true);
-               this.execute((ServerWorld)worldIn, structureblocktileentity);
-            } else if (!flag && flag1) {
-               structureblocktileentity.setPowered(false);
-            }
-
-         }
-      }
-   }
-
-   private void execute(ServerWorld world, StructureBlockTileEntity structureBlock) {
-      switch(structureBlock.getMode()) {
-      case SAVE:
-         structureBlock.save(false);
-         break;
-      case LOAD:
-         structureBlock.func_242688_a(world, false);
-         break;
-      case CORNER:
-         structureBlock.unloadStructure();
-      case DATA:
-      }
-
-   }
+            case DATA:
+        }
+    }
 }

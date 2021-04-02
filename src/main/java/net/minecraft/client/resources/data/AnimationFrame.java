@@ -1,31 +1,33 @@
 package net.minecraft.client.resources.data;
 
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+public class AnimationFrame
+{
+    private final int frameIndex;
+    private final int frameTime;
 
-@OnlyIn(Dist.CLIENT)
-public class AnimationFrame {
-   private final int frameIndex;
-   private final int frameTime;
+    public AnimationFrame(int frameIndexIn)
+    {
+        this(frameIndexIn, -1);
+    }
 
-   public AnimationFrame(int frameIndexIn) {
-      this(frameIndexIn, -1);
-   }
+    public AnimationFrame(int frameIndexIn, int frameTimeIn)
+    {
+        this.frameIndex = frameIndexIn;
+        this.frameTime = frameTimeIn;
+    }
 
-   public AnimationFrame(int frameIndexIn, int frameTimeIn) {
-      this.frameIndex = frameIndexIn;
-      this.frameTime = frameTimeIn;
-   }
+    public boolean hasNoTime()
+    {
+        return this.frameTime == -1;
+    }
 
-   public boolean hasNoTime() {
-      return this.frameTime == -1;
-   }
+    public int getFrameTime()
+    {
+        return this.frameTime;
+    }
 
-   public int getFrameTime() {
-      return this.frameTime;
-   }
-
-   public int getFrameIndex() {
-      return this.frameIndex;
-   }
+    public int getFrameIndex()
+    {
+        return this.frameIndex;
+    }
 }

@@ -15,86 +15,113 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.server.ServerWorld;
 
-public class PlacedBlockTrigger extends AbstractCriterionTrigger<PlacedBlockTrigger.Instance> {
-   private static final ResourceLocation ID = new ResourceLocation("placed_block");
+public class PlacedBlockTrigger extends AbstractCriterionTrigger<PlacedBlockTrigger.Instance>
+{
+    private static final ResourceLocation ID = new ResourceLocation("placed_block");
 
-   public ResourceLocation getId() {
-      return ID;
-   }
+    public ResourceLocation getId()
+    {
+        return ID;
+    }
 
-   public PlacedBlockTrigger.Instance deserializeTrigger(JsonObject json, EntityPredicate.AndPredicate entityPredicate, ConditionArrayParser conditionsParser) {
-      Block block = deserializeBlock(json);
-      StatePropertiesPredicate statepropertiespredicate = StatePropertiesPredicate.deserializeProperties(json.get("state"));
-      if (block != null) {
-         statepropertiespredicate.forEachNotPresent(block.getStateContainer(), (p_226948_1_) -> {
-            throw new JsonSyntaxException("Block " + block + " has no property " + p_226948_1_ + ":");
-         });
-      }
+    public PlacedBlockTrigger.Instance deserializeTrigger(JsonObject json, EntityPredicate.AndPredicate entityPredicate, ConditionArrayParser conditionsParser)
+    {
+        Block block = deserializeBlock(json);
+        StatePropertiesPredicate statepropertiespredicate = StatePropertiesPredicate.deserializeProperties(json.get("state"));
 
-      LocationPredicate locationpredicate = LocationPredicate.deserialize(json.get("location"));
-      ItemPredicate itempredicate = ItemPredicate.deserialize(json.get("item"));
-      return new PlacedBlockTrigger.Instance(entityPredicate, block, statepropertiespredicate, locationpredicate, itempredicate);
-   }
+        if (block != null)
+        {
+            statepropertiespredicate.forEachNotPresent(block.getStateContainer(), (property) ->
+            {
+                throw new JsonSyntaxException("Block " + block + " has no property " + property + ":");
+            });
+        }
 
-   @Nullable
-   private static Block deserializeBlock(JsonObject object) {
-      if (object.has("block")) {
-         ResourceLocation resourcelocation = new ResourceLocation(JSONUtils.getString(object, "block"));
-         return Registry.BLOCK.getOptional(resourcelocation).orElseThrow(() -> {
-            return new JsonSyntaxException("Unknown block type '" + resourcelocation + "'");
-         });
-      } else {
-         return null;
-      }
-   }
+        LocationPredicate locationpredicate = LocationPredicate.deserialize(json.get("location"));
+        ItemPredicate itempredicate = ItemPredicate.deserialize(json.get("item"));
+        return new PlacedBlockTrigger.Instance(entityPredicate, block, statepropertiespredicate, locationpredicate, itempredicate);
+    }
 
-   public void trigger(ServerPlayerEntity player, BlockPos pos, ItemStack item) {
-      BlockState blockstate = player.getServerWorld().getBlockState(pos);
-      this.triggerListeners(player, (p_226949_4_) -> {
-         return p_226949_4_.test(blockstate, pos, player.getServerWorld(), item);
-      });
-   }
+    @Nullable
+    private static Block deserializeBlock(JsonObject object)
+    {
+        if (object.has("block"))
+        {
+            ResourceLocation resourcelocation = new ResourceLocation(JSONUtils.getString(object, "block"));
+            return Registry.BLOCK.getOptional(resourcelocation).orElseThrow(() ->
+            {
+                return new JsonSyntaxException("Unknown block type '" + resourcelocation + "'");
+            });
+        }
+        else
+        {
+            return null;
+        }
+    }
 
-   public static class Instance extends CriterionInstance {
-      private final Block block;
-      private final StatePropertiesPredicate properties;
-      private final LocationPredicate location;
-      private final ItemPredicate item;
+    public void trigger(ServerPlayerEntity player, BlockPos pos, ItemStack item)
+    {
+        BlockState blockstate = player.getServerWorld().getBlockState(pos);
+        this.triggerListeners(player, (instance) ->
+        {
+            return instance.test(blockstate, pos, player.getServerWorld(), item);
+        });
+    }
 
-      public Instance(EntityPredicate.AndPredicate player, @Nullable Block block, StatePropertiesPredicate properties, LocationPredicate location, ItemPredicate item) {
-         super(PlacedBlockTrigger.ID, player);
-         this.block = block;
-         this.properties = properties;
-         this.location = location;
-         this.item = item;
-      }
+    public static class Instance extends CriterionInstance
+    {
+        private final Block block;
+        private final StatePropertiesPredicate properties;
+        private final LocationPredicate location;
+        private final ItemPredicate item;
 
-      public static PlacedBlockTrigger.Instance placedBlock(Block block) {
-         return new PlacedBlockTrigger.Instance(EntityPredicate.AndPredicate.ANY_AND, block, StatePropertiesPredicate.EMPTY, LocationPredicate.ANY, ItemPredicate.ANY);
-      }
+        public Instance(EntityPredicate.AndPredicate player, @Nullable Block block, StatePropertiesPredicate properties, LocationPredicate location, ItemPredicate item)
+        {
+            super(PlacedBlockTrigger.ID, player);
+            this.block = block;
+            this.properties = properties;
+            this.location = location;
+            this.item = item;
+        }
 
-      public boolean test(BlockState state, BlockPos pos, ServerWorld world, ItemStack item) {
-         if (this.block != null && !state.isIn(this.block)) {
-            return false;
-         } else if (!this.properties.matches(state)) {
-            return false;
-         } else if (!this.location.test(world, (float)pos.getX(), (float)pos.getY(), (float)pos.getZ())) {
-            return false;
-         } else {
-            return this.item.test(item);
-         }
-      }
+        public static PlacedBlockTrigger.Instance placedBlock(Block block)
+        {
+            return new PlacedBlockTrigger.Instance(EntityPredicate.AndPredicate.ANY_AND, block, StatePropertiesPredicate.EMPTY, LocationPredicate.ANY, ItemPredicate.ANY);
+        }
 
-      public JsonObject serialize(ConditionArraySerializer conditions) {
-         JsonObject jsonobject = super.serialize(conditions);
-         if (this.block != null) {
-            jsonobject.addProperty("block", Registry.BLOCK.getKey(this.block).toString());
-         }
+        public boolean test(BlockState state, BlockPos pos, ServerWorld world, ItemStack item)
+        {
+            if (this.block != null && !state.isIn(this.block))
+            {
+                return false;
+            }
+            else if (!this.properties.matches(state))
+            {
+                return false;
+            }
+            else if (!this.location.test(world, (float)pos.getX(), (float)pos.getY(), (float)pos.getZ()))
+            {
+                return false;
+            }
+            else
+            {
+                return this.item.test(item);
+            }
+        }
 
-         jsonobject.add("state", this.properties.toJsonElement());
-         jsonobject.add("location", this.location.serialize());
-         jsonobject.add("item", this.item.serialize());
-         return jsonobject;
-      }
-   }
+        public JsonObject serialize(ConditionArraySerializer conditions)
+        {
+            JsonObject jsonobject = super.serialize(conditions);
+
+            if (this.block != null)
+            {
+                jsonobject.addProperty("block", Registry.BLOCK.getKey(this.block).toString());
+            }
+
+            jsonobject.add("state", this.properties.toJsonElement());
+            jsonobject.add("location", this.location.serialize());
+            jsonobject.add("item", this.item.serialize());
+            return jsonobject;
+        }
+    }
 }

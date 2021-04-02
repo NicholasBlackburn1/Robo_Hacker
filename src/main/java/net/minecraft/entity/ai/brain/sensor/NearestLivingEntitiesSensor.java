@@ -11,21 +11,26 @@ import net.minecraft.entity.ai.brain.memory.MemoryModuleType;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.server.ServerWorld;
 
-public class NearestLivingEntitiesSensor extends Sensor<LivingEntity> {
-   protected void update(ServerWorld worldIn, LivingEntity entityIn) {
-      AxisAlignedBB axisalignedbb = entityIn.getBoundingBox().grow(16.0D, 16.0D, 16.0D);
-      List<LivingEntity> list = worldIn.getEntitiesWithinAABB(LivingEntity.class, axisalignedbb, (p_220980_1_) -> {
-         return p_220980_1_ != entityIn && p_220980_1_.isAlive();
-      });
-      list.sort(Comparator.comparingDouble(entityIn::getDistanceSq));
-      Brain<?> brain = entityIn.getBrain();
-      brain.setMemory(MemoryModuleType.MOBS, list);
-      brain.setMemory(MemoryModuleType.VISIBLE_MOBS, list.stream().filter((p_220981_1_) -> {
-         return canAttackTarget(entityIn, p_220981_1_);
-      }).collect(Collectors.toList()));
-   }
+public class NearestLivingEntitiesSensor extends Sensor<LivingEntity>
+{
+    protected void update(ServerWorld worldIn, LivingEntity entityIn)
+    {
+        AxisAlignedBB axisalignedbb = entityIn.getBoundingBox().grow(16.0D, 16.0D, 16.0D);
+        List<LivingEntity> list = worldIn.getEntitiesWithinAABB(LivingEntity.class, axisalignedbb, (livingEntity) ->
+        {
+            return livingEntity != entityIn && livingEntity.isAlive();
+        });
+        list.sort(Comparator.comparingDouble(entityIn::getDistanceSq));
+        Brain<?> brain = entityIn.getBrain();
+        brain.setMemory(MemoryModuleType.MOBS, list);
+        brain.setMemory(MemoryModuleType.VISIBLE_MOBS, list.stream().filter((visibleEntity) ->
+        {
+            return canAttackTarget(entityIn, visibleEntity);
+        }).collect(Collectors.toList()));
+    }
 
-   public Set<MemoryModuleType<?>> getUsedMemories() {
-      return ImmutableSet.of(MemoryModuleType.MOBS, MemoryModuleType.VISIBLE_MOBS);
-   }
+    public Set < MemoryModuleType<? >> getUsedMemories()
+    {
+        return ImmutableSet.of(MemoryModuleType.MOBS, MemoryModuleType.VISIBLE_MOBS);
+    }
 }

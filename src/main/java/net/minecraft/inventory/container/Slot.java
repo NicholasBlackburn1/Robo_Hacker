@@ -6,90 +6,145 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class Slot {
-   private final int slotIndex;
-   public final IInventory inventory;
-   public int slotNumber;
-   public final int xPos;
-   public final int yPos;
+public class Slot
+{
+    private final int slotIndex;
+    public final IInventory inventory;
+    public int slotNumber;
+    public final int xPos;
+    public final int yPos;
 
-   public Slot(IInventory inventoryIn, int index, int xPosition, int yPosition) {
-      this.inventory = inventoryIn;
-      this.slotIndex = index;
-      this.xPos = xPosition;
-      this.yPos = yPosition;
-   }
+    public Slot(IInventory inventoryIn, int index, int xPosition, int yPosition)
+    {
+        this.inventory = inventoryIn;
+        this.slotIndex = index;
+        this.xPos = xPosition;
+        this.yPos = yPosition;
+    }
 
-   public void onSlotChange(ItemStack oldStackIn, ItemStack newStackIn) {
-      int i = newStackIn.getCount() - oldStackIn.getCount();
-      if (i > 0) {
-         this.onCrafting(newStackIn, i);
-      }
+    /**
+     * if par2 has more items than par1, onCrafting(item,countIncrease) is called
+     */
+    public void onSlotChange(ItemStack oldStackIn, ItemStack newStackIn)
+    {
+        int i = newStackIn.getCount() - oldStackIn.getCount();
 
-   }
+        if (i > 0)
+        {
+            this.onCrafting(newStackIn, i);
+        }
+    }
 
-   protected void onCrafting(ItemStack stack, int amount) {
-   }
+    /**
+     * the itemStack passed in is the output - ie, iron ingots, and pickaxes, not ore and wood. Typically increases an
+     * internal count then calls onCrafting(item).
+     */
+    protected void onCrafting(ItemStack stack, int amount)
+    {
+    }
 
-   protected void onSwapCraft(int numItemsCrafted) {
-   }
+    protected void onSwapCraft(int numItemsCrafted)
+    {
+    }
 
-   protected void onCrafting(ItemStack stack) {
-   }
+    /**
+     * the itemStack passed in is the output - ie, iron ingots, and pickaxes, not ore and wood.
+     */
+    protected void onCrafting(ItemStack stack)
+    {
+    }
 
-   public ItemStack onTake(PlayerEntity thePlayer, ItemStack stack) {
-      this.onSlotChanged();
-      return stack;
-   }
+    public ItemStack onTake(PlayerEntity thePlayer, ItemStack stack)
+    {
+        this.onSlotChanged();
+        return stack;
+    }
 
-   public boolean isItemValid(ItemStack stack) {
-      return true;
-   }
+    /**
+     * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
+     */
+    public boolean isItemValid(ItemStack stack)
+    {
+        return true;
+    }
 
-   public ItemStack getStack() {
-      return this.inventory.getStackInSlot(this.slotIndex);
-   }
+    /**
+     * Helper fnct to get the stack in the slot.
+     */
+    public ItemStack getStack()
+    {
+        return this.inventory.getStackInSlot(this.slotIndex);
+    }
 
-   public boolean getHasStack() {
-      return !this.getStack().isEmpty();
-   }
+    /**
+     * Returns if this slot contains a stack.
+     */
+    public boolean getHasStack()
+    {
+        return !this.getStack().isEmpty();
+    }
 
-   public void putStack(ItemStack stack) {
-      this.inventory.setInventorySlotContents(this.slotIndex, stack);
-      this.onSlotChanged();
-   }
+    /**
+     * Helper method to put a stack in the slot.
+     */
+    public void putStack(ItemStack stack)
+    {
+        this.inventory.setInventorySlotContents(this.slotIndex, stack);
+        this.onSlotChanged();
+    }
 
-   public void onSlotChanged() {
-      this.inventory.markDirty();
-   }
+    /**
+     * Called when the stack in a Slot changes
+     */
+    public void onSlotChanged()
+    {
+        this.inventory.markDirty();
+    }
 
-   public int getSlotStackLimit() {
-      return this.inventory.getInventoryStackLimit();
-   }
+    /**
+     * Returns the maximum stack size for a given slot (usually the same as getInventoryStackLimit(), but 1 in the case
+     * of armor slots)
+     */
+    public int getSlotStackLimit()
+    {
+        return this.inventory.getInventoryStackLimit();
+    }
 
-   public int getItemStackLimit(ItemStack stack) {
-      return this.getSlotStackLimit();
-   }
+    public int getItemStackLimit(ItemStack stack)
+    {
+        return this.getSlotStackLimit();
+    }
 
-   @Nullable
-   @OnlyIn(Dist.CLIENT)
-   public Pair<ResourceLocation, ResourceLocation> getBackground() {
-      return null;
-   }
+    @Nullable
+    public Pair<ResourceLocation, ResourceLocation> getBackground()
+    {
+        return null;
+    }
 
-   public ItemStack decrStackSize(int amount) {
-      return this.inventory.decrStackSize(this.slotIndex, amount);
-   }
+    /**
+     * Decrease the size of the stack in slot (first int arg) by the amount of the second int arg. Returns the new
+     * stack.
+     */
+    public ItemStack decrStackSize(int amount)
+    {
+        return this.inventory.decrStackSize(this.slotIndex, amount);
+    }
 
-   public boolean canTakeStack(PlayerEntity playerIn) {
-      return true;
-   }
+    /**
+     * Return whether this slot's stack can be taken from this slot.
+     */
+    public boolean canTakeStack(PlayerEntity playerIn)
+    {
+        return true;
+    }
 
-   @OnlyIn(Dist.CLIENT)
-   public boolean isEnabled() {
-      return true;
-   }
+    /**
+     * Actualy only call when we want to render the white square effect over the slots. Return always True, except for
+     * the armor slot of the Donkey/Mule (we can't interact with the Undead and Skeleton horses)
+     */
+    public boolean isEnabled()
+    {
+        return true;
+    }
 }

@@ -11,54 +11,69 @@ import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 
-public class BrewedPotionTrigger extends AbstractCriterionTrigger<BrewedPotionTrigger.Instance> {
-   private static final ResourceLocation ID = new ResourceLocation("brewed_potion");
+public class BrewedPotionTrigger extends AbstractCriterionTrigger<BrewedPotionTrigger.Instance>
+{
+    private static final ResourceLocation ID = new ResourceLocation("brewed_potion");
 
-   public ResourceLocation getId() {
-      return ID;
-   }
+    public ResourceLocation getId()
+    {
+        return ID;
+    }
 
-   public BrewedPotionTrigger.Instance deserializeTrigger(JsonObject json, EntityPredicate.AndPredicate entityPredicate, ConditionArrayParser conditionsParser) {
-      Potion potion = null;
-      if (json.has("potion")) {
-         ResourceLocation resourcelocation = new ResourceLocation(JSONUtils.getString(json, "potion"));
-         potion = Registry.POTION.getOptional(resourcelocation).orElseThrow(() -> {
-            return new JsonSyntaxException("Unknown potion '" + resourcelocation + "'");
-         });
-      }
+    public BrewedPotionTrigger.Instance deserializeTrigger(JsonObject json, EntityPredicate.AndPredicate entityPredicate, ConditionArrayParser conditionsParser)
+    {
+        Potion potion = null;
 
-      return new BrewedPotionTrigger.Instance(entityPredicate, potion);
-   }
+        if (json.has("potion"))
+        {
+            ResourceLocation resourcelocation = new ResourceLocation(JSONUtils.getString(json, "potion"));
+            potion = Registry.POTION.getOptional(resourcelocation).orElseThrow(() ->
+            {
+                return new JsonSyntaxException("Unknown potion '" + resourcelocation + "'");
+            });
+        }
 
-   public void trigger(ServerPlayerEntity player, Potion potionIn) {
-      this.triggerListeners(player, (p_226301_1_) -> {
-         return p_226301_1_.test(potionIn);
-      });
-   }
+        return new BrewedPotionTrigger.Instance(entityPredicate, potion);
+    }
 
-   public static class Instance extends CriterionInstance {
-      private final Potion potion;
+    public void trigger(ServerPlayerEntity player, Potion potionIn)
+    {
+        this.triggerListeners(player, (instance) ->
+        {
+            return instance.test(potionIn);
+        });
+    }
 
-      public Instance(EntityPredicate.AndPredicate player, @Nullable Potion potion) {
-         super(BrewedPotionTrigger.ID, player);
-         this.potion = potion;
-      }
+    public static class Instance extends CriterionInstance
+    {
+        private final Potion potion;
 
-      public static BrewedPotionTrigger.Instance brewedPotion() {
-         return new BrewedPotionTrigger.Instance(EntityPredicate.AndPredicate.ANY_AND, (Potion)null);
-      }
+        public Instance(EntityPredicate.AndPredicate player, @Nullable Potion potion)
+        {
+            super(BrewedPotionTrigger.ID, player);
+            this.potion = potion;
+        }
 
-      public boolean test(Potion potion) {
-         return this.potion == null || this.potion == potion;
-      }
+        public static BrewedPotionTrigger.Instance brewedPotion()
+        {
+            return new BrewedPotionTrigger.Instance(EntityPredicate.AndPredicate.ANY_AND, (Potion)null);
+        }
 
-      public JsonObject serialize(ConditionArraySerializer conditions) {
-         JsonObject jsonobject = super.serialize(conditions);
-         if (this.potion != null) {
-            jsonobject.addProperty("potion", Registry.POTION.getKey(this.potion).toString());
-         }
+        public boolean test(Potion potion)
+        {
+            return this.potion == null || this.potion == potion;
+        }
 
-         return jsonobject;
-      }
-   }
+        public JsonObject serialize(ConditionArraySerializer conditions)
+        {
+            JsonObject jsonobject = super.serialize(conditions);
+
+            if (this.potion != null)
+            {
+                jsonobject.addProperty("potion", Registry.POTION.getKey(this.potion).toString());
+            }
+
+            return jsonobject;
+        }
+    }
 }

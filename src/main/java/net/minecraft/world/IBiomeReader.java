@@ -15,22 +15,27 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.IWorldGenerationReader;
 
-public interface IBiomeReader extends IEntityReader, IWorldReader, IWorldGenerationReader {
-   default Stream<VoxelShape> func_230318_c_(@Nullable Entity p_230318_1_, AxisAlignedBB p_230318_2_, Predicate<Entity> p_230318_3_) {
-      return IEntityReader.super.func_230318_c_(p_230318_1_, p_230318_2_, p_230318_3_);
-   }
+public interface IBiomeReader extends IEntityReader, IWorldReader, IWorldGenerationReader
+{
+default Stream<VoxelShape> func_230318_c_(@Nullable Entity p_230318_1_, AxisAlignedBB p_230318_2_, Predicate<Entity> p_230318_3_)
+    {
+        return IEntityReader.super.func_230318_c_(p_230318_1_, p_230318_2_, p_230318_3_);
+    }
 
-   default boolean checkNoEntityCollision(@Nullable Entity entityIn, VoxelShape shape) {
-      return IEntityReader.super.checkNoEntityCollision(entityIn, shape);
-   }
+default boolean checkNoEntityCollision(@Nullable Entity entityIn, VoxelShape shape)
+    {
+        return IEntityReader.super.checkNoEntityCollision(entityIn, shape);
+    }
 
-   default BlockPos getHeight(Heightmap.Type heightmapType, BlockPos pos) {
-      return IWorldReader.super.getHeight(heightmapType, pos);
-   }
+default BlockPos getHeight(Heightmap.Type heightmapType, BlockPos pos)
+    {
+        return IWorldReader.super.getHeight(heightmapType, pos);
+    }
 
-   DynamicRegistries func_241828_r();
+    DynamicRegistries func_241828_r();
 
-   default Optional<RegistryKey<Biome>> func_242406_i(BlockPos p_242406_1_) {
-      return this.func_241828_r().getRegistry(Registry.BIOME_KEY).getOptionalKey(this.getBiome(p_242406_1_));
-   }
+default Optional<RegistryKey<Biome>> func_242406_i(BlockPos p_242406_1_)
+    {
+        return this.func_241828_r().getRegistry(Registry.BIOME_KEY).getOptionalKey(this.getBiome(p_242406_1_));
+    }
 }

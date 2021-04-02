@@ -1,4 +1,5 @@
 package net.minecraft.entity;
 
-public interface ILivingEntityData {
+public interface ILivingEntityData
+{
 }

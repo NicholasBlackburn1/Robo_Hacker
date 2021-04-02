@@ -2,26 +2,54 @@ package net.minecraft.network.rcon;
 
 import net.minecraft.server.dedicated.ServerProperties;
 
-public interface IServer {
-   ServerProperties getServerProperties();
+public interface IServer
+{
+    ServerProperties getServerProperties();
 
-   String getHostname();
+    /**
+     * Returns the server's hostname.
+     */
+    String getHostname();
 
-   int getPort();
+    /**
+     * Never used, but "getServerPort" is already taken.
+     */
+    int getPort();
 
-   String getMotd();
+    /**
+     * Returns the server message of the day
+     */
+    String getMotd();
 
-   String getMinecraftVersion();
+    /**
+     * Returns the server's Minecraft version as string.
+     */
+    String getMinecraftVersion();
 
-   int getCurrentPlayerCount();
+    /**
+     * Returns the number of players currently on the server.
+     */
+    int getCurrentPlayerCount();
 
-   int getMaxPlayers();
+    /**
+     * Returns the maximum number of players allowed on the server.
+     */
+    int getMaxPlayers();
 
-   String[] getOnlinePlayerNames();
+    /**
+     * Returns an array of the usernames of all the connected players.
+     */
+    String[] getOnlinePlayerNames();
 
-   String func_230542_k__();
+    String func_230542_k__();
 
-   String getPlugins();
+    /**
+     * Used by RCon's Query in the form of "MajorServerMod 1.2.3: MyPlugin 1.3; AnotherPlugin 2.1; AndSoForth 1.0".
+     */
+    String getPlugins();
 
-   String handleRConCommand(String command);
+    /**
+     * Handle a command received by an RCon instance
+     */
+    String handleRConCommand(String command);
 }

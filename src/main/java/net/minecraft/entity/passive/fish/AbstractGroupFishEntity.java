@@ -12,109 +12,144 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 
-public abstract class AbstractGroupFishEntity extends AbstractFishEntity {
-   private AbstractGroupFishEntity groupLeader;
-   private int groupSize = 1;
+public abstract class AbstractGroupFishEntity extends AbstractFishEntity
+{
+    private AbstractGroupFishEntity groupLeader;
+    private int groupSize = 1;
 
-   public AbstractGroupFishEntity(EntityType<? extends AbstractGroupFishEntity> type, World worldIn) {
-      super(type, worldIn);
-   }
+    public AbstractGroupFishEntity(EntityType <? extends AbstractGroupFishEntity > type, World worldIn)
+    {
+        super(type, worldIn);
+    }
 
-   protected void registerGoals() {
-      super.registerGoals();
-      this.goalSelector.addGoal(5, new FollowSchoolLeaderGoal(this));
-   }
+    protected void registerGoals()
+    {
+        super.registerGoals();
+        this.goalSelector.addGoal(5, new FollowSchoolLeaderGoal(this));
+    }
 
-   public int getMaxSpawnedInChunk() {
-      return this.getMaxGroupSize();
-   }
+    /**
+     * Will return how many at most can spawn in a chunk at once.
+     */
+    public int getMaxSpawnedInChunk()
+    {
+        return this.getMaxGroupSize();
+    }
 
-   public int getMaxGroupSize() {
-      return super.getMaxSpawnedInChunk();
-   }
+    public int getMaxGroupSize()
+    {
+        return super.getMaxSpawnedInChunk();
+    }
 
-   protected boolean func_212800_dy() {
-      return !this.hasGroupLeader();
-   }
+    protected boolean func_212800_dy()
+    {
+        return !this.hasGroupLeader();
+    }
 
-   public boolean hasGroupLeader() {
-      return this.groupLeader != null && this.groupLeader.isAlive();
-   }
+    public boolean hasGroupLeader()
+    {
+        return this.groupLeader != null && this.groupLeader.isAlive();
+    }
 
-   public AbstractGroupFishEntity func_212803_a(AbstractGroupFishEntity groupLeaderIn) {
-      this.groupLeader = groupLeaderIn;
-      groupLeaderIn.increaseGroupSize();
-      return groupLeaderIn;
-   }
+    public AbstractGroupFishEntity func_212803_a(AbstractGroupFishEntity groupLeaderIn)
+    {
+        this.groupLeader = groupLeaderIn;
+        groupLeaderIn.increaseGroupSize();
+        return groupLeaderIn;
+    }
 
-   public void leaveGroup() {
-      this.groupLeader.decreaseGroupSize();
-      this.groupLeader = null;
-   }
+    public void leaveGroup()
+    {
+        this.groupLeader.decreaseGroupSize();
+        this.groupLeader = null;
+    }
 
-   private void increaseGroupSize() {
-      ++this.groupSize;
-   }
+    private void increaseGroupSize()
+    {
+        ++this.groupSize;
+    }
 
-   private void decreaseGroupSize() {
-      --this.groupSize;
-   }
+    private void decreaseGroupSize()
+    {
+        --this.groupSize;
+    }
 
-   public boolean canGroupGrow() {
-      return this.isGroupLeader() && this.groupSize < this.getMaxGroupSize();
-   }
+    public boolean canGroupGrow()
+    {
+        return this.isGroupLeader() && this.groupSize < this.getMaxGroupSize();
+    }
 
-   public void tick() {
-      super.tick();
-      if (this.isGroupLeader() && this.world.rand.nextInt(200) == 1) {
-         List<AbstractFishEntity> list = this.world.getEntitiesWithinAABB(this.getClass(), this.getBoundingBox().grow(8.0D, 8.0D, 8.0D));
-         if (list.size() <= 1) {
-            this.groupSize = 1;
-         }
-      }
+    /**
+     * Called to update the entity's position/logic.
+     */
+    public void tick()
+    {
+        super.tick();
 
-   }
+        if (this.isGroupLeader() && this.world.rand.nextInt(200) == 1)
+        {
+            List<AbstractFishEntity> list = this.world.getEntitiesWithinAABB(this.getClass(), this.getBoundingBox().grow(8.0D, 8.0D, 8.0D));
 
-   public boolean isGroupLeader() {
-      return this.groupSize > 1;
-   }
+            if (list.size() <= 1)
+            {
+                this.groupSize = 1;
+            }
+        }
+    }
 
-   public boolean inRangeOfGroupLeader() {
-      return this.getDistanceSq(this.groupLeader) <= 121.0D;
-   }
+    public boolean isGroupLeader()
+    {
+        return this.groupSize > 1;
+    }
 
-   public void moveToGroupLeader() {
-      if (this.hasGroupLeader()) {
-         this.getNavigator().tryMoveToEntityLiving(this.groupLeader, 1.0D);
-      }
+    public boolean inRangeOfGroupLeader()
+    {
+        return this.getDistanceSq(this.groupLeader) <= 121.0D;
+    }
 
-   }
+    public void moveToGroupLeader()
+    {
+        if (this.hasGroupLeader())
+        {
+            this.getNavigator().tryMoveToEntityLiving(this.groupLeader, 1.0D);
+        }
+    }
 
-   public void func_212810_a(Stream<AbstractGroupFishEntity> p_212810_1_) {
-      p_212810_1_.limit((long)(this.getMaxGroupSize() - this.groupSize)).filter((p_212801_1_) -> {
-         return p_212801_1_ != this;
-      }).forEach((p_212804_1_) -> {
-         p_212804_1_.func_212803_a(this);
-      });
-   }
+    public void func_212810_a(Stream<AbstractGroupFishEntity> p_212810_1_)
+    {
+        p_212810_1_.limit((long)(this.getMaxGroupSize() - this.groupSize)).filter((p_212801_1_) ->
+        {
+            return p_212801_1_ != this;
+        }).forEach((p_212804_1_) ->
+        {
+            p_212804_1_.func_212803_a(this);
+        });
+    }
 
-   @Nullable
-   public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-      super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
-      if (spawnDataIn == null) {
-         spawnDataIn = new AbstractGroupFishEntity.GroupData(this);
-      } else {
-         this.func_212803_a(((AbstractGroupFishEntity.GroupData)spawnDataIn).groupLeader);
-      }
+    @Nullable
+    public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag)
+    {
+        super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
 
-      return spawnDataIn;
-   }
+        if (spawnDataIn == null)
+        {
+            spawnDataIn = new AbstractGroupFishEntity.GroupData(this);
+        }
+        else
+        {
+            this.func_212803_a(((AbstractGroupFishEntity.GroupData)spawnDataIn).groupLeader);
+        }
 
-   public static class GroupData implements ILivingEntityData {
-      public final AbstractGroupFishEntity groupLeader;
+        return spawnDataIn;
+    }
 
-      public GroupData(AbstractGroupFishEntity groupLeaderIn) {
-         this.groupLeader = groupLeaderIn;
-      }
-   }
+    public static class GroupData implements ILivingEntityData
+    {
+        public final AbstractGroupFishEntity groupLeader;
+
+        public GroupData(AbstractGroupFishEntity groupLeaderIn)
+        {
+            this.groupLeader = groupLeaderIn;
+        }
+    }
 }

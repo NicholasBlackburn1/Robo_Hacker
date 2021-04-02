@@ -19,47 +19,56 @@ import net.minecraft.util.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class AdvancementManager extends JsonReloadListener {
-   private static final Logger LOGGER = LogManager.getLogger();
-   private static final Gson GSON = (new GsonBuilder()).create();
-   private AdvancementList advancementList = new AdvancementList();
-   private final LootPredicateManager lootPredicateManager;
+public class AdvancementManager extends JsonReloadListener
+{
+    private static final Logger LOGGER = LogManager.getLogger();
+    private static final Gson GSON = (new GsonBuilder()).create();
+    private AdvancementList advancementList = new AdvancementList();
+    private final LootPredicateManager lootPredicateManager;
 
-   public AdvancementManager(LootPredicateManager lootPredicateManager) {
-      super(GSON, "advancements");
-      this.lootPredicateManager = lootPredicateManager;
-   }
+    public AdvancementManager(LootPredicateManager lootPredicateManager)
+    {
+        super(GSON, "advancements");
+        this.lootPredicateManager = lootPredicateManager;
+    }
 
-   protected void apply(Map<ResourceLocation, JsonElement> objectIn, IResourceManager resourceManagerIn, IProfiler profilerIn) {
-      Map<ResourceLocation, Advancement.Builder> map = Maps.newHashMap();
-      objectIn.forEach((p_240923_2_, p_240923_3_) -> {
-         try {
-            JsonObject jsonobject = JSONUtils.getJsonObject(p_240923_3_, "advancement");
-            Advancement.Builder advancement$builder = Advancement.Builder.deserialize(jsonobject, new ConditionArrayParser(p_240923_2_, this.lootPredicateManager));
-            map.put(p_240923_2_, advancement$builder);
-         } catch (IllegalArgumentException | JsonParseException jsonparseexception) {
-            LOGGER.error("Parsing error loading custom advancement {}: {}", p_240923_2_, jsonparseexception.getMessage());
-         }
+    protected void apply(Map<ResourceLocation, JsonElement> objectIn, IResourceManager resourceManagerIn, IProfiler profilerIn)
+    {
+        Map<ResourceLocation, Advancement.Builder> map = Maps.newHashMap();
+        objectIn.forEach((conditions, advancement) ->
+        {
+            try {
+                JsonObject jsonobject = JSONUtils.getJsonObject(advancement, "advancement");
+                Advancement.Builder advancement$builder = Advancement.Builder.deserialize(jsonobject, new ConditionArrayParser(conditions, this.lootPredicateManager));
+                map.put(conditions, advancement$builder);
+            }
+            catch (IllegalArgumentException | JsonParseException jsonparseexception)
+            {
+                LOGGER.error("Parsing error loading custom advancement {}: {}", conditions, jsonparseexception.getMessage());
+            }
+        });
+        AdvancementList advancementlist = new AdvancementList();
+        advancementlist.loadAdvancements(map);
 
-      });
-      AdvancementList advancementlist = new AdvancementList();
-      advancementlist.loadAdvancements(map);
+        for (Advancement advancement : advancementlist.getRoots())
+        {
+            if (advancement.getDisplay() != null)
+            {
+                AdvancementTreeNode.layout(advancement);
+            }
+        }
 
-      for(Advancement advancement : advancementlist.getRoots()) {
-         if (advancement.getDisplay() != null) {
-            AdvancementTreeNode.layout(advancement);
-         }
-      }
+        this.advancementList = advancementlist;
+    }
 
-      this.advancementList = advancementlist;
-   }
+    @Nullable
+    public Advancement getAdvancement(ResourceLocation id)
+    {
+        return this.advancementList.getAdvancement(id);
+    }
 
-   @Nullable
-   public Advancement getAdvancement(ResourceLocation id) {
-      return this.advancementList.getAdvancement(id);
-   }
-
-   public Collection<Advancement> getAllAdvancements() {
-      return this.advancementList.getAll();
-   }
+    public Collection<Advancement> getAllAdvancements()
+    {
+        return this.advancementList.getAll();
+    }
 }

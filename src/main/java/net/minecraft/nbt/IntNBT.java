@@ -6,107 +6,141 @@ import java.io.IOException;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
-public class IntNBT extends NumberNBT {
-   public static final INBTType<IntNBT> TYPE = new INBTType<IntNBT>() {
-      public IntNBT readNBT(DataInput input, int depth, NBTSizeTracker accounter) throws IOException {
-         accounter.read(96L);
-         return IntNBT.valueOf(input.readInt());
-      }
+public class IntNBT extends NumberNBT
+{
+    public static final INBTType<IntNBT> TYPE = new INBTType<IntNBT>()
+    {
+        public IntNBT readNBT(DataInput input, int depth, NBTSizeTracker accounter) throws IOException
+        {
+            accounter.read(96L);
+            return IntNBT.valueOf(input.readInt());
+        }
+        public String getName()
+        {
+            return "INT";
+        }
+        public String getTagName()
+        {
+            return "TAG_Int";
+        }
+        public boolean isPrimitive()
+        {
+            return true;
+        }
+    };
+    private final int data;
 
-      public String getName() {
-         return "INT";
-      }
+    private IntNBT(int data)
+    {
+        this.data = data;
+    }
 
-      public String getTagName() {
-         return "TAG_Int";
-      }
+    public static IntNBT valueOf(int dataIn)
+    {
+        return dataIn >= -128 && dataIn <= 1024 ? IntNBT.Cache.CACHE[dataIn + 128] : new IntNBT(dataIn);
+    }
 
-      public boolean isPrimitive() {
-         return true;
-      }
-   };
-   private final int data;
+    /**
+     * Write the actual data contents of the tag, implemented in NBT extension classes
+     */
+    public void write(DataOutput output) throws IOException
+    {
+        output.writeInt(this.data);
+    }
 
-   private IntNBT(int data) {
-      this.data = data;
-   }
+    /**
+     * Gets the type byte for the tag.
+     */
+    public byte getId()
+    {
+        return 3;
+    }
 
-   public static IntNBT valueOf(int dataIn) {
-      return dataIn >= -128 && dataIn <= 1024 ? IntNBT.Cache.CACHE[dataIn + 128] : new IntNBT(dataIn);
-   }
+    public INBTType<IntNBT> getType()
+    {
+        return TYPE;
+    }
 
-   public void write(DataOutput output) throws IOException {
-      output.writeInt(this.data);
-   }
+    public String toString()
+    {
+        return String.valueOf(this.data);
+    }
 
-   public byte getId() {
-      return 3;
-   }
+    /**
+     * Creates a clone of the tag.
+     */
+    public IntNBT copy()
+    {
+        return this;
+    }
 
-   public INBTType<IntNBT> getType() {
-      return TYPE;
-   }
+    public boolean equals(Object p_equals_1_)
+    {
+        if (this == p_equals_1_)
+        {
+            return true;
+        }
+        else
+        {
+            return p_equals_1_ instanceof IntNBT && this.data == ((IntNBT)p_equals_1_).data;
+        }
+    }
 
-   public String toString() {
-      return String.valueOf(this.data);
-   }
+    public int hashCode()
+    {
+        return this.data;
+    }
 
-   public IntNBT copy() {
-      return this;
-   }
+    public ITextComponent toFormattedComponent(String indentation, int indentDepth)
+    {
+        return (new StringTextComponent(String.valueOf(this.data))).mergeStyle(SYNTAX_HIGHLIGHTING_NUMBER);
+    }
 
-   public boolean equals(Object p_equals_1_) {
-      if (this == p_equals_1_) {
-         return true;
-      } else {
-         return p_equals_1_ instanceof IntNBT && this.data == ((IntNBT)p_equals_1_).data;
-      }
-   }
+    public long getLong()
+    {
+        return (long)this.data;
+    }
 
-   public int hashCode() {
-      return this.data;
-   }
+    public int getInt()
+    {
+        return this.data;
+    }
 
-   public ITextComponent toFormattedComponent(String indentation, int indentDepth) {
-      return (new StringTextComponent(String.valueOf(this.data))).mergeStyle(SYNTAX_HIGHLIGHTING_NUMBER);
-   }
+    public short getShort()
+    {
+        return (short)(this.data & 65535);
+    }
 
-   public long getLong() {
-      return (long)this.data;
-   }
+    public byte getByte()
+    {
+        return (byte)(this.data & 255);
+    }
 
-   public int getInt() {
-      return this.data;
-   }
+    public double getDouble()
+    {
+        return (double)this.data;
+    }
 
-   public short getShort() {
-      return (short)(this.data & '\uffff');
-   }
+    public float getFloat()
+    {
+        return (float)this.data;
+    }
 
-   public byte getByte() {
-      return (byte)(this.data & 255);
-   }
+    public Number getAsNumber()
+    {
+        return this.data;
+    }
 
-   public double getDouble() {
-      return (double)this.data;
-   }
+    static class Cache
+    {
+        static final IntNBT[] CACHE = new IntNBT[1153];
 
-   public float getFloat() {
-      return (float)this.data;
-   }
-
-   public Number getAsNumber() {
-      return this.data;
-   }
-
-   static class Cache {
-      static final IntNBT[] CACHE = new IntNBT[1153];
-
-      static {
-         for(int i = 0; i < CACHE.length; ++i) {
-            CACHE[i] = new IntNBT(-128 + i);
-         }
-
-      }
-   }
+        static
+        {
+            for (int i = 0; i < CACHE.length; ++i)
+            {
+                CACHE[i] = new IntNBT(-128 + i);
+            }
+        }
+    }
 }

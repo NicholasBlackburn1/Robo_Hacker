@@ -13,32 +13,40 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.TranslationTextComponent;
 
-public class EntitySummonArgument implements ArgumentType<ResourceLocation> {
-   private static final Collection<String> EXAMPLES = Arrays.asList("minecraft:pig", "cow");
-   public static final DynamicCommandExceptionType ENTITY_UNKNOWN_TYPE = new DynamicCommandExceptionType((p_211367_0_) -> {
-      return new TranslationTextComponent("entity.notFound", p_211367_0_);
-   });
+public class EntitySummonArgument implements ArgumentType<ResourceLocation>
+{
+    private static final Collection<String> EXAMPLES = Arrays.asList("minecraft:pig", "cow");
+    public static final DynamicCommandExceptionType ENTITY_UNKNOWN_TYPE = new DynamicCommandExceptionType((p_211367_0_) ->
+    {
+        return new TranslationTextComponent("entity.notFound", p_211367_0_);
+    });
 
-   public static EntitySummonArgument entitySummon() {
-      return new EntitySummonArgument();
-   }
+    public static EntitySummonArgument entitySummon()
+    {
+        return new EntitySummonArgument();
+    }
 
-   public static ResourceLocation getEntityId(CommandContext<CommandSource> context, String name) throws CommandSyntaxException {
-      return checkIfEntityExists(context.getArgument(name, ResourceLocation.class));
-   }
+    public static ResourceLocation getEntityId(CommandContext<CommandSource> context, String name) throws CommandSyntaxException
+    {
+        return checkIfEntityExists(context.getArgument(name, ResourceLocation.class));
+    }
 
-   private static ResourceLocation checkIfEntityExists(ResourceLocation id) throws CommandSyntaxException {
-      Registry.ENTITY_TYPE.getOptional(id).filter(EntityType::isSummonable).orElseThrow(() -> {
-         return ENTITY_UNKNOWN_TYPE.create(id);
-      });
-      return id;
-   }
+    private static ResourceLocation checkIfEntityExists(ResourceLocation id) throws CommandSyntaxException
+    {
+        Registry.ENTITY_TYPE.getOptional(id).filter(EntityType::isSummonable).orElseThrow(() ->
+        {
+            return ENTITY_UNKNOWN_TYPE.create(id);
+        });
+        return id;
+    }
 
-   public ResourceLocation parse(StringReader p_parse_1_) throws CommandSyntaxException {
-      return checkIfEntityExists(ResourceLocation.read(p_parse_1_));
-   }
+    public ResourceLocation parse(StringReader p_parse_1_) throws CommandSyntaxException
+    {
+        return checkIfEntityExists(ResourceLocation.read(p_parse_1_));
+    }
 
-   public Collection<String> getExamples() {
-      return EXAMPLES;
-   }
+    public Collection<String> getExamples()
+    {
+        return EXAMPLES;
+    }
 }

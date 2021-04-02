@@ -21,146 +21,216 @@ import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class ShapelessRecipeBuilder {
-   private static final Logger LOGGER = LogManager.getLogger();
-   private final Item result;
-   private final int count;
-   private final List<Ingredient> ingredients = Lists.newArrayList();
-   private final Advancement.Builder advancementBuilder = Advancement.Builder.builder();
-   private String group;
+public class ShapelessRecipeBuilder
+{
+    private static final Logger LOGGER = LogManager.getLogger();
+    private final Item result;
+    private final int count;
+    private final List<Ingredient> ingredients = Lists.newArrayList();
+    private final Advancement.Builder advancementBuilder = Advancement.Builder.builder();
+    private String group;
 
-   public ShapelessRecipeBuilder(IItemProvider resultIn, int countIn) {
-      this.result = resultIn.asItem();
-      this.count = countIn;
-   }
+    public ShapelessRecipeBuilder(IItemProvider resultIn, int countIn)
+    {
+        this.result = resultIn.asItem();
+        this.count = countIn;
+    }
 
-   public static ShapelessRecipeBuilder shapelessRecipe(IItemProvider resultIn) {
-      return new ShapelessRecipeBuilder(resultIn, 1);
-   }
+    /**
+     * Creates a new builder for a shapeless recipe.
+     */
+    public static ShapelessRecipeBuilder shapelessRecipe(IItemProvider resultIn)
+    {
+        return new ShapelessRecipeBuilder(resultIn, 1);
+    }
 
-   public static ShapelessRecipeBuilder shapelessRecipe(IItemProvider resultIn, int countIn) {
-      return new ShapelessRecipeBuilder(resultIn, countIn);
-   }
+    /**
+     * Creates a new builder for a shapeless recipe.
+     */
+    public static ShapelessRecipeBuilder shapelessRecipe(IItemProvider resultIn, int countIn)
+    {
+        return new ShapelessRecipeBuilder(resultIn, countIn);
+    }
 
-   public ShapelessRecipeBuilder addIngredient(ITag<Item> tagIn) {
-      return this.addIngredient(Ingredient.fromTag(tagIn));
-   }
+    /**
+     * Adds an ingredient that can be any item in the given tag.
+     */
+    public ShapelessRecipeBuilder addIngredient(ITag<Item> tagIn)
+    {
+        return this.addIngredient(Ingredient.fromTag(tagIn));
+    }
 
-   public ShapelessRecipeBuilder addIngredient(IItemProvider itemIn) {
-      return this.addIngredient(itemIn, 1);
-   }
+    /**
+     * Adds an ingredient of the given item.
+     */
+    public ShapelessRecipeBuilder addIngredient(IItemProvider itemIn)
+    {
+        return this.addIngredient(itemIn, 1);
+    }
 
-   public ShapelessRecipeBuilder addIngredient(IItemProvider itemIn, int quantity) {
-      for(int i = 0; i < quantity; ++i) {
-         this.addIngredient(Ingredient.fromItems(itemIn));
-      }
+    /**
+     * Adds the given ingredient multiple times.
+     */
+    public ShapelessRecipeBuilder addIngredient(IItemProvider itemIn, int quantity)
+    {
+        for (int i = 0; i < quantity; ++i)
+        {
+            this.addIngredient(Ingredient.fromItems(itemIn));
+        }
 
-      return this;
-   }
+        return this;
+    }
 
-   public ShapelessRecipeBuilder addIngredient(Ingredient ingredientIn) {
-      return this.addIngredient(ingredientIn, 1);
-   }
+    /**
+     * Adds an ingredient.
+     */
+    public ShapelessRecipeBuilder addIngredient(Ingredient ingredientIn)
+    {
+        return this.addIngredient(ingredientIn, 1);
+    }
 
-   public ShapelessRecipeBuilder addIngredient(Ingredient ingredientIn, int quantity) {
-      for(int i = 0; i < quantity; ++i) {
-         this.ingredients.add(ingredientIn);
-      }
+    /**
+     * Adds an ingredient multiple times.
+     */
+    public ShapelessRecipeBuilder addIngredient(Ingredient ingredientIn, int quantity)
+    {
+        for (int i = 0; i < quantity; ++i)
+        {
+            this.ingredients.add(ingredientIn);
+        }
 
-      return this;
-   }
+        return this;
+    }
 
-   public ShapelessRecipeBuilder addCriterion(String name, ICriterionInstance criterionIn) {
-      this.advancementBuilder.withCriterion(name, criterionIn);
-      return this;
-   }
+    /**
+     * Adds a criterion needed to unlock the recipe.
+     */
+    public ShapelessRecipeBuilder addCriterion(String name, ICriterionInstance criterionIn)
+    {
+        this.advancementBuilder.withCriterion(name, criterionIn);
+        return this;
+    }
 
-   public ShapelessRecipeBuilder setGroup(String groupIn) {
-      this.group = groupIn;
-      return this;
-   }
+    public ShapelessRecipeBuilder setGroup(String groupIn)
+    {
+        this.group = groupIn;
+        return this;
+    }
 
-   public void build(Consumer<IFinishedRecipe> consumerIn) {
-      this.build(consumerIn, Registry.ITEM.getKey(this.result));
-   }
+    /**
+     * Builds this recipe into an {@link IFinishedRecipe}.
+     */
+    public void build(Consumer<IFinishedRecipe> consumerIn)
+    {
+        this.build(consumerIn, Registry.ITEM.getKey(this.result));
+    }
 
-   public void build(Consumer<IFinishedRecipe> consumerIn, String save) {
-      ResourceLocation resourcelocation = Registry.ITEM.getKey(this.result);
-      if ((new ResourceLocation(save)).equals(resourcelocation)) {
-         throw new IllegalStateException("Shapeless Recipe " + save + " should remove its 'save' argument");
-      } else {
-         this.build(consumerIn, new ResourceLocation(save));
-      }
-   }
+    /**
+     * Builds this recipe into an {@link IFinishedRecipe}. Use {@link #build(Consumer)} if save is the same as the ID
+     * for the result.
+     */
+    public void build(Consumer<IFinishedRecipe> consumerIn, String save)
+    {
+        ResourceLocation resourcelocation = Registry.ITEM.getKey(this.result);
 
-   public void build(Consumer<IFinishedRecipe> consumerIn, ResourceLocation id) {
-      this.validate(id);
-      this.advancementBuilder.withParentId(new ResourceLocation("recipes/root")).withCriterion("has_the_recipe", RecipeUnlockedTrigger.create(id)).withRewards(AdvancementRewards.Builder.recipe(id)).withRequirementsStrategy(IRequirementsStrategy.OR);
-      consumerIn.accept(new ShapelessRecipeBuilder.Result(id, this.result, this.count, this.group == null ? "" : this.group, this.ingredients, this.advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getGroup().getPath() + "/" + id.getPath())));
-   }
+        if ((new ResourceLocation(save)).equals(resourcelocation))
+        {
+            throw new IllegalStateException("Shapeless Recipe " + save + " should remove its 'save' argument");
+        }
+        else
+        {
+            this.build(consumerIn, new ResourceLocation(save));
+        }
+    }
 
-   private void validate(ResourceLocation id) {
-      if (this.advancementBuilder.getCriteria().isEmpty()) {
-         throw new IllegalStateException("No way of obtaining recipe " + id);
-      }
-   }
+    /**
+     * Builds this recipe into an {@link IFinishedRecipe}.
+     */
+    public void build(Consumer<IFinishedRecipe> consumerIn, ResourceLocation id)
+    {
+        this.validate(id);
+        this.advancementBuilder.withParentId(new ResourceLocation("recipes/root")).withCriterion("has_the_recipe", RecipeUnlockedTrigger.create(id)).withRewards(AdvancementRewards.Builder.recipe(id)).withRequirementsStrategy(IRequirementsStrategy.OR);
+        consumerIn.accept(new ShapelessRecipeBuilder.Result(id, this.result, this.count, this.group == null ? "" : this.group, this.ingredients, this.advancementBuilder, new ResourceLocation(id.getNamespace(), "recipes/" + this.result.getGroup().getPath() + "/" + id.getPath())));
+    }
 
-   public static class Result implements IFinishedRecipe {
-      private final ResourceLocation id;
-      private final Item result;
-      private final int count;
-      private final String group;
-      private final List<Ingredient> ingredients;
-      private final Advancement.Builder advancementBuilder;
-      private final ResourceLocation advancementId;
+    /**
+     * Makes sure that this recipe is valid and obtainable.
+     */
+    private void validate(ResourceLocation id)
+    {
+        if (this.advancementBuilder.getCriteria().isEmpty())
+        {
+            throw new IllegalStateException("No way of obtaining recipe " + id);
+        }
+    }
 
-      public Result(ResourceLocation idIn, Item resultIn, int countIn, String groupIn, List<Ingredient> ingredientsIn, Advancement.Builder advancementBuilderIn, ResourceLocation advancementIdIn) {
-         this.id = idIn;
-         this.result = resultIn;
-         this.count = countIn;
-         this.group = groupIn;
-         this.ingredients = ingredientsIn;
-         this.advancementBuilder = advancementBuilderIn;
-         this.advancementId = advancementIdIn;
-      }
+    public static class Result implements IFinishedRecipe
+    {
+        private final ResourceLocation id;
+        private final Item result;
+        private final int count;
+        private final String group;
+        private final List<Ingredient> ingredients;
+        private final Advancement.Builder advancementBuilder;
+        private final ResourceLocation advancementId;
 
-      public void serialize(JsonObject json) {
-         if (!this.group.isEmpty()) {
-            json.addProperty("group", this.group);
-         }
+        public Result(ResourceLocation idIn, Item resultIn, int countIn, String groupIn, List<Ingredient> ingredientsIn, Advancement.Builder advancementBuilderIn, ResourceLocation advancementIdIn)
+        {
+            this.id = idIn;
+            this.result = resultIn;
+            this.count = countIn;
+            this.group = groupIn;
+            this.ingredients = ingredientsIn;
+            this.advancementBuilder = advancementBuilderIn;
+            this.advancementId = advancementIdIn;
+        }
 
-         JsonArray jsonarray = new JsonArray();
+        public void serialize(JsonObject json)
+        {
+            if (!this.group.isEmpty())
+            {
+                json.addProperty("group", this.group);
+            }
 
-         for(Ingredient ingredient : this.ingredients) {
-            jsonarray.add(ingredient.serialize());
-         }
+            JsonArray jsonarray = new JsonArray();
 
-         json.add("ingredients", jsonarray);
-         JsonObject jsonobject = new JsonObject();
-         jsonobject.addProperty("item", Registry.ITEM.getKey(this.result).toString());
-         if (this.count > 1) {
-            jsonobject.addProperty("count", this.count);
-         }
+            for (Ingredient ingredient : this.ingredients)
+            {
+                jsonarray.add(ingredient.serialize());
+            }
 
-         json.add("result", jsonobject);
-      }
+            json.add("ingredients", jsonarray);
+            JsonObject jsonobject = new JsonObject();
+            jsonobject.addProperty("item", Registry.ITEM.getKey(this.result).toString());
 
-      public IRecipeSerializer<?> getSerializer() {
-         return IRecipeSerializer.CRAFTING_SHAPELESS;
-      }
+            if (this.count > 1)
+            {
+                jsonobject.addProperty("count", this.count);
+            }
 
-      public ResourceLocation getID() {
-         return this.id;
-      }
+            json.add("result", jsonobject);
+        }
 
-      @Nullable
-      public JsonObject getAdvancementJson() {
-         return this.advancementBuilder.serialize();
-      }
+        public IRecipeSerializer<?> getSerializer()
+        {
+            return IRecipeSerializer.CRAFTING_SHAPELESS;
+        }
 
-      @Nullable
-      public ResourceLocation getAdvancementID() {
-         return this.advancementId;
-      }
-   }
+        public ResourceLocation getID()
+        {
+            return this.id;
+        }
+
+        @Nullable
+        public JsonObject getAdvancementJson()
+        {
+            return this.advancementBuilder.serialize();
+        }
+
+        @Nullable
+        public ResourceLocation getAdvancementID()
+        {
+            return this.advancementId;
+        }
+    }
 }

@@ -8,36 +8,46 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ISeedReader;
 import net.minecraft.world.gen.ChunkGenerator;
 
-public class AbstractSphereReplaceConfig extends Feature<SphereReplaceConfig> {
-   public AbstractSphereReplaceConfig(Codec<SphereReplaceConfig> codec) {
-      super(codec);
-   }
+public class AbstractSphereReplaceConfig extends Feature<SphereReplaceConfig>
+{
+    public AbstractSphereReplaceConfig(Codec<SphereReplaceConfig> p_i241977_1_)
+    {
+        super(p_i241977_1_);
+    }
 
-   public boolean generate(ISeedReader reader, ChunkGenerator generator, Random rand, BlockPos pos, SphereReplaceConfig config) {
-      boolean flag = false;
-      int i = config.radius.func_242259_a(rand);
+    public boolean func_241855_a(ISeedReader p_241855_1_, ChunkGenerator p_241855_2_, Random p_241855_3_, BlockPos p_241855_4_, SphereReplaceConfig p_241855_5_)
+    {
+        boolean flag = false;
+        int i = p_241855_5_.radius.func_242259_a(p_241855_3_);
 
-      for(int j = pos.getX() - i; j <= pos.getX() + i; ++j) {
-         for(int k = pos.getZ() - i; k <= pos.getZ() + i; ++k) {
-            int l = j - pos.getX();
-            int i1 = k - pos.getZ();
-            if (l * l + i1 * i1 <= i * i) {
-               for(int j1 = pos.getY() - config.field_242809_d; j1 <= pos.getY() + config.field_242809_d; ++j1) {
-                  BlockPos blockpos = new BlockPos(j, j1, k);
-                  Block block = reader.getBlockState(blockpos).getBlock();
+        for (int j = p_241855_4_.getX() - i; j <= p_241855_4_.getX() + i; ++j)
+        {
+            for (int k = p_241855_4_.getZ() - i; k <= p_241855_4_.getZ() + i; ++k)
+            {
+                int l = j - p_241855_4_.getX();
+                int i1 = k - p_241855_4_.getZ();
 
-                  for(BlockState blockstate : config.targets) {
-                     if (blockstate.isIn(block)) {
-                        reader.setBlockState(blockpos, config.state, 2);
-                        flag = true;
-                        break;
-                     }
-                  }
-               }
+                if (l * l + i1 * i1 <= i * i)
+                {
+                    for (int j1 = p_241855_4_.getY() - p_241855_5_.field_242809_d; j1 <= p_241855_4_.getY() + p_241855_5_.field_242809_d; ++j1)
+                    {
+                        BlockPos blockpos = new BlockPos(j, j1, k);
+                        Block block = p_241855_1_.getBlockState(blockpos).getBlock();
+
+                        for (BlockState blockstate : p_241855_5_.targets)
+                        {
+                            if (blockstate.isIn(block))
+                            {
+                                p_241855_1_.setBlockState(blockpos, p_241855_5_.state, 2);
+                                flag = true;
+                                break;
+                            }
+                        }
+                    }
+                }
             }
-         }
-      }
+        }
 
-      return flag;
-   }
+        return flag;
+    }
 }

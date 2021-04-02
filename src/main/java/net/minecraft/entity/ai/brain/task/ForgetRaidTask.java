@@ -7,22 +7,27 @@ import net.minecraft.entity.ai.brain.schedule.Activity;
 import net.minecraft.world.raid.Raid;
 import net.minecraft.world.server.ServerWorld;
 
-public class ForgetRaidTask extends Task<LivingEntity> {
-   public ForgetRaidTask() {
-      super(ImmutableMap.of());
-   }
+public class ForgetRaidTask extends Task<LivingEntity>
+{
+    public ForgetRaidTask()
+    {
+        super(ImmutableMap.of());
+    }
 
-   protected boolean shouldExecute(ServerWorld worldIn, LivingEntity owner) {
-      return worldIn.rand.nextInt(20) == 0;
-   }
+    protected boolean shouldExecute(ServerWorld worldIn, LivingEntity owner)
+    {
+        return worldIn.rand.nextInt(20) == 0;
+    }
 
-   protected void startExecuting(ServerWorld worldIn, LivingEntity entityIn, long gameTimeIn) {
-      Brain<?> brain = entityIn.getBrain();
-      Raid raid = worldIn.findRaid(entityIn.getPosition());
-      if (raid == null || raid.isStopped() || raid.isLoss()) {
-         brain.setFallbackActivity(Activity.IDLE);
-         brain.updateActivity(worldIn.getDayTime(), worldIn.getGameTime());
-      }
+    protected void startExecuting(ServerWorld worldIn, LivingEntity entityIn, long gameTimeIn)
+    {
+        Brain<?> brain = entityIn.getBrain();
+        Raid raid = worldIn.findRaid(entityIn.getPosition());
 
-   }
+        if (raid == null || raid.isStopped() || raid.isLoss())
+        {
+            brain.setFallbackActivity(Activity.IDLE);
+            brain.updateActivity(worldIn.getDayTime(), worldIn.getGameTime());
+        }
+    }
 }

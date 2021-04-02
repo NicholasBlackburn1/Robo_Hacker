@@ -8,17 +8,22 @@ import net.minecraft.tileentity.SignTileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class SignItem extends WallOrFloorItem {
-   public SignItem(Item.Properties propertiesIn, Block floorBlockIn, Block wallBlockIn) {
-      super(floorBlockIn, wallBlockIn, propertiesIn);
-   }
+public class SignItem extends WallOrFloorItem
+{
+    public SignItem(Item.Properties propertiesIn, Block floorBlockIn, Block wallBlockIn)
+    {
+        super(floorBlockIn, wallBlockIn, propertiesIn);
+    }
 
-   protected boolean onBlockPlaced(BlockPos pos, World worldIn, @Nullable PlayerEntity player, ItemStack stack, BlockState state) {
-      boolean flag = super.onBlockPlaced(pos, worldIn, player, stack, state);
-      if (!worldIn.isRemote && !flag && player != null) {
-         player.openSignEditor((SignTileEntity)worldIn.getTileEntity(pos));
-      }
+    protected boolean onBlockPlaced(BlockPos pos, World worldIn, @Nullable PlayerEntity player, ItemStack stack, BlockState state)
+    {
+        boolean flag = super.onBlockPlaced(pos, worldIn, player, stack, state);
 
-      return flag;
-   }
+        if (!worldIn.isRemote && !flag && player != null)
+        {
+            player.openSignEditor((SignTileEntity)worldIn.getTileEntity(pos));
+        }
+
+        return flag;
+    }
 }

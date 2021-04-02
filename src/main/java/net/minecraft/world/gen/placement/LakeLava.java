@@ -6,21 +6,27 @@ import java.util.stream.Stream;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.gen.feature.WorldDecoratingHelper;
 
-public class LakeLava extends Placement<ChanceConfig> {
-   public LakeLava(Codec<ChanceConfig> codec) {
-      super(codec);
-   }
+public class LakeLava extends Placement<ChanceConfig>
+{
+    public LakeLava(Codec<ChanceConfig> p_i232089_1_)
+    {
+        super(p_i232089_1_);
+    }
 
-   public Stream<BlockPos> getPositions(WorldDecoratingHelper helper, Random rand, ChanceConfig config, BlockPos pos) {
-      if (rand.nextInt(config.chance / 10) == 0) {
-         int i = rand.nextInt(16) + pos.getX();
-         int j = rand.nextInt(16) + pos.getZ();
-         int k = rand.nextInt(rand.nextInt(helper.func_242891_a() - 8) + 8);
-         if (k < helper.func_242895_b() || rand.nextInt(config.chance / 8) == 0) {
-            return Stream.of(new BlockPos(i, k, j));
-         }
-      }
+    public Stream<BlockPos> func_241857_a(WorldDecoratingHelper p_241857_1_, Random p_241857_2_, ChanceConfig p_241857_3_, BlockPos p_241857_4_)
+    {
+        if (p_241857_2_.nextInt(p_241857_3_.chance / 10) == 0)
+        {
+            int i = p_241857_2_.nextInt(16) + p_241857_4_.getX();
+            int j = p_241857_2_.nextInt(16) + p_241857_4_.getZ();
+            int k = p_241857_2_.nextInt(p_241857_2_.nextInt(p_241857_1_.func_242891_a() - 8) + 8);
 
-      return Stream.empty();
-   }
+            if (k < p_241857_1_.func_242895_b() || p_241857_2_.nextInt(p_241857_3_.chance / 8) == 0)
+            {
+                return Stream.of(new BlockPos(i, k, j));
+            }
+        }
+
+        return Stream.empty();
+    }
 }

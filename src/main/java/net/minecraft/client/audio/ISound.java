@@ -3,49 +3,52 @@ package net.minecraft.client.audio;
 import javax.annotation.Nullable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
-public interface ISound {
-   ResourceLocation getSoundLocation();
+public interface ISound
+{
+    ResourceLocation getSoundLocation();
 
-   @Nullable
-   SoundEventAccessor createAccessor(SoundHandler handler);
+    @Nullable
+    SoundEventAccessor createAccessor(SoundHandler handler);
 
-   Sound getSound();
+    Sound getSound();
 
-   SoundCategory getCategory();
+    SoundCategory getCategory();
 
-   boolean canRepeat();
+    boolean canRepeat();
 
-   boolean isGlobal();
+    /**
+     * True if the sound is not tied to a particular position in world (e.g. BGM)
+     */
+    boolean isGlobal();
 
-   int getRepeatDelay();
+    int getRepeatDelay();
 
-   float getVolume();
+    float getVolume();
 
-   float getPitch();
+    float getPitch();
 
-   double getX();
+    double getX();
 
-   double getY();
+    double getY();
 
-   double getZ();
+    double getZ();
 
-   ISound.AttenuationType getAttenuationType();
+    ISound.AttenuationType getAttenuationType();
 
-   default boolean canBeSilent() {
-      return false;
-   }
+default boolean canBeSilent()
+    {
+        return false;
+    }
 
-   default boolean shouldPlaySound() {
-      return true;
-   }
+default boolean shouldPlaySound()
+    {
+        return true;
+    }
 
-   @OnlyIn(Dist.CLIENT)
-   public static enum AttenuationType {
-      NONE,
-      LINEAR;
-   }
+    public static enum AttenuationType
+    {
+        NONE,
+        LINEAR;
+    }
 }
