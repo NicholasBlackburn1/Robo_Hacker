@@ -431,7 +431,7 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
       this.mouseHelper.registerCallbacks(this.mainWindow.getHandle());
       this.keyboardListener = new KeyboardListener(this);
       this.keyboardListener.setupCallbacks(this.mainWindow.getHandle());
-      RenderSystem.initRenderer(this.gameSettings.glDebugVerbosity, false);
+      RenderSystem.initRenderer(this.gameSettings.glDebugVerbosity, true);
       this.framebuffer = new Framebuffer(this.mainWindow.getFramebufferWidth(), this.mainWindow.getFramebufferHeight(), true, IS_RUNNING_ON_MAC);
       this.framebuffer.setFramebufferColor(0.0F, 0.0F, 0.0F, 0.0F);
       this.resourceManager = new SimpleReloadableResourceManager(ResourcePackType.CLIENT_RESOURCES);
