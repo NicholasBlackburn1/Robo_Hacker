@@ -136,8 +136,8 @@ public class ResourceLoadProgressGui extends LoadingGui
 
         if (flag)
         {
-            blit(matrixStack, j2 - k1, i1 - j1 - 100, k1, (int)d0, -0.0625F, 0.0F, 120, 60, 120, 120);
-            blit(matrixStack, j2, i1 - j1- 100, k1, (int)d0, 0.0625F, 60.0F, 120, 60, 120, 120);
+            blit(matrixStack, j2 - k1, i1 - j1 - 50, k1, (int)d0, -0.0625F, 0.0F, 120, 60, 120, 120);
+            blit(matrixStack, j2, i1 - j1- 50, k1, (int)d0, 0.0625F, 60.0F, 120, 60, 120, 120);
         }
 
         RenderSystem.defaultBlendFunc();
