@@ -514,7 +514,7 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
    }
 
    public void setDefaultMinecraftTitle() {
-      this.mainWindow.setWindowTitle(this.getWindowTitle());
+      this.mainWindow.setWindowTitle("Blackburn Minecraft 1.16.5");
    }
 
    private String getWindowTitle() {
