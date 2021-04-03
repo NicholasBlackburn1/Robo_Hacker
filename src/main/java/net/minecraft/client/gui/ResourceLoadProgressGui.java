@@ -76,7 +76,7 @@ public class ResourceLoadProgressGui extends LoadingGui
     {   
     
         renderBlackburnLogo(matrixStack,mouseX,mouseY,partialTicks);
-        //renderMojangLogo(matrixStack,mouseX,mouseY,partialTicks);
+        renderMojangLogo(matrixStack,mouseX,mouseY,partialTicks);
         
     }
     /**
