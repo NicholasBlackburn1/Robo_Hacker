@@ -36,6 +36,8 @@ import net.optifine.reflect.ReflectorForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import blackburn.gui.GuiAboutScreen;
+
 public class MainMenuScreen extends Screen
 {
     private static final Logger field_238656_b_ = LogManager.getLogger();
@@ -273,7 +275,7 @@ public class MainMenuScreen extends Screen
            return true;
         } else {
            if (mouseX > (double)this.widthCopyrightRest && mouseX < (double)(this.widthCopyrightRest + this.widthCopyright) && mouseY > (double)(this.height - 10) && mouseY < (double)this.height) {
-              this.minecraft.displayGuiScreen(new WinGameScreen(false, Runnables.doNothing()));
+              this.minecraft.displayGuiScreen(new GuiAboutScreen(modUpdateNotification, this.minecraft.gameSettings));
            }
   
            return false;
