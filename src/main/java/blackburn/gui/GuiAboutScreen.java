@@ -83,6 +83,7 @@ public class GuiAboutScreen extends GuiScreenOF
         this.drawCenteredString(matrixStackIn, fontRenderer,"§6Build:"+"§r "+BlackburnConst.Build,this.width/2 ,160, 16777215);
         this.drawCenteredString(matrixStackIn, fontRenderer,"§6BuildDate:"+"§r "+Date,this.width/2 ,170, 16777215);
         
+        
 
         super.render(matrixStackIn, x, y, partialTicks);
         this.tooltipManager.drawTooltips(matrixStackIn, x, y, this.buttonList);
