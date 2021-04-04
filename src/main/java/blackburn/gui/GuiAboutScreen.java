@@ -79,7 +79,7 @@ public class GuiAboutScreen extends GuiScreenOF
         this.drawCenteredString(matrixStackIn, this.font, splasher,this.width/2 ,30, 16770022 );
 
         this.drawCenteredString(matrixStackIn, fontRenderer,"Blackburn Software Stats UwU",this.width/2 ,140, 16777215);
-        this.drawCenteredString(matrixStackIn, fontRenderer,"Version:"+" "+BlackburnConst.VERSION+BlackburnConst.Releasetag/2 ,150, 16777215);
+        this.drawCenteredString(matrixStackIn, fontRenderer,"Version:"+" "+BlackburnConst.VERSION+BlackburnConst.Releasetag,this.width/2 ,150, 16777215);
         this.drawCenteredString(matrixStackIn, fontRenderer,"Build:"+" "+BlackburnConst.Build,this.width/2 ,160, 16777215);
         this.drawCenteredString(matrixStackIn, fontRenderer,"BuildDate:"+" "+Date,this.width/2 ,170, 16777215);
         
