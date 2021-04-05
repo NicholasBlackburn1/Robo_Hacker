@@ -21,7 +21,8 @@ import net.optifine.gui.TooltipManager;
 import net.optifine.gui.TooltipProviderOptions;
 
 public class GuiAboutScreen extends GuiScreenOF
-{
+{   
+    private Calendar calendar = Calendar.getInstance();
     private Screen prevScreen;
     private GameSettings settings;
     private String splasher;
@@ -39,7 +40,7 @@ public class GuiAboutScreen extends GuiScreenOF
 
     public void init()
     {   
-        Calendar calendar = Calendar.getInstance();
+       
         calendar.setTime(new Date());
         
         Date = calendar.getTime().toString();

@@ -36,6 +36,7 @@ import net.optifine.reflect.ReflectorForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import blackburn.files.MainMenuConfig;
 import blackburn.gui.GuiAboutScreen;
 
 public class MainMenuScreen extends Screen
@@ -205,7 +206,7 @@ public class MainMenuScreen extends Screen
         //this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/1413249501665.png"));
         
         //Adding Custon Image Placement into Client 
-        this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/background.png"));
+        this.minecraft.getTextureManager().bindTexture(new ResourceLocation(MainMenuConfig.updateMainMenuBackground()));
         RenderSystem.enableBlend();
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, this.showFadeInAnimation ? (float)MathHelper.ceil(MathHelper.clamp(f, 0.0F, 1.0F)) : 1.0F);
@@ -213,7 +214,7 @@ public class MainMenuScreen extends Screen
         float f1 = this.showFadeInAnimation ? MathHelper.clamp(f - 1.0F, 0.0F, 1.0F) : 1.0F;
         int l = MathHelper.ceil(f1 * 255.0F) << 24;
         if ((l & -67108864) != 0) {
-           this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/clintcraft.png"));
+           this.minecraft.getTextureManager().bindTexture(new ResourceLocation(MainMenuConfig.updateMainMenuBackground()));
            RenderSystem.color4f(1.0F, 1.0F, 1.0F, f1);
            if (this.showTitleWronglySpelled) {
               
