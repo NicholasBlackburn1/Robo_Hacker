@@ -25,10 +25,7 @@ public class MainMenuConfig {
             {
                 InputStream inputstream = iresourcemanager.getResource(new ResourceLocation("blackburn/MainMenu.properties")).getInputStream();
 
-                if (inputstream == null)
-                {
-                    return;
-                }
+             
 
                 Properties properties = new PropertiesOrdered();
                 properties.load(inputstream);
@@ -52,8 +49,8 @@ public class MainMenuConfig {
         }
 
     }
-
+    
     private void cycleThroughBackgrounds(){
-        
+
     }
 }
