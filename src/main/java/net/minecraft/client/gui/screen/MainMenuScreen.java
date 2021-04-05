@@ -203,7 +203,8 @@ public class MainMenuScreen extends Screen
   
         // this one will be for playing  between 12 am and 3 am
         //this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/1413249501665.png"));
-  
+        
+        //Adding Custon Image Placement into Client 
         this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/background.png"));
         RenderSystem.enableBlend();
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
