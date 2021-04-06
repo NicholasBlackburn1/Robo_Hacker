@@ -24,6 +24,9 @@ import net.minecraft.item.SplashPotionItem;
 import net.minecraft.item.TridentItem;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.math.*;
+import net.minecraft.util.math.RayTraceContext.BlockMode;
+import net.minecraft.util.math.RayTraceContext.FluidMode;
+import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraft.util.math.vector.Vector3d;
 import net.optifine.Config;
 import blackburn.utils.*;
@@ -98,6 +101,7 @@ public class TrajectoryTracking {
 	
 	private ArrayList<Vector3d> getPath(float partialTicks)
 	{
+	
 		ClientPlayerEntity player = Config.getMinecraft().player;
 		ArrayList<Vector3d> path = new ArrayList<>();
 		
@@ -109,17 +113,17 @@ public class TrajectoryTracking {
 			return path;
 		
 		// calculate starting position
-		double arrowPosX = player.prevPosX
-			+ (player.getPosX() - player.lastTickPosX) * partialTicks
-			- Math.cos(Math.toRadians(player.getYaw(partialTicks))) * 0.16;
+		double arrowPosX = player.lastTickPosX
+			+ (player.getPosX() - player.lastTickPosX* partialTicks
+			- Math.cos(Math.toRadians(player.getYaw(partialTicks) )));
 		
-		double arrowPosY = player.prevPosY
-			+ (player.getPosY()) - player.lastTickPosY * partialTicks
+		double arrowPosY = player.lastTickPosY
+			+ (player.getPosY()) - player.lastTickPosY* partialTicks
 			+ player.getEyeHeight() - 0.1;
 		
 		double arrowPosZ = player.lastTickPosZ
 			+ (player.getPosZ()) - player.lastTickPosZ * partialTicks
-			- Math.sin(Math.toRadians(player.getYaw(partialTicks))) * 0.16;
+			- Math.sin(Math.toRadians(player.getYaw(partialTicks)));
 		
 		// Motion factor. Arrows go faster than snowballs and all that...
 		double arrowMotionFactor = item instanceof ArrowItem  ? 1.0 : 0.4;
@@ -141,6 +145,10 @@ public class TrajectoryTracking {
 		arrowMotionX /= arrowMotion;
 		arrowMotionY /= arrowMotion;
 		arrowMotionZ /= arrowMotion;
+
+
+
+		Config.warnblackburn("Arrow Pos" + arrowMotion);
 		
 		// apply bow charge
 		if(item instanceof BowItem)
@@ -186,6 +194,10 @@ public class TrajectoryTracking {
 			arrowMotionY -= gravity * 0.1;
 			
 			// check for collision
+			RayTraceContext context = new RayTraceContext(eyesPos, arrowPos,
+			BlockMode.COLLIDER,FluidMode.NONE, Config.getMinecraft().player);
+			if(Config.getMinecraft().world.rayTraceBlocks(context).getType() != Type.MISS)
+				break;
 		
 		}
 		

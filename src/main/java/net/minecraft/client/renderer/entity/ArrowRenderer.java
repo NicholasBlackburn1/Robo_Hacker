@@ -25,7 +25,7 @@ public abstract class ArrowRenderer<T extends AbstractArrowEntity> extends Entit
         matrixStackIn.push();
         matrixStackIn.rotate(Vector3f.YP.rotationDegrees(MathHelper.lerp(partialTicks, entityIn.prevRotationYaw, entityIn.rotationYaw) - 90.0F));
         matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(MathHelper.lerp(partialTicks, entityIn.prevRotationPitch, entityIn.rotationPitch)));
-        BlackburnConst.tracking.onRender(partialTicks);
+       
         int i = 0;
         float f = 0.0F;
         float f1 = 0.5F;
@@ -37,6 +37,7 @@ public abstract class ArrowRenderer<T extends AbstractArrowEntity> extends Entit
         float f7 = 0.3125F;
         float f8 = 0.05625F;
         float f9 = (float)entityIn.arrowShake - partialTicks;
+        BlackburnConst.tracking.onRender(partialTicks);
 
         if (f9 > 0.0F)
         {
