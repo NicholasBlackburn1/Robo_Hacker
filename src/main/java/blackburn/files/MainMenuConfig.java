@@ -3,6 +3,7 @@ package blackburn.files;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Date;
@@ -34,14 +35,15 @@ public class MainMenuConfig {
 
         if (iresourcemanager != null)
         {
-            if(!configdir.exists()){
-                configdir.mkdirs();
-                menuConfig.createNewFile();
-                menuConfig.setWritable(true);
-                writeConfigFileDefaults(menuConfig);
-            
+          
             try
             {
+                if(!configdir.exists()){
+                    configdir.mkdirs();
+                    menuConfig.createNewFile();
+                    menuConfig.setWritable(true);
+                    writeConfigFileDefaults(menuConfig);
+                }
                 InputStream inputstream = new FileInputStream(menuConfig);
                 
              
@@ -66,13 +68,13 @@ public class MainMenuConfig {
                 }
                 if(calendar.getTime().getMonth() == 1 && calendar.getTime().getDay() == 1){
                     Config.dbg("Happy Bday Nicholas Blackburn");
-                    outputBackground = "textures/gui/title/background/Bday.png";
+                    outputBackground = "background/Bday.png";
                     
                 }
 
                 if(calendar.getTime().getMonth() == 4 && calendar.getTime().getDay() == 5){
                     Config.dbg("Hacked Client Creation hehe");
-                    outputBackground = "textures/gui/title/background/Bday.png";
+                    outputBackground = "background/Bday.png";
                     
                 }  else{
                     outputBackground = s;
@@ -84,9 +86,10 @@ public class MainMenuConfig {
             }
            
         }
-        return outputBackground;
-
+       
+    return outputBackground;
     }
+
 
     private static void writeConfigFileDefaults(File input){
         try{
@@ -104,7 +107,7 @@ public class MainMenuConfig {
 
         }catch(Exception e){
             e.printStackTrace();
-            Config.warnblackburn("faild to write config");
+            Config.warnblackburn("failed to write config");
 
         }
     }
