@@ -2,10 +2,13 @@ package blackburn.files;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
+
+import org.lwjgl.system.CallbackI.S;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.IResourceManager;
@@ -21,7 +24,7 @@ public class MainMenuConfig {
     private static Calendar calendar = Calendar.getInstance();
     private static String outputBackground;
     private static File configdir = new File(Minecraft.getInstance().gameDir+"/blackburn",null);
-    private static File menuConfig = new File(Minecraft.getInstance().gameDir+"/blackburn","MainMenu.propertys")
+    private static File menuConfig = new File(Minecraft.getInstance().gameDir+"/blackburn","MainMenu.propertys");
 
     // Allows User to Change Main Menu Background
     public static String updateMainMenuBackground()
@@ -31,11 +34,15 @@ public class MainMenuConfig {
 
         if (iresourcemanager != null)
         {
-            
+            if(!configdir.exists()){
+                configdir.mkdirs();
+                menuConfig.createNewFile();
+                menuConfig.setWritable(true);
+                writeConfigFileDefaults(menuConfig);
             
             try
             {
-                InputStream inputstream = new FileInputStream();
+                InputStream inputstream = new FileInputStream(menuConfig);
                 
              
 
@@ -79,6 +86,27 @@ public class MainMenuConfig {
         }
         return outputBackground;
 
+    }
+
+    private static void writeConfigFileDefaults(File input){
+        try{
+        FileWriter writer = new FileWriter(input);
+
+        Config.warnblackburn("Writing to File the config!");
+
+        writer.write("# Blackburn Main Menu Config File");
+        writer.write("\n");
+        writer.write("\n");
+        writer.write("# Main menu Background Image");
+        writer.write("background:");
+        writer.close();
+        Config.warnblackburn("Wrote config to the file!");
+
+        }catch(Exception e){
+            e.printStackTrace();
+            Config.warnblackburn("faild to write config");
+
+        }
     }
     
 }
