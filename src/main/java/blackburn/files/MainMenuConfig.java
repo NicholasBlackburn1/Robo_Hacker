@@ -1,5 +1,7 @@
 package blackburn.files;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Date;
@@ -18,7 +20,8 @@ public class MainMenuConfig {
     
     private static Calendar calendar = Calendar.getInstance();
     private static String outputBackground;
-    
+    private static File configdir = new File(Minecraft.getInstance().gameDir+"/blackburn",null);
+    private static File menuConfig = new File(Minecraft.getInstance().gameDir+"/blackburn","MainMenu.propertys")
 
     // Allows User to Change Main Menu Background
     public static String updateMainMenuBackground()
@@ -32,7 +35,7 @@ public class MainMenuConfig {
             
             try
             {
-                InputStream inputstream = iresourcemanager.getResource(new ResourceLocation("blackburn/MainMenu.properties")).getInputStream();
+                InputStream inputstream = new FileInputStream();
                 
              
 
