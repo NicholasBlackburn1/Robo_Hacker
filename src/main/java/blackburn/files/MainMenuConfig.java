@@ -12,7 +12,7 @@ import java.util.Properties;
 import org.lwjgl.system.CallbackI.S;
 
 import blackburn.BlackburnConst;
-import blackburn.gui.BlackburnResourceLoader;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
@@ -70,13 +70,13 @@ public class MainMenuConfig {
                 }
                 if(calendar.getTime().getMonth() == 1 && calendar.getTime().getDay() == 1){
                     Config.dbg("Happy Bday Nicholas Blackburn");
-                    outputBackground = "background/Bday.png";
+                    outputBackground = "textures/gui/title/background//Bday.png";
                     
                 }
 
                 if(calendar.getTime().getMonth() == 4 && calendar.getTime().getDay() == 5){
                     Config.dbg("Hacked Client Creation hehe");
-                    outputBackground = "background/Bday.png";
+                    outputBackground = "textures/gui/title/background//Bday.png";
                     
                 }  else{
                     outputBackground = s;
@@ -106,7 +106,7 @@ public class MainMenuConfig {
         writer.write("background:");
         writer.close();
         Config.warnblackburn("Wrote config to the file!");
-        Minecraft.getInstance().getResourcePackList().close();
+       
 
         }catch(Exception e){
             e.printStackTrace();
