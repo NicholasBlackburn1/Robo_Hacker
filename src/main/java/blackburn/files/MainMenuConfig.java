@@ -11,6 +11,8 @@ import java.util.Properties;
 
 import org.lwjgl.system.CallbackI.S;
 
+import blackburn.BlackburnConst;
+import blackburn.gui.BlackburnResourceLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
@@ -31,7 +33,7 @@ public class MainMenuConfig {
     public static String updateMainMenuBackground()
     {
         calendar.setTime(new Date());
-        IResourceManager iresourcemanager = Config.getResourceManager();
+        IResourceManager iresourcemanager =BlackburnConst.mc.getResourceManager();
 
         if (iresourcemanager != null)
         {
@@ -104,6 +106,7 @@ public class MainMenuConfig {
         writer.write("background:");
         writer.close();
         Config.warnblackburn("Wrote config to the file!");
+        Minecraft.getInstance().getResourcePackList().close();
 
         }catch(Exception e){
             e.printStackTrace();
@@ -111,5 +114,6 @@ public class MainMenuConfig {
 
         }
     }
+
     
 }

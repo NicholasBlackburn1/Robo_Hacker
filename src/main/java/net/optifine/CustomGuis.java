@@ -41,6 +41,8 @@ public class CustomGuis
     private static CustomGuiProperties[][] guiProperties = (CustomGuiProperties[][])null;
     public static boolean isChristmas = isChristmas();
 
+
+ 
     public static ResourceLocation getTextureLocation(ResourceLocation loc)
     {
         if (guiProperties == null)

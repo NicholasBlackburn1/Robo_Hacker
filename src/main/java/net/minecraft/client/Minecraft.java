@@ -2885,6 +2885,8 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
         return this.resourceManager;
     }
 
+    
+
     public ResourcePackList getResourcePackList()
     {
         return this.resourcePackRepository;
