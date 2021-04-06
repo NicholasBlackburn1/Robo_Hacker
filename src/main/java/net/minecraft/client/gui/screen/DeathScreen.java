@@ -103,7 +103,7 @@ public class DeathScreen extends Screen
         if (this.causeOfDeath != null)
         {
             drawCenteredString(matrixStack, this.font, this.causeOfDeath, this.width / 2, 85, 16777215);
-            drawCenteredString(matrixStack, this.font, "§6UwU Hehe A least you dont have to pay Child Support", this.width / 2, 120, 16777215);
+            drawCenteredString(matrixStack, this.font, "§6UwU Hehe A least you dont have to pay Child Support like i do", this.width / 2, 120, 16777215);
         }
 
         drawCenteredString(matrixStack, this.font, this.field_243285_p, this.width / 2, 100, 16777215);
