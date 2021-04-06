@@ -6,6 +6,8 @@ package blackburn;
 
 import java.util.Calendar;
 
+import blackburn.hacks.TrajectoryTracking;
+import blackburn.utils.RotationFaker;
 import net.minecraft.client.Minecraft;
 
 public class BlackburnConst {
@@ -17,4 +19,6 @@ public class BlackburnConst {
     public static String configFolder = "blackburn/resources";
 
     public static Minecraft mc = Minecraft.getInstance();
+    public static RotationFaker faker = new RotationFaker();
+    public static TrajectoryTracking tracking = new TrajectoryTracking();
 }
