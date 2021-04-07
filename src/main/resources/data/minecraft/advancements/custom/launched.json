@@ -1,5 +1,5 @@
 {
-  
+  "parent": "minecraft:custom/root",
   "display": {
     "icon": {
       "item": "minecraft:diamond"
@@ -16,7 +16,6 @@
     "announce_to_chat": true,
     "hidden": false
   },
-  "parent": "minecraft:root",
   "criteria": {
     "launched": {
       "trigger": "launched"

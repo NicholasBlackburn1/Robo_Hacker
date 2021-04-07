@@ -144,6 +144,7 @@ public class ChatScreen extends Screen
         }
     }
     
+
     public void customComamnds(){
             final String s = this.inputField.getText().trim();
             this.sendMessage(s, true);
@@ -263,7 +264,7 @@ public class ChatScreen extends Screen
         this.inputField.render(matrixStack, mouseX, mouseY, partialTicks);
         this.commandSuggestionHelper.drawSuggestionList(matrixStack, mouseX, mouseY);
         Style style = this.minecraft.ingameGUI.getChatGUI().func_238494_b_((double)mouseX, (double)mouseY);
-        customComamnds();
+        //customComamnds();
         if (style != null && style.getHoverEvent() != null)
         {
             this.renderComponentHoverEffect(matrixStack, style, mouseX, mouseY);
