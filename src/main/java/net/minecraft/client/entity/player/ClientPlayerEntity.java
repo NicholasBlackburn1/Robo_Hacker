@@ -1,10 +1,15 @@
 package net.minecraft.client.entity.player;
 
 import com.google.common.collect.Lists;
+
+import blackburn.BlackburnConst;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 import javax.annotation.Nullable;
+
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.BiomeSoundHandler;
@@ -177,6 +182,7 @@ public class ClientPlayerEntity extends AbstractClientPlayerEntity
      */
     public void heal(float healAmount)
     {
+       
     }
 
     public boolean startRiding(Entity entityIn, boolean force)
@@ -448,7 +454,8 @@ public class ClientPlayerEntity extends AbstractClientPlayerEntity
      * returns true if this is an EntityPlayerSP, or the logged in player.
      */
     public boolean isUser()
-    {
+    {   
+        
         return true;
     }
 
@@ -493,6 +500,7 @@ public class ClientPlayerEntity extends AbstractClientPlayerEntity
      */
     public String getServerBrand()
     {
+       
         return this.serverBrand;
     }
 
@@ -654,6 +662,7 @@ public class ClientPlayerEntity extends AbstractClientPlayerEntity
      */
     public boolean isServerWorld()
     {
+        
         return true;
     }
 

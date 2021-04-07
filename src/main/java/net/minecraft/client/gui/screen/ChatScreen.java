@@ -262,6 +262,7 @@ public class ChatScreen extends Screen
         this.inputField.setFocused2(true);
         fill(matrixStack, 2, this.height - 14, this.width - 2, this.height - 2, this.minecraft.gameSettings.getChatBackgroundColor(Integer.MIN_VALUE));
         this.inputField.render(matrixStack, mouseX, mouseY, partialTicks);
+        
         this.commandSuggestionHelper.drawSuggestionList(matrixStack, mouseX, mouseY);
         Style style = this.minecraft.ingameGUI.getChatGUI().func_238494_b_((double)mouseX, (double)mouseY);
         //customComamnds();
