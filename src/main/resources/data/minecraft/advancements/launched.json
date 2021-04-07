@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:adventure/launched",
+  
   "display": {
     "icon": {
       "item": "minecraft:diamond"
@@ -16,13 +16,10 @@
     "announce_to_chat": true,
     "hidden": false
   },
-  "rewards": {
-    "experience": 100
-  },
+  "parent": "minecraft:root",
   "criteria": {
     "launched": {
-      "trigger": "launched",
-      "conditions": {}
+      "trigger": "launched"
     }
   }
 }
