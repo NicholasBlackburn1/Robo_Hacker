@@ -238,6 +238,8 @@ import net.minecraft.world.storage.ServerWorldInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import blackburn.event.PlayerButtonAction;
+
 public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperInfo, IWindowEventListener
 {
     private static Minecraft instance;
@@ -1974,6 +1976,10 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
                 this.player.swingArm(Hand.MAIN_HAND);
             }
         }
+
+        PlayerButtonAction.toggleTrajectoryView();
+
+        
 
         boolean flag2 = this.gameSettings.chatVisibility != ChatVisibility.HIDDEN;
 

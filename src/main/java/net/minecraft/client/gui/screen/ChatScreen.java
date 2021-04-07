@@ -145,17 +145,6 @@ public class ChatScreen extends Screen
     }
     
 
-    public void customComamnds(){
-            final String s = this.inputField.getText().trim();
-            this.sendMessage(s, true);
-        if(s.stripLeading() == ":hacks"){
-            System.out.println("Message: is form a hacker");
-            System.out.println("Message: is form a hacker");
-            this.sendMessage("UwU", true);
-        }
-
-    }
-
     public boolean mouseScrolled(double mouseX, double mouseY, double delta)
     {
         if (delta > 1.0D)

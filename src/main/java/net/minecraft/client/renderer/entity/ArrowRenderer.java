@@ -23,10 +23,10 @@ public abstract class ArrowRenderer<T extends AbstractArrowEntity> extends Entit
     public void render(T entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn)
     {
         matrixStackIn.push();
-        BlackburnConst.tracking.setParticalfloat(partialTicks);
         matrixStackIn.rotate(Vector3f.YP.rotationDegrees(MathHelper.lerp(partialTicks, entityIn.prevRotationYaw, entityIn.rotationYaw) - 90.0F));
         matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(MathHelper.lerp(partialTicks, entityIn.prevRotationPitch, entityIn.rotationPitch)));
-        
+        BlackburnConst.tracking.setParticalfloat(partialTicks);
+        BlackburnConst.tracking.onRender();
         
         int i = 0;
         float f = 0.0F;

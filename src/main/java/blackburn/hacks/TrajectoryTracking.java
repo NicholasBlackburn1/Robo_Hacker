@@ -34,10 +34,12 @@ import blackburn.utils.*;
 public class TrajectoryTracking {
     
 	private float partialTicks;
-
+	private boolean enable;
 	
 	public void onRender()
-	{
+	{	
+		if(this.enable){
+		Config.warnblackburn("in Renderer");
 		GL11.glPushMatrix();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glEnable(GL11.GL_BLEND);
@@ -50,17 +52,17 @@ public class TrajectoryTracking {
 		
 		RenderUtils.applyCameraRotationOnly();
 		
-		ArrayList<Vector3d> path = getPath(partialTicks);
+		ArrayList<Vector3d> path = getPath(this.partialTicks);
 		Vector3d camPos = RenderUtils.getCameraPos();
-		
+	
 		drawLine(path, camPos);
 		
 		if(!path.isEmpty())
 		{
-			Vector3d end = path.get(path.size() - 1);
-			drawEndOfLine(end, camPos);
+				Vector3d end = path.get(path.size() - 1);
+				drawEndOfLine(end, camPos);
 		}
-		
+			
 		GL11.glColor4f(1, 1, 1, 1);
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
@@ -68,6 +70,8 @@ public class TrajectoryTracking {
 		GL11.glDepthMask(true);
 		GL11.glDisable(GL11.GL_LINE_SMOOTH);
 		GL11.glPopMatrix();
+		
+		}
 	}
 	
 	private void drawLine(ArrayList<Vector3d> path, Vector3d camPos)
@@ -82,7 +86,7 @@ public class TrajectoryTracking {
 		GL11.glEnd();
 	}
 	
-	private void drawEndOfLine(Vector3d end, Vector3d camPos)
+	public void drawEndOfLine(Vector3d end, Vector3d camPos)
 	{
 		double renderX = end.x - camPos.x;
 		double renderY = end.y - camPos.y;
@@ -115,16 +119,16 @@ public class TrajectoryTracking {
 		
 		// calculate starting position
 		double arrowPosX = player.lastTickPosX
-			+ (player.getPosX() - player.lastTickPosX* partialTicks
+			+ (player.getPosX() * partialTicks
 			- Math.cos(Math.toRadians(player.getYaw(partialTicks) - 0.16 )));
 		
 		double arrowPosY = player.lastTickPosY
-			+ (player.getPosY()) - player.lastTickPosY* partialTicks
+			+ (player.getPosY())  * partialTicks
 			+ player.getEyeHeight() - 0.1;
 		
 		double arrowPosZ = player.lastTickPosZ
-			+ (player.getPosZ()) - player.lastTickPosZ * partialTicks
-			- Math.sin(Math.toRadians(player.getYaw(partialTicks)- 0.16));
+			+ (player.getPosZ())* partialTicks
+			- Math.sin(Math.toRadians(player.getYaw(partialTicks) - 0.16));
 		
 		// Motion factor. Arrows go faster than snowballs and all that...
 		double arrowMotionFactor = item instanceof ArrowItem  ? 1.0 : 0.4;
@@ -143,9 +147,8 @@ public class TrajectoryTracking {
 		double arrowMotion = Math.sqrt(arrowMotionX * arrowMotionX
 			+ arrowMotionY * arrowMotionY + arrowMotionZ * arrowMotionZ);
 		
-		arrowMotionX /= arrowMotion;
-		arrowMotionY /= arrowMotion;
-		arrowMotionZ /= arrowMotion;
+			arrowMotion /= arrowMotion;
+	
 		
 		// apply bow charge
 		if(item instanceof BowItem)
@@ -229,5 +232,9 @@ public class TrajectoryTracking {
 	}
 	public float setParticalfloat(float partical){
 		return this.partialTicks = partical;
+	}
+
+	public boolean enableDisplayOutput(boolean enabler){
+		return this.enable = enabler;
 	}
 }
