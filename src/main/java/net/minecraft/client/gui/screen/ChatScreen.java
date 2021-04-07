@@ -32,7 +32,7 @@ public class ChatScreen extends Screen
     /**
      * is the text that appears when you press the chat key and the input box appears pre-filled
      */
-    private String defaultInputFieldText = "";
+    private String defaultInputFieldText = "for hacks type in :Hacks";
     private CommandSuggestionHelper commandSuggestionHelper;
 
     public ChatScreen(String defaultText)
@@ -145,9 +145,12 @@ public class ChatScreen extends Screen
     }
     
     public void customComamnds(){
-        System.out.println("Message:" +this.inputField.getMessage().toString());
-        if(this.inputField.getMessage().toString() == "hacks"){
-            BlackburnConst.mc.player.sendMessage(new TranslationTextComponent("command.hacks"),  BlackburnConst.mc.player.getUniqueID());
+            final String s = this.inputField.getText().trim();
+            this.sendMessage(s, true);
+        if(s.stripLeading() == ":hacks"){
+            System.out.println("Message: is form a hacker");
+            System.out.println("Message: is form a hacker");
+            this.sendMessage("UwU", true);
         }
 
     }

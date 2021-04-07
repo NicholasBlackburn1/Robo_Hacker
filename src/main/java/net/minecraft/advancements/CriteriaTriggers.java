@@ -1,6 +1,9 @@
 package net.minecraft.advancements;
 
 import com.google.common.collect.Maps;
+
+import blackburn.advancementTriggers.LaunchedMinecraftTrigger;
+
 import java.util.Map;
 import javax.annotation.Nullable;
 import net.minecraft.advancements.criterion.BeeNestDestroyedTrigger;
@@ -88,6 +91,7 @@ public class CriteriaTriggers
     public static final PlayerGeneratesContainerLootTrigger PLAYER_GENERATES_CONTAINER_LOOT = register(new PlayerGeneratesContainerLootTrigger());
     public static final ThrownItemPickedUpByEntityTrigger THROWN_ITEM_PICKED_UP_BY_ENTITY = register(new ThrownItemPickedUpByEntityTrigger());
     public static final PlayerEntityInteractionTrigger PLAYER_ENTITY_INTERACTION = register(new PlayerEntityInteractionTrigger());
+    public static final LaunchedMinecraftTrigger LAUNCHED_MINECRAFT_TRIGGER = register(new LaunchedMinecraftTrigger());
 
     private static < T extends ICriterionTrigger<? >> T register(T criterion)
     {

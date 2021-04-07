@@ -1,0 +1,28 @@
+{
+  "parent": "minecraft:adventure/launched",
+  "display": {
+    "icon": {
+      "item": "minecraft:diamond"
+     
+    },
+    "title": {
+      "translate": "advancements.adventure.launched.title"
+    },
+    "description": {
+      "translate": "advancements.adventure.launched.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "rewards": {
+    "experience": 100
+  },
+  "criteria": {
+    "launched": {
+      "trigger": "launched",
+      "conditions": {}
+    }
+  }
+}
