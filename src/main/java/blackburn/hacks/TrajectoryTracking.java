@@ -33,9 +33,10 @@ import blackburn.utils.*;
 
 public class TrajectoryTracking {
     
+	private float partialTicks;
 
 	
-	public void onRender(float partialTicks)
+	public void onRender()
 	{
 		GL11.glPushMatrix();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -115,7 +116,7 @@ public class TrajectoryTracking {
 		// calculate starting position
 		double arrowPosX = player.lastTickPosX
 			+ (player.getPosX() - player.lastTickPosX* partialTicks
-			- Math.cos(Math.toRadians(player.getYaw(partialTicks) )));
+			- Math.cos(Math.toRadians(player.getYaw(partialTicks) - 0.16 )));
 		
 		double arrowPosY = player.lastTickPosY
 			+ (player.getPosY()) - player.lastTickPosY* partialTicks
@@ -123,7 +124,7 @@ public class TrajectoryTracking {
 		
 		double arrowPosZ = player.lastTickPosZ
 			+ (player.getPosZ()) - player.lastTickPosZ * partialTicks
-			- Math.sin(Math.toRadians(player.getYaw(partialTicks)));
+			- Math.sin(Math.toRadians(player.getYaw(partialTicks)- 0.16));
 		
 		// Motion factor. Arrows go faster than snowballs and all that...
 		double arrowMotionFactor = item instanceof ArrowItem  ? 1.0 : 0.4;
@@ -145,10 +146,6 @@ public class TrajectoryTracking {
 		arrowMotionX /= arrowMotion;
 		arrowMotionY /= arrowMotion;
 		arrowMotionZ /= arrowMotion;
-
-
-
-		Config.warnblackburn("Arrow Pos" + arrowMotion);
 		
 		// apply bow charge
 		if(item instanceof BowItem)
@@ -229,5 +226,8 @@ public class TrajectoryTracking {
 			|| item instanceof SplashPotionItem
 			|| item instanceof LingeringPotionItem
 			|| item instanceof FishingRodItem || item instanceof TridentItem;
+	}
+	public float setParticalfloat(float partical){
+		return this.partialTicks = partical;
 	}
 }

@@ -1,6 +1,9 @@
 package net.minecraft.client.gui.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.brigadier.Message;
+
+import blackburn.BlackburnConst;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.CommandSuggestionHelper;
 import net.minecraft.client.gui.NewChatGui;
@@ -9,6 +12,8 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponent;
+import net.minecraft.util.text.TextComponentUtils;
 import net.minecraft.util.text.TranslationTextComponent;
 
 public class ChatScreen extends Screen
@@ -138,6 +143,14 @@ public class ChatScreen extends Screen
             return true;
         }
     }
+    
+    public void customComamnds(){
+        System.out.println("Message:" +this.inputField.getMessage().toString());
+        if(this.inputField.getMessage().toString() == "hacks"){
+            BlackburnConst.mc.player.sendMessage(new TranslationTextComponent("command.hacks"),  BlackburnConst.mc.player.getUniqueID());
+        }
+
+    }
 
     public boolean mouseScrolled(double mouseX, double mouseY, double delta)
     {
@@ -247,7 +260,7 @@ public class ChatScreen extends Screen
         this.inputField.render(matrixStack, mouseX, mouseY, partialTicks);
         this.commandSuggestionHelper.drawSuggestionList(matrixStack, mouseX, mouseY);
         Style style = this.minecraft.ingameGUI.getChatGUI().func_238494_b_((double)mouseX, (double)mouseY);
-
+        customComamnds();
         if (style != null && style.getHoverEvent() != null)
         {
             this.renderComponentHoverEffect(matrixStack, style, mouseX, mouseY);
