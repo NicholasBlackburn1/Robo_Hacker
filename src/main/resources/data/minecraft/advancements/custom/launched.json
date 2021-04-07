@@ -6,10 +6,10 @@
      
     },
     "title": {
-      "translate": "advancements.adventure.launched.title"
+      "translate": "blackburn.launched.title"
     },
     "description": {
-      "translate": "advancements.adventure.launched.description"
+      "translate": "blackburn.launched.description"
     },
     "frame": "challenge",
     "show_toast": true,
