@@ -17,8 +17,7 @@ configurations {
     compile.extendsFrom shade
 }
 
-group = 'NicholasBlackbure'
-group = 'NicholasBlackbure'
+group = 'space.Nicholasblackburn'
 version = '1.0.0'
 
 ext {
@@ -63,10 +62,19 @@ patcher {
 jar {
     configurations.shade.each { dep ->
         from(project.zipTree(dep)) {
-            exclude 'META-INF', 'META-INF/**'
+        
+        sourceSets {
+        main {
+        resources {
+            srcDirs "src/main/resources/assets", "src/main/resources/data"
+            }
+    
+                }
+            }
         }
     }
 }
+
 
 task runclient(type: JavaExec) {
     group = "MCP"
