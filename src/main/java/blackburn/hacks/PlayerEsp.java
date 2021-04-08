@@ -86,8 +86,7 @@ public class PlayerEsp {
 		// draw boxes
 		
 		renderBoxes(partialTicks, regionX, regionZ);
-	    renderTracers(partialTicks, regionX, regionZ);
-		
+	    //renderTracers(partialTicks, regionX, regionZ);
 		GL11.glPopMatrix();
 		
 		// GL resets
@@ -96,8 +95,10 @@ public class PlayerEsp {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glDisable(GL11.GL_LINE_SMOOTH);
+		}
+
 	}
-}
+
 	
     // Renders gl boxes
 	private void renderBoxes(double partialTicks, int regionX, int regionZ)
@@ -153,49 +154,6 @@ public class PlayerEsp {
 		return this.enable = enabler;
 		
 	}
-	private enum Style
-	{
-		BOXES("Boxes only", true, false),
-		LINES("Lines only", false, true),
-		LINES_AND_BOXES("Lines and boxes", true, true);
-		
-		private final String name;
-		private final boolean boxes;
-		private final boolean lines;
-		
-		private Style(String name, boolean boxes, boolean lines)
-		{
-			this.name = name;
-			this.boxes = boxes;
-			this.lines = lines;
-		}
-		
-		@Override
-		public String toString()
-		{
-			return name;
-		}
-	}
-	
-	private enum BoxSize
-	{
-		ACCURATE("Accurate", 0),
-		FANCY("Fancy", 0.1);
-		
-		private final String name;
-		private final double extraSize;
-		
-		private BoxSize(String name, double extraSize)
-		{
-			this.name = name;
-			this.extraSize = extraSize;
-		}
-		
-		@Override
-		public String toString()
-		{
-			return name;
-		}
         
 	}
-}
+

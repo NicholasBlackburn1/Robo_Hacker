@@ -52,6 +52,7 @@ public enum RenderUtils
             int regionZ = (blockPos.getZ() >> 9) * 512;
             
             GL11.glTranslated(regionX - camPos.x, -camPos.y, regionZ - camPos.z);
+            Config.dbg("Data from Movent X"+ (regionX - camPos.x)+"Movent Z"+( regionZ - camPos.z));
         }
         
         public static void applyRegionalRenderOffset(Chunk chunk)
