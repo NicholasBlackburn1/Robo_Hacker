@@ -124,11 +124,11 @@ public class TrajectoryTracking {
 		
 		double arrowPosY = player.lastTickPosY
 			+ (player.getPosY())  * partialTicks
-			+ player.getEyeHeight() - 0.1;
+			+ player.getEyeHeight();
 		
 		double arrowPosZ = player.lastTickPosZ
 			+ (player.getPosZ())* partialTicks
-			- Math.sin(Math.toRadians(player.getYaw(partialTicks) - 0.16));
+			- Math.sin(Math.toRadians(player.getYaw(partialTicks) - 100));
 		
 		// Motion factor. Arrows go faster than snowballs and all that...
 		double arrowMotionFactor = item instanceof ArrowItem  ? 1.0 : 0.4;
@@ -147,7 +147,7 @@ public class TrajectoryTracking {
 		double arrowMotion = Math.sqrt(arrowMotionX * arrowMotionX
 			+ arrowMotionY * arrowMotionY + arrowMotionZ * arrowMotionZ);
 		
-			arrowMotion /= arrowMotion;
+			arrowMotion = arrowMotion/5;
 	
 		
 		// apply bow charge
@@ -166,9 +166,7 @@ public class TrajectoryTracking {
 			
 		}else
 		{
-			arrowMotionX *= 1.5;
-			arrowMotionY *= 1.5;
-			arrowMotionZ *= 1.5;
+		 arrowMotion= arrowMotion * 2.5;
 		}
 		
 		double gravity = getProjectileGravity(item);
