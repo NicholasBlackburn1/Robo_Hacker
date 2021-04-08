@@ -7,18 +7,20 @@ import java.util.stream.Stream;
 import org.lwjgl.opengl.GL11;
 
 import blackburn.BlackburnConst;
-import blackburn.utils.EnumSetting;
 import blackburn.utils.RenderUtils;
+import blackburn.utils.RotationUtils;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3d;
 
 public class PlayerEsp {
 	
 	private int playerBox;
 	private final ArrayList<PlayerEntity> players = new ArrayList<>();
+    private float partialTicks;
 	
 	public PlayerEsp()
 	{
@@ -59,7 +61,7 @@ public class PlayerEsp {
 	}
 	
 
-	public void onRender(float partialTicks)
+	public void onRender()
 	{
 		// GL settings
 		GL11.glEnable(GL11.GL_BLEND);
@@ -102,7 +104,7 @@ public class PlayerEsp {
 			GL11.glPushMatrix();
 			
 			GL11.glTranslated(
-				e.prevPosX + (e.getPosX() - e.prevPosX * partialTicks - regionX,
+				e.prevPosX + (e.getPosX() - e.prevPosX) * partialTicks - regionX,
 				e.prevPosY + (e.getPosY() - e.prevPosY) * partialTicks,
 				e.prevPosZ + (e.getPosZ() - e.prevPosZ) * partialTicks - regionZ);
 			
@@ -121,31 +123,27 @@ public class PlayerEsp {
 	
 	private void renderTracers(double partialTicks, int regionX, int regionZ)
 	{
-		Vec3d start =
+		Vector3d start =
 			RotationUtils.getClientLookVec().add(RenderUtils.getCameraPos());
 		
 		GL11.glBegin(GL11.GL_LINES);
 		for(PlayerEntity e : players)
 		{
-			Vec3d end = e.getBoundingBox().getCenter()
-				.subtract(new Vec3d(e.getX(), e.getY(), e.getZ())
-					.subtract(e.prevX, e.prevY, e.prevZ)
-					.multiply(1 - partialTicks));
+			Vector3d end = e.getBoundingBox().getCenter()
+				.subtract(new Vector3d(e.getPosX(), e.getPosY(), e.getPosZ())
+					.subtract(e.prevPosX, e.prevPosY, e.prevPosZ *1 - partialTicks));
 			
-			if(WURST.getFriends().contains(e.getEntityName()))
-				GL11.glColor4f(0, 0, 1, 0.5F);
-			else
-			{
-				float f = MC.player.distanceTo(e) / 20F;
-				GL11.glColor4f(2 - f, f, 0, 0.5F);
-			}
-			
+			GL11.glColor4f(0, 1, 0, 0.5F);
+
 			GL11.glVertex3d(start.x - regionX, start.y, start.z - regionZ);
 			GL11.glVertex3d(end.x - regionX, end.y, end.z - regionZ);
 		}
 		GL11.glEnd();
 	}
-	
+	public float setParticalTicks(float ticks){
+        return this.partialTicks = ticks;
+    }
+    
 	private enum Style
 	{
 		BOXES("Boxes only", true, false),
@@ -189,7 +187,6 @@ public class PlayerEsp {
 		{
 			return name;
 		}
+        
 	}
-}
-
 }

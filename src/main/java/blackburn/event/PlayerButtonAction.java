@@ -17,9 +17,23 @@ public class PlayerButtonAction {
         } else{
             BlackburnConst.tracking.enableDisplayOutput(false);
         }
+        
 
         
 
+    }
+
+    public static void togglePlayerEsp(){
+        
+        while (BlackburnConst.mc.gameSettings.keybindEsphack.isPressed())
+        {
+            Config.warnblackburn("UwU going to render Player Esp");
+            BlackburnConst.esphack.onRender();
+          
+        } 
+            BlackburnConst.esphack.onDisable();
+        }
+        
     }
     
 }
