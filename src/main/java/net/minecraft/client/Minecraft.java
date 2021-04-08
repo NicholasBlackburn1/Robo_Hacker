@@ -238,6 +238,7 @@ import net.minecraft.world.storage.ServerWorldInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import blackburn.BlackburnConst;
 import blackburn.event.PlayerButtonAction;
 
 public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperInfo, IWindowEventListener
@@ -402,6 +403,7 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
         this.enableChat = !gameConfig.gameInfo.disableChat;
         this.jvm64bit = isJvm64bit();
         this.integratedServer = null;
+        
         String s;
         int i;
 
@@ -409,6 +411,7 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
         {
             s = gameConfig.serverInfo.serverName;
             i = gameConfig.serverInfo.serverPort;
+           
         }
         else
         {
@@ -1699,6 +1702,7 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
      */
     public void runTick()
     {
+        
         if (this.rightClickDelayTimer > 0)
         {
             --this.rightClickDelayTimer;

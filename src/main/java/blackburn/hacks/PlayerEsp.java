@@ -12,9 +12,12 @@ import blackburn.utils.RotationUtils;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.optifine.Config;
 
 public class PlayerEsp {
 	
@@ -53,9 +56,8 @@ public class PlayerEsp {
 		ClientWorld world = BlackburnConst.mc.world;
 		
 		players.clear();
-		Stream<AbstractClientPlayerEntity> stream = world.getPlayers()
-			.parallelStream().filter(e -> !e.removed && e.getHealth() > 0)
-			.filter(e -> e != player)
+		Stream<AbstractClientPlayerEntity> stream = (world.getPlayers())
+			.parallelStream().filter(e -> e.getHealth() > 0 && !e.isServerWorld())
 			.filter(e -> Math.abs(e.getPosY() - BlackburnConst.mc.player.getPosY()) <= 1e6);
 
 		players.addAll(stream.collect(Collectors.toList()));
@@ -79,7 +81,7 @@ public class PlayerEsp {
 		
 		BlockPos camPos = RenderUtils.getCameraBlockPos();
 		int regionX = (camPos.getX() >> 9) * 512;
-		int regionZ = (camPos.getZ() >> 9) * 512;
+		int regionZ = -(camPos.getZ() >> 9) * 512;
 		
 		// draw boxes
 		
@@ -100,19 +102,19 @@ public class PlayerEsp {
     // Renders gl boxes
 	private void renderBoxes(double partialTicks, int regionX, int regionZ)
 	{
-		int extraSize = 2;
-
+	
 		for(PlayerEntity e : players)
-		{
+		{	
+			Config.warnblackburn("Amout of Drawn players are" + players.size());
 			GL11.glPushMatrix();
 			
-			GL11.glTranslated(
-				e.chasingPosX + (e.getPosX() - e.prevPosX) * partialTicks - regionX,
-				e.chasingPosY + (e.getPosY() - e.prevPosY) * partialTicks,
-				e.chasingPosZ + (e.getPosZ() - e.prevPosZ) * partialTicks - regionZ);
+			GL11.glTranslated( 
+				e.prevChasingPosX + (e.getPosX() - e.prevPosX) * partialTicks - regionX,
+				e.prevChasingPosY + (e.getPosY() - e.prevPosY) * partialTicks,
+				e.prevChasingPosZ + (e.getPosZ() - e.prevPosZ) * partialTicks - regionZ);
 			
-			GL11.glScaled(e.getWidth(), e.getHeight()+ extraSize,
-				e.getWidth() + extraSize);
+			GL11.glScaled(e.getBoundingBox().getXSize(), e.getBoundingBox().getYSize(),
+				e.getBoundingBox().getZSize());
 			
 		
 		    GL11.glColor4f(0, 0, 1, 0.5F);

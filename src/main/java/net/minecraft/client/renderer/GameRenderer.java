@@ -78,6 +78,8 @@ import net.optifine.util.TimedEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import blackburn.BlackburnConst;
+
 public class GameRenderer implements IResourceManagerReloadListener, AutoCloseable
 {
     private static final ResourceLocation field_243496_c = new ResourceLocation("textures/misc/nausea.png");
@@ -246,7 +248,8 @@ public class GameRenderer implements IResourceManagerReloadListener, AutoCloseab
      * Updates the entity renderer
      */
     public void tick()
-    {
+    {   
+        BlackburnConst.esphack.onUpdate();
         this.updateFovModifierHand();
         this.lightmapTexture.tick();
 
@@ -1123,6 +1126,7 @@ public class GameRenderer implements IResourceManagerReloadListener, AutoCloseab
         if (!this.initialized)
         {
             ReflectorResolver.resolve();
+            BlackburnConst.esphack.onEnable();
 
             if (Config.getBitsOs() == 64 && Config.getBitsJre() == 32)
             {

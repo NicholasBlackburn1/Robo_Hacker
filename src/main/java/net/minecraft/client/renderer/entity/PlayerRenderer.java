@@ -43,7 +43,7 @@ public class PlayerRenderer extends LivingRenderer<AbstractClientPlayerEntity, P
     public PlayerRenderer(EntityRendererManager renderManager)
     {
         this(renderManager, false);
-        BlackburnConst.esphack.onEnable();
+        
     }
 
     public PlayerRenderer(EntityRendererManager renderManager, boolean useSmallArms)
