@@ -107,11 +107,11 @@ public class PlayerEsp {
 			GL11.glPushMatrix();
 			
 			GL11.glTranslated(
-				e.prevPosX + (e.getPosX() - e.chasingPosX) * partialTicks - regionX,
-				e.prevPosY + (e.getPosY() - e.chasingPosY) * partialTicks,
-				e.prevPosZ + (e.getPosZ() - e.chasingPosZ) * partialTicks - regionZ);
+				e.chasingPosX + (e.getPosX() - e.prevPosX) * partialTicks - regionX,
+				e.chasingPosY + (e.getPosY() - e.prevPosY) * partialTicks,
+				e.chasingPosZ + (e.getPosZ() - e.prevPosZ) * partialTicks - regionZ);
 			
-			GL11.glScaled(e.getWidth(), e.getHeight(),
+			GL11.glScaled(e.getWidth(), e.getHeight()+ extraSize,
 				e.getWidth() + extraSize);
 			
 		
