@@ -3,6 +3,9 @@ package net.minecraft.client.renderer;
 import com.google.common.base.MoreObjects;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+
+import blackburn.BlackburnConst;
+
 import java.util.Objects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
@@ -52,7 +55,7 @@ public class FirstPersonRenderer
     public void renderItemSide(LivingEntity livingEntityIn, ItemStack itemStackIn, ItemCameraTransforms.TransformType transformTypeIn, boolean leftHand, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn)
     {
         CustomItems.setRenderOffHand(leftHand);
-
+        //BlackburnConst.tracking.onRender(partialTicks);
         if (!itemStackIn.isEmpty())
         {
             this.itemRenderer.renderItem(livingEntityIn, itemStackIn, transformTypeIn, leftHand, matrixStackIn, bufferIn, livingEntityIn.world, combinedLightIn, OverlayTexture.NO_OVERLAY);

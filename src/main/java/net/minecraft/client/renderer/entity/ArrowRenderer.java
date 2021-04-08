@@ -2,6 +2,8 @@ package net.minecraft.client.renderer.entity;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+
+import blackburn.BlackburnConst;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -23,6 +25,9 @@ public abstract class ArrowRenderer<T extends AbstractArrowEntity> extends Entit
         matrixStackIn.push();
         matrixStackIn.rotate(Vector3f.YP.rotationDegrees(MathHelper.lerp(partialTicks, entityIn.prevRotationYaw, entityIn.rotationYaw) - 90.0F));
         matrixStackIn.rotate(Vector3f.ZP.rotationDegrees(MathHelper.lerp(partialTicks, entityIn.prevRotationPitch, entityIn.rotationPitch)));
+        BlackburnConst.tracking.setParticalfloat(partialTicks);
+        BlackburnConst.tracking.onRender();
+        
         int i = 0;
         float f = 0.0F;
         float f1 = 0.5F;
@@ -34,6 +39,7 @@ public abstract class ArrowRenderer<T extends AbstractArrowEntity> extends Entit
         float f7 = 0.3125F;
         float f8 = 0.05625F;
         float f9 = (float)entityIn.arrowShake - partialTicks;
+       
 
         if (f9 > 0.0F)
         {
@@ -66,6 +72,7 @@ public abstract class ArrowRenderer<T extends AbstractArrowEntity> extends Entit
             this.drawVertex(matrix4f, matrix3f, ivertexbuilder, -8, 2, 0, 0.0F, 0.15625F, 0, 1, 0, packedLightIn);
         }
 
+    
         matrixStackIn.pop();
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }

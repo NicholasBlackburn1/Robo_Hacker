@@ -23,7 +23,7 @@ public class RemoteClientPlayerEntity extends AbstractClientPlayerEntity
     public boolean isInRangeToRenderDist(double distance)
     {
         double d0 = this.getBoundingBox().getAverageEdgeLength() * 10.0D;
-
+    
         if (Double.isNaN(d0))
         {
             d0 = 1.0D;

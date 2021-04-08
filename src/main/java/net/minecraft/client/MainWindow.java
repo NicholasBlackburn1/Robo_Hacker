@@ -165,6 +165,12 @@ public final class MainWindow implements AutoCloseable
         return GLX._shouldClose(this);
     }
 
+
+   public void updateDisplay() {
+       this.toggleFullscreen(this.vsync);
+    }
+
+ 
     public static void checkGlfwError(BiConsumer<Integer, String> glfwErrorConsumer)
     {
         RenderSystem.assertThread(RenderSystem::isInInitPhase);

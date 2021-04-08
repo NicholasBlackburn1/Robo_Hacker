@@ -119,7 +119,7 @@ public abstract class AbstractGui
         builder.pos(matrix, (float)x2, (float)y2, (float)z).color(f5, f6, f7, f4).endVertex();
     }
 
-    public static void drawCenteredString(MatrixStack matrixStack, FontRenderer fontRenderer, String font, int text, int x, int y)
+    public void drawCenteredString(MatrixStack matrixStack, FontRenderer fontRenderer, String font, int text, int x, int y)
     {
         fontRenderer.drawStringWithShadow(matrixStack, font, (float)(text - fontRenderer.getStringWidth(font) / 2), (float)x, y);
     }

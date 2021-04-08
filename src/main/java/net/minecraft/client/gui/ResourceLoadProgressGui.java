@@ -1,3 +1,16 @@
+/***
+ * opengl doesn't know gif
+[3:57 PM]
+but if you get the .gif image loaded as a series of frames
+[3:57 PM]
+you can use opengl to draw the gif
+[3:57 PM]
+but instead of opengl directly, I'd use minecraft's rendering code
+
+
+https://medium.com/@andreshj87/drawing-a-gui-screen-on-minecraft-forge-7e0059015596
+ */
+
 package net.minecraft.client.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -19,6 +32,7 @@ import net.minecraft.util.ColorHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.Color;
 import net.optifine.Config;
 import net.optifine.reflect.Reflector;
 import net.optifine.render.GlBlendState;
@@ -28,6 +42,7 @@ import net.optifine.util.PropertiesOrdered;
 public class ResourceLoadProgressGui extends LoadingGui
 {
     private static final ResourceLocation MOJANG_LOGO_TEXTURE = new ResourceLocation("textures/gui/title/mojangstudios.png");
+    private static final ResourceLocation BLACKBURN_TEXTURE = new ResourceLocation("textures/gui/title/loading2.png");
     private static final int field_238627_b_ = ColorHelper.PackedColor.packColor(255, 255, 50, 61);
     private static final int field_238628_c_ = field_238627_b_ & 16777215;
     private final Minecraft mc;
@@ -43,7 +58,7 @@ public class ResourceLoadProgressGui extends LoadingGui
     private int colorProgress = 16777215;
     private GlBlendState blendState = null;
     private boolean fadeOut = false;
-
+    private EarlyLoaderGUI gui;
     public ResourceLoadProgressGui(Minecraft p_i225928_1_, IAsyncReloader p_i225928_2_, Consumer<Optional<Throwable>> p_i225928_3_, boolean p_i225928_4_)
     {
         this.mc = p_i225928_1_;
@@ -55,10 +70,20 @@ public class ResourceLoadProgressGui extends LoadingGui
     public static void loadLogoTexture(Minecraft mc)
     {
         mc.getTextureManager().loadTexture(MOJANG_LOGO_TEXTURE, new ResourceLoadProgressGui.MojangLogoTexture());
+        //mc.getTextureManager().loadTexture(BLACKBURN_TEXTURE, new ResourceLoadProgressGui.BlackburnLogoTexture());
     }
 
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks)
-    {
+    {   
+    
+        
+        renderMojangLogo(matrixStack,mouseX,mouseY,partialTicks);
+        
+    }
+
+   
+    public void renderMojangLogo(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks){
+        FontRenderer render = this.mc.fontRenderer;
         int i = this.mc.getMainWindow().getScaledWidth();
         int j = this.mc.getMainWindow().getScaledHeight();
         long k = Util.milliTime();
@@ -104,6 +129,7 @@ public class ResourceLoadProgressGui extends LoadingGui
 
         int j2 = (int)((double)this.mc.getMainWindow().getScaledWidth() * 0.5D);
         int i1 = (int)((double)this.mc.getMainWindow().getScaledHeight() * 0.5D);
+   
         double d0 = Math.min((double)this.mc.getMainWindow().getScaledWidth() * 0.75D, (double)this.mc.getMainWindow().getScaledHeight()) * 0.25D;
         int j1 = (int)(d0 * 0.5D);
         double d1 = d0 * 4.0D;
@@ -114,6 +140,7 @@ public class ResourceLoadProgressGui extends LoadingGui
         RenderSystem.blendFunc(770, 1);
         RenderSystem.alphaFunc(516, 0.0F);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, f2);
+        
         boolean flag = true;
 
         if (this.blendState != null)
@@ -128,18 +155,21 @@ public class ResourceLoadProgressGui extends LoadingGui
 
         if (flag)
         {
-            blit(matrixStack, j2 - k1, i1 - j1, k1, (int)d0, -0.0625F, 0.0F, 120, 60, 120, 120);
-            blit(matrixStack, j2, i1 - j1, k1, (int)d0, 0.0625F, 60.0F, 120, 60, 120, 120);
+            blit(matrixStack, j2 - k1, i1 - j1 - 50, k1, (int)d0, -0.0625F, 0.0F, 120, 60, 120, 120);
+            blit(matrixStack, j2, i1 - j1- 50, k1, (int)d0, 0.0625F, 60.0F, 120, 60, 120, 120);
+            
         }
 
+        
         RenderSystem.defaultBlendFunc();
         RenderSystem.defaultAlphaFunc();
         RenderSystem.disableBlend();
         int l1 = (int)((double)this.mc.getMainWindow().getScaledHeight() * 0.8325D);
         float f3 = this.asyncReloader.estimateExecutionSpeed();
         this.progress = MathHelper.clamp(this.progress * 0.95F + f3 * 0.050000012F, 0.0F, 1.0F);
-        Reflector.ClientModLoader_renderProgressText.call();
-
+        //gui.renderMessage("hello", 255F, 255, 1.0F);
+        
+        
         if (f < 1.0F)
         {
             this.func_238629_a_(matrixStack, i / 2 - k1, l1 - 5, i / 2 + k1, l1 + 5, 1.0F - MathHelper.clamp(f, 0.0F, 1.0F));
@@ -185,7 +215,6 @@ public class ResourceLoadProgressGui extends LoadingGui
         fill(p_238629_1_, p_238629_2_ + 1, p_238629_5_, p_238629_4_ - 1, p_238629_5_ - 1, i3);
         fill(p_238629_1_, p_238629_2_, p_238629_3_, p_238629_2_ + 1, p_238629_5_, i3);
         fill(p_238629_1_, p_238629_4_, p_238629_3_, p_238629_4_ - 1, p_238629_5_, i3);
-      
         i3 = ColorHelper.PackedColor.packColor(j, 0, 255, 30);
         fill(p_238629_1_, p_238629_2_ + 2, p_238629_3_ + 2, p_238629_2_ + i, p_238629_5_ - 2, i3);
     }
@@ -284,6 +313,31 @@ public class ResourceLoadProgressGui extends LoadingGui
         return this.fadeOut;
     }
 
+    
+    static class BlackburnLogoTexture extends SimpleTexture
+    {
+        public BlackburnLogoTexture()
+        {
+            super(ResourceLoadProgressGui.BLACKBURN_TEXTURE);
+        }
+
+        protected SimpleTexture.TextureData getTextureData(IResourceManager resourceManager)
+        {
+            Minecraft minecraft = Minecraft.getInstance();
+            VanillaPack vanillapack = minecraft.getPackFinder().getVanillaPack();
+
+            try (InputStream inputstream = getGifInputStream(resourceManager, vanillapack))
+            {
+                return new SimpleTexture.TextureData(new TextureMetadataSection(true, true), NativeImage.read(inputstream));
+            }
+            catch (IOException ioexception1)
+            {
+                return new SimpleTexture.TextureData(ioexception1);
+            }
+        }
+    }
+
+
     static class MojangLogoTexture extends SimpleTexture
     {
         public MojangLogoTexture()
@@ -305,10 +359,20 @@ public class ResourceLoadProgressGui extends LoadingGui
                 return new SimpleTexture.TextureData(ioexception1);
             }
         }
+    }
+
+
+        
 
         private static InputStream getLogoInputStream(IResourceManager p_getLogoInputStream_0_, VanillaPack p_getLogoInputStream_1_) throws IOException
         {
             return p_getLogoInputStream_0_.hasResource(ResourceLoadProgressGui.MOJANG_LOGO_TEXTURE) ? p_getLogoInputStream_0_.getResource(ResourceLoadProgressGui.MOJANG_LOGO_TEXTURE).getInputStream() : p_getLogoInputStream_1_.getResourceStream(ResourcePackType.CLIENT_RESOURCES, ResourceLoadProgressGui.MOJANG_LOGO_TEXTURE);
         }
+
+        // gif loading Hopefully
+        private static InputStream getGifInputStream(IResourceManager p_getLogoInputStream_0_, VanillaPack p_getLogoInputStream_1_) throws IOException
+        {
+            return p_getLogoInputStream_0_.hasResource(ResourceLoadProgressGui.MOJANG_LOGO_TEXTURE) ? p_getLogoInputStream_0_.getResource(ResourceLoadProgressGui.BLACKBURN_TEXTURE).getInputStream() : p_getLogoInputStream_1_.getResourceStream(ResourcePackType.CLIENT_RESOURCES, ResourceLoadProgressGui.MOJANG_LOGO_TEXTURE);
+        }
     }
-}
+

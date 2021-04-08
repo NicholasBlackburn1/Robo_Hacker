@@ -270,6 +270,12 @@ public class MultiplayerScreen extends Screen
         }
     }
 
+    public void connectServer(){
+        ServerSelectionList.Entry serverselectionlist$entry = this.serverListSelector.getSelected();
+        this.connectToServer(((ServerSelectionList.NormalEntry)serverselectionlist$entry).getServerData());
+    
+    }
+
     private void connectToServer(ServerData server)
     {
         this.minecraft.displayGuiScreen(new ConnectingScreen(this, this.minecraft, server));

@@ -647,6 +647,10 @@ public class Config
     {
         LOGGER.warn("[OptiFine] " + s);
     }
+    public static void warnblackburn(String s)
+    {
+        LOGGER.warn("[Blackburb] " + s);
+    }
 
     public static void warn(String s, Throwable t)
     {

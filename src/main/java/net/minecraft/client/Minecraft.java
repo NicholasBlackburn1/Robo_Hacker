@@ -238,6 +238,8 @@ import net.minecraft.world.storage.ServerWorldInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import blackburn.event.PlayerButtonAction;
+
 public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperInfo, IWindowEventListener
 {
     private static Minecraft instance;
@@ -1975,6 +1977,11 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
             }
         }
 
+        PlayerButtonAction.toggleTrajectoryView();
+        PlayerButtonAction.togglePlayerEsp();
+
+        
+
         boolean flag2 = this.gameSettings.chatVisibility != ChatVisibility.HIDDEN;
 
         if (flag2)
@@ -2393,6 +2400,7 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
 
     private void updateWorldRenderer(@Nullable ClientWorld worldIn)
     {
+        this.worldRenderer.setWorldAndLoadRenderers(worldIn);
         this.worldRenderer.setWorldAndLoadRenderers(worldIn);
         this.particles.clearEffects(worldIn);
         TileEntityRendererDispatcher.instance.setWorld(worldIn);
@@ -2884,6 +2892,8 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
     {
         return this.resourceManager;
     }
+
+    
 
     public ResourcePackList getResourcePackList()
     {

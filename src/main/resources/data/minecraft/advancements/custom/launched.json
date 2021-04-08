@@ -1,0 +1,24 @@
+{
+  "parent": "minecraft:custom/root",
+  "display": {
+    "icon": {
+      "item": "minecraft:diamond"
+     
+    },
+    "title": {
+      "translate": "blackburn.launched.title"
+    },
+    "description": {
+      "translate": "blackburn.launched.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "launched": {
+      "trigger": "launched"
+    }
+  }
+}

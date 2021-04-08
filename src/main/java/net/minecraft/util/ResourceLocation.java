@@ -29,7 +29,7 @@ public class ResourceLocation implements Comparable<ResourceLocation>
         this.path = resourceParts[1];
 
         if (this.path.equals("DUMMY"))
-        {
+        {   
             if (!isValidNamespace(this.namespace))
             {
                 throw new ResourceLocationException("Non [a-z0-9_.-] character in namespace of location: " + this.namespace + ':' + this.path);
@@ -41,6 +41,8 @@ public class ResourceLocation implements Comparable<ResourceLocation>
         }
     }
 
+    
+    
     public ResourceLocation(String resourceName)
     {
         this(decompose(resourceName, ':'));

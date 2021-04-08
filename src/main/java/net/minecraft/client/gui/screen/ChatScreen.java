@@ -1,6 +1,9 @@
 package net.minecraft.client.gui.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.brigadier.Message;
+
+import blackburn.BlackburnConst;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.CommandSuggestionHelper;
 import net.minecraft.client.gui.NewChatGui;
@@ -9,6 +12,8 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponent;
+import net.minecraft.util.text.TextComponentUtils;
 import net.minecraft.util.text.TranslationTextComponent;
 
 public class ChatScreen extends Screen
@@ -27,7 +32,7 @@ public class ChatScreen extends Screen
     /**
      * is the text that appears when you press the chat key and the input box appears pre-filled
      */
-    private String defaultInputFieldText = "";
+    private String defaultInputFieldText = "for hacks type in :Hacks";
     private CommandSuggestionHelper commandSuggestionHelper;
 
     public ChatScreen(String defaultText)
@@ -138,6 +143,7 @@ public class ChatScreen extends Screen
             return true;
         }
     }
+    
 
     public boolean mouseScrolled(double mouseX, double mouseY, double delta)
     {
@@ -245,9 +251,10 @@ public class ChatScreen extends Screen
         this.inputField.setFocused2(true);
         fill(matrixStack, 2, this.height - 14, this.width - 2, this.height - 2, this.minecraft.gameSettings.getChatBackgroundColor(Integer.MIN_VALUE));
         this.inputField.render(matrixStack, mouseX, mouseY, partialTicks);
+        
         this.commandSuggestionHelper.drawSuggestionList(matrixStack, mouseX, mouseY);
         Style style = this.minecraft.ingameGUI.getChatGUI().func_238494_b_((double)mouseX, (double)mouseY);
-
+        //customComamnds();
         if (style != null && style.getHoverEvent() != null)
         {
             this.renderComponentHoverEffect(matrixStack, style, mouseX, mouseY);

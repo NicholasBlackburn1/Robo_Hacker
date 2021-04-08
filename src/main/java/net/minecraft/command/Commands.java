@@ -110,6 +110,8 @@ public class Commands
 
     public Commands(Commands.EnvironmentType envType)
     {
+
+     
         AdvancementCommand.register(this.dispatcher);
         AttributeCommand.register(this.dispatcher);
         ExecuteCommand.register(this.dispatcher);

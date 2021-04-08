@@ -1,10 +1,15 @@
 package net.minecraft.client.entity.player;
 
 import com.google.common.collect.Lists;
+
+import blackburn.BlackburnConst;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 import javax.annotation.Nullable;
+
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.BiomeSoundHandler;
@@ -90,25 +95,25 @@ public class ClientPlayerEntity extends AbstractClientPlayerEntity
      * The last X position which was transmitted to the server, used to determine when the X position changes and needs
      * to be re-trasmitted
      */
-    private double lastReportedPosX;
+    public double lastReportedPosX;
 
     /**
      * The last Y position which was transmitted to the server, used to determine when the Y position changes and needs
      * to be re-transmitted
      */
-    private double lastReportedPosY;
+    public double lastReportedPosY;
 
     /**
      * The last Z position which was transmitted to the server, used to determine when the Z position changes and needs
      * to be re-transmitted
      */
-    private double lastReportedPosZ;
+    public double lastReportedPosZ;
 
     /**
      * The last yaw value which was transmitted to the server, used to determine when the yaw changes and needs to be
      * re-transmitted
      */
-    private float lastReportedYaw;
+    public float lastReportedYaw;
 
     /**
      * The last pitch value which was transmitted to the server, used to determine when the pitch changes and needs to
@@ -177,6 +182,7 @@ public class ClientPlayerEntity extends AbstractClientPlayerEntity
      */
     public void heal(float healAmount)
     {
+       
     }
 
     public boolean startRiding(Entity entityIn, boolean force)
@@ -197,6 +203,7 @@ public class ClientPlayerEntity extends AbstractClientPlayerEntity
                 this.prevRotationYaw = entityIn.rotationYaw;
                 this.rotationYaw = entityIn.rotationYaw;
                 this.setRotationYawHead(entityIn.rotationYaw);
+                
             }
 
             return true;
@@ -447,7 +454,8 @@ public class ClientPlayerEntity extends AbstractClientPlayerEntity
      * returns true if this is an EntityPlayerSP, or the logged in player.
      */
     public boolean isUser()
-    {
+    {   
+        
         return true;
     }
 
@@ -492,6 +500,7 @@ public class ClientPlayerEntity extends AbstractClientPlayerEntity
      */
     public String getServerBrand()
     {
+       
         return this.serverBrand;
     }
 
@@ -653,6 +662,7 @@ public class ClientPlayerEntity extends AbstractClientPlayerEntity
      */
     public boolean isServerWorld()
     {
+        
         return true;
     }
 

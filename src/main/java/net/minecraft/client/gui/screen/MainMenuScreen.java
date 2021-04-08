@@ -36,6 +36,9 @@ import net.optifine.reflect.ReflectorForge;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import blackburn.files.MainMenuConfig;
+import blackburn.gui.GuiAboutScreen;
+
 public class MainMenuScreen extends Screen
 {
     private static final Logger field_238656_b_ = LogManager.getLogger();
@@ -201,7 +204,8 @@ public class MainMenuScreen extends Screen
   
         // this one will be for playing  between 12 am and 3 am
         //this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/1413249501665.png"));
-  
+        
+        //Adding Custon Image Placement into Client 
         this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/background.png"));
         RenderSystem.enableBlend();
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
@@ -210,7 +214,7 @@ public class MainMenuScreen extends Screen
         float f1 = this.showFadeInAnimation ? MathHelper.clamp(f - 1.0F, 0.0F, 1.0F) : 1.0F;
         int l = MathHelper.ceil(f1 * 255.0F) << 24;
         if ((l & -67108864) != 0) {
-           this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/clintcraft.png"));
+           this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/background.png"));
            RenderSystem.color4f(1.0F, 1.0F, 1.0F, f1);
            if (this.showTitleWronglySpelled) {
               
@@ -273,7 +277,7 @@ public class MainMenuScreen extends Screen
            return true;
         } else {
            if (mouseX > (double)this.widthCopyrightRest && mouseX < (double)(this.widthCopyrightRest + this.widthCopyright) && mouseY > (double)(this.height - 10) && mouseY < (double)this.height) {
-              this.minecraft.displayGuiScreen(new WinGameScreen(false, Runnables.doNothing()));
+              this.minecraft.displayGuiScreen(new GuiAboutScreen(modUpdateNotification, this.minecraft.gameSettings));
            }
   
            return false;

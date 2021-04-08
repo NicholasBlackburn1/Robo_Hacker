@@ -8,12 +8,12 @@ import net.minecraft.util.ResourceLocation;
 public abstract class CriterionInstance implements ICriterionInstance
 {
     private final ResourceLocation criterion;
-    private final EntityPredicate.AndPredicate playerCondition;
+    protected static EntityPredicate.AndPredicate playerCondition;
 
     public CriterionInstance(ResourceLocation criterion, EntityPredicate.AndPredicate playerCondition)
     {
         this.criterion = criterion;
-        this.playerCondition = playerCondition;
+        CriterionInstance.playerCondition = playerCondition;
     }
 
     public ResourceLocation getId()
