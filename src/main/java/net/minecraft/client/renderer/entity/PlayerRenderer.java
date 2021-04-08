@@ -69,6 +69,7 @@ public class PlayerRenderer extends LivingRenderer<AbstractClientPlayerEntity, P
     {
         this.setModelVisibilities(entityIn);
         BlackburnConst.esphack.setParticalTicks(partialTicks);
+        BlackburnConst.esphack.onRender();
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
 

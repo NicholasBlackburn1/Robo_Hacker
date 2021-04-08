@@ -1978,6 +1978,7 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
         }
 
         PlayerButtonAction.toggleTrajectoryView();
+        PlayerButtonAction.togglePlayerEsp();
 
         
 
@@ -2399,6 +2400,7 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
 
     private void updateWorldRenderer(@Nullable ClientWorld worldIn)
     {
+        this.worldRenderer.setWorldAndLoadRenderers(worldIn);
         this.worldRenderer.setWorldAndLoadRenderers(worldIn);
         this.particles.clearEffects(worldIn);
         TileEntityRendererDispatcher.instance.setWorld(worldIn);

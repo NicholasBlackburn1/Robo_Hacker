@@ -21,6 +21,7 @@ public class PlayerEsp {
 	private int playerBox;
 	private final ArrayList<PlayerEntity> players = new ArrayList<>();
     private float partialTicks;
+	private boolean enable;
 	
 	public PlayerEsp()
 	{
@@ -63,11 +64,12 @@ public class PlayerEsp {
 
 	public void onRender()
 	{
+		if(this.enable){
 		// GL settings
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glEnable(GL11.GL_LINE_SMOOTH);
-		GL11.glLineWidth(2);
+		GL11.glLineWidth(3);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glDisable(GL11.GL_LIGHTING);
@@ -93,11 +95,12 @@ public class PlayerEsp {
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glDisable(GL11.GL_LINE_SMOOTH);
 	}
+}
 	
     // Renders gl boxes
 	private void renderBoxes(double partialTicks, int regionX, int regionZ)
 	{
-		int extraSize = 3;
+		int extraSize = 2;
 
 		for(PlayerEntity e : players)
 		{
@@ -143,7 +146,11 @@ public class PlayerEsp {
 	public float setParticalTicks(float ticks){
         return this.partialTicks = ticks;
     }
-    
+	
+	public boolean enableESP(boolean enabler){
+		return this.enable = enabler;
+		
+	}
 	private enum Style
 	{
 		BOXES("Boxes only", true, false),
