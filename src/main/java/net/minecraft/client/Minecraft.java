@@ -2413,7 +2413,7 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
 
     public boolean isMultiplayerEnabled()
     {   
-        EventHandler.RegisterOnEnables();
+        
         return this.enableMultiplayer && this.field_244734_au.serversAllowed();
     }
 

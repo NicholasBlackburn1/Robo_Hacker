@@ -66,7 +66,7 @@ public class PlayerEsp {
 
 	public void onRender()
 	{
-		while(this.enable){
+		if(this.enable){
 		// GL settings
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);

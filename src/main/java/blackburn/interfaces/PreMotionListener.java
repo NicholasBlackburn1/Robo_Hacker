@@ -16,7 +16,7 @@ public interface PreMotionListener extends Listener
 				listener.onPreMotion();
 		}
 		
-	]
+	
 		public Class<PreMotionListener> getListenerType()
 		{
 			return PreMotionListener.class;

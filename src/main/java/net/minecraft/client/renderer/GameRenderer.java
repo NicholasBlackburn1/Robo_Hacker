@@ -79,6 +79,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import blackburn.BlackburnConst;
+import blackburn.event.EventHandler;
 
 public class GameRenderer implements IResourceManagerReloadListener, AutoCloseable
 {
@@ -1126,7 +1127,7 @@ public class GameRenderer implements IResourceManagerReloadListener, AutoCloseab
         if (!this.initialized)
         {
             ReflectorResolver.resolve();
-            BlackburnConst.esphack.onEnable();
+           
 
             if (Config.getBitsOs() == 64 && Config.getBitsJre() == 32)
             {
@@ -1141,11 +1142,12 @@ public class GameRenderer implements IResourceManagerReloadListener, AutoCloseab
         if (world != null)
         {
             if (Config.getNewRelease() != null)
-            {
+            {   
+                EventHandler.RegisterOnEnables();
                 String s = "HD_U".replace("HD_U", "HD Ultra").replace("L", "Light");
                 String s1 = s + " " + Config.getNewRelease();
                 StringTextComponent stringtextcomponent = new StringTextComponent(I18n.format("of.message.newVersion", "\u00a7n" + s1 + "\u00a7r"));
-                stringtextcomponent.setStyle(Style.EMPTY.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://optifine.net/downloads")));
+                stringtextcomponent.setStyle(Style.EMPTY.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://nicholasblackburn.space")));
                 this.mc.ingameGUI.getChatGUI().printChatMessage(stringtextcomponent);
                 Config.setNewRelease((String)null);
             }

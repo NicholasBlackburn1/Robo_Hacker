@@ -38,9 +38,9 @@ public class PlayerButtonAction {
 
     public static void toggleItemEsp(){
         
-        if (BlackburnConst.mc.gameSettings.keybindEsphack.isPressed())
+        if (BlackburnConst.mc.gameSettings.keybindItemEspHack.isPressed())
         {   
-            Config.warnblackburn("UwU going to render Player Esp");
+            Config.warnblackburn("UwU going to render item Esp");
             
             BlackburnConst.itemEsp.setEnabled(true);
         }else{
