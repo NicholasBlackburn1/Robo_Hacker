@@ -66,7 +66,7 @@ public class PlayerEsp {
 
 	public void onRender()
 	{
-		if(this.enable){
+		while(this.enable){
 		// GL settings
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -80,13 +80,13 @@ public class PlayerEsp {
 		RenderUtils.applyRegionalRenderOffset();
 		
 		BlockPos camPos = RenderUtils.getCameraBlockPos();
-		int regionX = (camPos.getX() >> 9) * 512;
-		int regionZ = -(camPos.getZ() >> 9) * 512;
+		int regionX = (camPos.getX() >> 2) * 512;
+		int regionZ = -(camPos.getZ() >> 2) * 512;
 		
 		// draw boxes
 		
 		renderBoxes(partialTicks, regionX, regionZ);
-	    //renderTracers(partialTicks, regionX, regionZ);
+	    renderTracers(partialTicks, regionX, regionZ);
 		GL11.glPopMatrix();
 		
 		// GL resets
@@ -118,7 +118,7 @@ public class PlayerEsp {
 				e.getBoundingBox().getZSize());
 			
 		
-		    GL11.glColor4f(0, 0, 1, 0.5F);
+		    GL11.glColor4f(1, 0,0 , 0.5F);
 			
 			
 			GL11.glCallList(playerBox);

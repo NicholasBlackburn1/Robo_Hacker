@@ -239,6 +239,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import blackburn.BlackburnConst;
+import blackburn.event.EventHandler;
 import blackburn.event.PlayerButtonAction;
 
 public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperInfo, IWindowEventListener
@@ -1981,11 +1982,9 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
             }
         }
 
-        PlayerButtonAction.toggleTrajectoryView();
-        PlayerButtonAction.togglePlayerEsp();
+        EventHandler.RegisterEvents();
 
-        
-
+    
         boolean flag2 = this.gameSettings.chatVisibility != ChatVisibility.HIDDEN;
 
         if (flag2)
