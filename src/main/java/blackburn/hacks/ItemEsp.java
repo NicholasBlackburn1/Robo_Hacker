@@ -23,6 +23,7 @@ public final class ItemEsp
 	private final ArrayList<ItemEntity> items = new ArrayList<>();
     private static String item_Name;
     private float ParticalTick;
+	private boolean enable;
 
 	
 	public void onEnable()
@@ -61,6 +62,7 @@ public final class ItemEsp
 
 	public void onRender()
 	{
+		
 		// GL settings
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glEnable(GL11.GL_LINE_SMOOTH);
@@ -74,9 +76,10 @@ public final class ItemEsp
 		int regionX = (camPos.getX() >> 9) * 512;
 		int regionZ = (camPos.getZ() >> 9) * 512;
 		
-		renderBoxes(partialTicks, regionX, regionZ);
-		renderTracers(partialTicks, regionX, regionZ);
-		
+		if (this.enable){
+		renderBoxes(ParticalTick, regionX, regionZ);
+		renderTracers(ParticalTick, regionX, regionZ);
+		}
 		GL11.glPopMatrix();
 		
 		// GL resets
@@ -85,6 +88,7 @@ public final class ItemEsp
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glDisable(GL11.GL_LINE_SMOOTH);
+		
 	}
 	
 	private void renderBoxes(float partialTicks, int regionX, int regionZ)
@@ -133,6 +137,11 @@ public final class ItemEsp
 		GL11.glEnd();
 	}
 
-    public void 
+    public Float setParticleTics(float part){
+		return this.ParticalTick = part;
+	}
+	public boolean setEnabled(boolean enabler){
+		return this.enable = enabler;
+	}
 	
 }

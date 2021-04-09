@@ -1724,6 +1724,7 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
         if (!this.isGamePaused && this.world != null)
         {
             this.playerController.tick();
+            EventHandler.RegisterUpdateEvents();
         }
 
         this.profiler.endStartSection("textures");
@@ -2411,7 +2412,8 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
     }
 
     public boolean isMultiplayerEnabled()
-    {
+    {   
+        EventHandler.RegisterOnEnables();
         return this.enableMultiplayer && this.field_244734_au.serversAllowed();
     }
 

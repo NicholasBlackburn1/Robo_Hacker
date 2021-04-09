@@ -42,9 +42,9 @@ public class PlayerButtonAction {
         {   
             Config.warnblackburn("UwU going to render Player Esp");
             
-            BlackburnConst.esphack.enableESP(true);
+            BlackburnConst.itemEsp.setEnabled(true);
         }else{
-            BlackburnConst.esphack.enableESP(false);
+            BlackburnConst.itemEsp.setEnabled(false);
         }
         
     }
