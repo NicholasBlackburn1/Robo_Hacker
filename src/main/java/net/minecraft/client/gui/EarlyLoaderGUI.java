@@ -41,10 +41,6 @@ public class EarlyLoaderGUI {
         this.handledElsewhere = true;
     }
 
-    public void renderFromGUI(String mes) {
-        renderMessages(mes);
-    }
-
     @SuppressWarnings("deprecation")
     void renderTick(String msg) {
         if (handledElsewhere) return;
@@ -56,7 +52,7 @@ public class EarlyLoaderGUI {
         RenderSystem.pushMatrix();
         setupMatrix();
         renderBackground();
-        renderMessages(msg);
+        renderMessage("uwu read me master", window.getHeight(), window.getWindowX(),1.0f);
         window.updateDisplay();
         RenderSystem.popMatrix();
     }
@@ -69,26 +65,14 @@ public class EarlyLoaderGUI {
         GL11.glVertex3f(window.getScaledWidth(), window.getScaledHeight(), -10);
         GL11.glVertex3f(window.getScaledWidth(), 0, -10);
         GL11.glEnd();
-    }
-
-    private void renderMessages(String messages) {
-        
-        for (int i = 0; i < 10; i++) {
-            boolean nofade = i == 0;
-            ;
-            final float fade = MathHelper.clamp((4000.0f  - ( i - 4 ) * 1000.0f) / 5000.0f, 0.0f, 1.0f);
-            if (fade <0.01f && !nofade) continue;
-           
-            renderMessage(messages, 255F, ((window.getScaledHeight() - 15) / 10) - i + 1, nofade ? 1.0f : fade);
-        }
-      
+    
     }
 
     private static final float[] memorycolour = new float[] { 0.0f, 0.0f, 0.0f};
 
 
     @SuppressWarnings("deprecation")
-    void renderMessage(final String message, final float f, int line, float alpha) {
+    public void renderMessage(final String message, final float f, int line, float alpha) {
         GlStateManager.enableClientState(GL11.GL_VERTEX_ARRAY);
         ByteBuffer charBuffer = MemoryUtil.memAlloc(message.length() * 270);
         int quads = STBEasyFont.stb_easy_font_print(0, 0, message, null, charBuffer);
