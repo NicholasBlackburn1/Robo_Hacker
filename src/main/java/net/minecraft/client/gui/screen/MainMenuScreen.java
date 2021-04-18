@@ -217,8 +217,14 @@ public class MainMenuScreen extends Screen
         if(calendar.getTime().getHours() ==2){
          this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/UwUCuteFurryies.png"));
         }else{
+
+            if(calendar.getTime().getMonth() == Calendar.DECEMBER && calendar.getTime().getDay() == 6){
+               this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/Bday.png"));
+
+            } else{
             //Adding Custon Image Placement into Client 
             this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/background.png"));
+            }
         }
         RenderSystem.enableBlend();
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
