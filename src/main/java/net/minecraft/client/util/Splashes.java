@@ -79,9 +79,9 @@ public class Splashes extends ReloadListener<List<String>>
         {
             return null;
         }
-        else
-        {
-            return this.gameSession != null && RANDOM.nextInt(this.possibleSplashes.size()) == 42 ? this.gameSession.getUsername().toUpperCase(Locale.ROOT) + " IS YOU" : this.possibleSplashes.get(RANDOM.nextInt(this.possibleSplashes.size()));
+        else if (calendar.getTime().getMonth() == 12 && calendar.getTime(.getDay() == 6){
+            return "Happy BirthDay, Cute Fox XSeveredGamerx!";
+        }
         }
     }
 }

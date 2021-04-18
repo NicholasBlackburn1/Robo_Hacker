@@ -222,7 +222,7 @@ public class MainMenuScreen extends Screen
                this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/Bday.png"));
 
             } else{
-            //Adding Custon Image Placement into Client 
+            
             this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/background.png"));
             }
         }
