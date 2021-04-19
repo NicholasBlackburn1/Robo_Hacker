@@ -44,7 +44,7 @@ public class PlayerRenderer extends LivingRenderer<AbstractClientPlayerEntity, P
     public PlayerRenderer(EntityRendererManager renderManager)
     {
         this(renderManager, false);
-        
+        EventHandler.RegisterRenderEvents();
     }
 
     public PlayerRenderer(EntityRendererManager renderManager, boolean useSmallArms)
@@ -70,7 +70,7 @@ public class PlayerRenderer extends LivingRenderer<AbstractClientPlayerEntity, P
     {
         this.setModelVisibilities(entityIn);
         EventHandler.RegisterParticleTics(partialTicks);
-        EventHandler.RegisterRenderEvents();
+        
         
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }

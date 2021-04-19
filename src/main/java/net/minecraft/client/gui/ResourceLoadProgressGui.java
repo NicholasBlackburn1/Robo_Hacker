@@ -15,14 +15,22 @@ package net.minecraft.client.gui;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
+import org.lwjgl.system.MemoryUtil;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import org.apache.commons.compress.utils.IOUtils;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL14;
+import org.lwjgl.stb.STBEasyFont;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryUsage;
+import java.nio.ByteBuffer;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.function.Consumer;
@@ -87,10 +95,9 @@ public class ResourceLoadProgressGui extends LoadingGui {
     }
 
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-
+    
         renderMojangLogo(matrixStack, mouseX, mouseY, partialTicks);
-       // logo();
-
+        
     }
 
     public void logo() {
@@ -195,7 +202,7 @@ public class ResourceLoadProgressGui extends LoadingGui {
         float f3 = this.asyncReloader.estimateExecutionSpeed();
         this.progress = MathHelper.clamp(this.progress * 0.95F + f3 * 0.050000012F, 0.0F, 1.0F);
         // gui.renderMessage("hello", 255F, 255, 1.0F);
-
+        drawText();
         if (f < 1.0F) {
             this.func_238629_a_(matrixStack, i / 2 - k1, l1 - 5, i / 2 + k1, l1 + 5,
                     1.0F - MathHelper.clamp(f, 0.0F, 1.0F));
@@ -311,7 +318,59 @@ public class ResourceLoadProgressGui extends LoadingGui {
         return this.fadeOut;
     }
 
-    static class MojangLogoTexture extends SimpleTexture {
+
+    public void drawText(){
+        memorycolour[2] = ((1) & 0xFF) / 255.0f;
+        memorycolour[1] = ((2 >> 8 ) & 0xFF) / 255.0f;
+        memorycolour[0] = ((4 >> 16 ) & 0xFF) / 255.0f;
+
+        renderMessage("UwU World Im here",memorycolour, ((mc.currentScreen.height - 15) / 10) -+ 1,  1.0f);
+    }
+
+    @SuppressWarnings("deprecation")
+    public void renderMessage(final String message, final float[] colour, int line, float alpha) {
+        GlStateManager.enableClientState(GL11.GL_VERTEX_ARRAY);
+        ByteBuffer charBuffer = MemoryUtil.memAlloc(message.length() * 270);
+        int quads = STBEasyFont.stb_easy_font_print(0, 0, message, null, charBuffer);
+        GL14.glVertexPointer(2, GL11.GL_FLOAT, 16, charBuffer);
+
+        RenderSystem.enableBlend();
+        RenderSystem.disableTexture();
+        // STBEasyFont's quads are in reverse order or what OGGL expects, so it gets culled for facing the wrong way.
+        // So Disable culling https://github.com/MinecraftForge/MinecraftForge/pull/6824
+        RenderSystem.disableCull();
+        GL14.glBlendColor(0,0,0, alpha);
+        RenderSystem.blendFunc(GlStateManager.SourceFactor.CONSTANT_ALPHA, GlStateManager.DestFactor.ONE_MINUS_CONSTANT_ALPHA);
+        RenderSystem.color3f(colour[0],colour[1],colour[2]);
+        RenderSystem.pushMatrix();
+        RenderSystem.translatef(10, line * 10, 0);
+        RenderSystem.scalef(1, 1, 0);
+        RenderSystem.drawArrays(GL11.GL_QUADS, 0, quads * 4);
+        RenderSystem.popMatrix();
+
+        RenderSystem.enableCull();
+        GlStateManager.disableClientState(GL11.GL_VERTEX_ARRAY);
+        MemoryUtil.memFree(charBuffer);
+    }
+
+    private static final float[] memorycolour = new float[] { 0.0f, 0.0f, 0.0f};
+
+    private void renderMemoryInfo() {
+        final MemoryUsage heapusage = ManagementFactory.getMemoryMXBean().getHeapMemoryUsage();
+        final MemoryUsage offheapusage = ManagementFactory.getMemoryMXBean().getNonHeapMemoryUsage();
+        final float pctmemory = (float) heapusage.getUsed() / heapusage.getMax();
+        String memory = String.format("Memory Heap: %d / %d MB (%.1f%%)  OffHeap: %d MB", heapusage.getUsed() >> 20, heapusage.getMax() >> 20, pctmemory * 100.0, offheapusage.getUsed() >> 20);
+
+        final int i = MathHelper.hsvToRGB((1.0f - (float)Math.pow(pctmemory, 1.5f)) / 3f, 1.0f, 0.5f);
+        memorycolour[2] = ((i) & 0xFF) / 255.0f;
+        memorycolour[1] = ((i >> 8 ) & 0xFF) / 255.0f;
+        memorycolour[0] = ((i >> 16 ) & 0xFF) / 255.0f;
+        renderMessage(memory, memorycolour, 1, 1.0f);
+    }
+
+
+
+   static class MojangLogoTexture extends SimpleTexture {
         public MojangLogoTexture() {
             super(ResourceLoadProgressGui.MOJANG_LOGO_TEXTURE);
         }
@@ -329,7 +388,7 @@ public class ResourceLoadProgressGui extends LoadingGui {
         }
     }
 
-    static class LogoTexutre extends SimpleTexture {
+    class LogoTexutre extends SimpleTexture {
         public LogoTexutre() {
             super(ResourceLoadProgressGui.forgeLoc);
         }
