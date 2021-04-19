@@ -64,7 +64,7 @@ public class ResourceLoadProgressGui extends LoadingGui {
     private static final ResourceLocation MOJANG_LOGO_TEXTURE = new ResourceLocation(
             "textures/gui/title/mojangstudios.png");
     private static final ResourceLocation forgeLoc = new ResourceLocation("textures/gui/title/mojangstudios.png");
-    private static final int field_238627_b_ = ColorHelper.PackedColor.packColor(255, 255, 50, 61);
+    private static final int field_238627_b_ = ColorHelper.PackedColor.packColor(255, 0, 0, 0);
     private static final int field_238628_c_ = field_238627_b_ & 16777215;
     private final Minecraft mc;
     private final IAsyncReloader asyncReloader;
@@ -203,6 +203,7 @@ public class ResourceLoadProgressGui extends LoadingGui {
         this.progress = MathHelper.clamp(this.progress * 0.95F + f3 * 0.050000012F, 0.0F, 1.0F);
         // gui.renderMessage("hello", 255F, 255, 1.0F);
         drawText();
+        renderMemoryInfo();
         if (f < 1.0F) {
             this.func_238629_a_(matrixStack, i / 2 - k1, l1 - 5, i / 2 + k1, l1 + 5,
                     1.0F - MathHelper.clamp(f, 0.0F, 1.0F));
@@ -320,12 +321,16 @@ public class ResourceLoadProgressGui extends LoadingGui {
 
 
     public void drawText(){
-        memorycolour[2] = ((1) & 0xFF) / 255.0f;
-        memorycolour[1] = ((2 >> 8 ) & 0xFF) / 255.0f;
-        memorycolour[0] = ((4 >> 16 ) & 0xFF) / 255.0f;
+        memorycolour[2] = ((255) & 0xFF) / 255.0f;
+        memorycolour[1] = ((255 >> 8 ) & 0xFF) / 255.0f;
+        memorycolour[0] = ((255 >> 16 ) & 0xFF) / 255.0f;
 
-        renderMessage("UwU World Im here",memorycolour, ((mc.currentScreen.height - 15) / 10) -+ 1,  1.0f);
+        renderMessage("World Im here Yaa I Hacked MCP 1.16.5 UwU *Tail Wags in Excitement* ",memorycolour, ((mc.currentScreen.height - 15) / 10) -+ 1,  1.0f);
     }
+
+    /**
+     * This Fun is for Rendering Loading Screen Messages uwU
+     */
 
     @SuppressWarnings("deprecation")
     public void renderMessage(final String message, final float[] colour, int line, float alpha) {
@@ -355,6 +360,9 @@ public class ResourceLoadProgressGui extends LoadingGui {
 
     private static final float[] memorycolour = new float[] { 0.0f, 0.0f, 0.0f};
 
+    /**
+     * This Is For Rendering Mem Info On Main Screen
+     */
     private void renderMemoryInfo() {
         final MemoryUsage heapusage = ManagementFactory.getMemoryMXBean().getHeapMemoryUsage();
         final MemoryUsage offheapusage = ManagementFactory.getMemoryMXBean().getNonHeapMemoryUsage();
