@@ -39,6 +39,14 @@ public class ScreenShotHelper
     }
 
     /**
+     * Saves a screenshot in the game directory with a time-stamped filename.
+     * Returns an ITextComponent indicating the success/failure of the saving.
+     */
+    public static void saveScreenshotDbg(File gameDirectory, int width, int height, Framebuffer buffer)
+    {
+        saveScreenshot(gameDirectory, (String)null, width, height, buffer,null);
+    }
+    /**
      * Saves a screenshot in the game directory with the given file name (or null to generate a time-stamped name).
      * Returns an ITextComponent indicating the success/failure of the saving.
      */

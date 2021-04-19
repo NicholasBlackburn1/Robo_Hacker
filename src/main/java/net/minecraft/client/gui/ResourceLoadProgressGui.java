@@ -51,6 +51,7 @@ import net.minecraft.resources.ResourcePackType;
 import net.minecraft.resources.VanillaPack;
 import net.minecraft.util.ColorHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.ScreenShotHelper;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.Color;
@@ -204,6 +205,7 @@ public class ResourceLoadProgressGui extends LoadingGui {
         // gui.renderMessage("hello", 255F, 255, 1.0F);
         drawText();
         renderMemoryInfo();
+        
         if (f < 1.0F) {
             this.func_238629_a_(matrixStack, i / 2 - k1, l1 - 5, i / 2 + k1, l1 + 5,
                     1.0F - MathHelper.clamp(f, 0.0F, 1.0F));
@@ -224,9 +226,11 @@ public class ResourceLoadProgressGui extends LoadingGui {
             }
 
             if (this.mc.currentScreen != null) {
+                ScreenShotHelper.saveScreenshotDbg(mc.gameDir,mc.currentScreen.width ,mc.currentScreen.height,mc.getFramebuffer());
                 this.mc.currentScreen.init(this.mc, this.mc.getMainWindow().getScaledWidth(),
                         this.mc.getMainWindow().getScaledHeight());
             }
+
         }
     }
     
@@ -325,7 +329,8 @@ public class ResourceLoadProgressGui extends LoadingGui {
         memorycolour[1] = ((255 >> 8 ) & 0xFF) / 255.0f;
         memorycolour[0] = ((255 >> 16 ) & 0xFF) / 255.0f;
 
-        renderMessage("World Im here Yaa I Hacked MCP 1.16.5 UwU *Tail Wags in Excitement* ",memorycolour, ((mc.currentScreen.height - 15) / 10) -+ 1,  1.0f);
+        renderMessage("World Im here Yaa I Hacked MCP 1.16.5 UwU *Tail Wags in Excitement* ",memorycolour, ((mc.currentScreen.height - 15) / 10) -+ 2,  1.0f);
+        renderMessage("Place Holder for Custo Output",memorycolour, ((mc.currentScreen.height - 15) / 10) -+ 1,  1.0f);
     }
 
     /**
