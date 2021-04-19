@@ -82,7 +82,7 @@ public class Splashes extends ReloadListener<List<String>>
         else if (calendar.getTime().getMonth() == 12 && calendar.getTime().getDay() == 6){
             return "Happy BirthDay, Cute Fox XSeveredGamerx!";
         }
-        return null;
+        return this.possibleSplashes.get(RANDOM.nextInt(this.possibleSplashes.size()));
     }   
 }
 
