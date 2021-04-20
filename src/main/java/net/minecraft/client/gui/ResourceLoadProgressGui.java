@@ -101,30 +101,6 @@ public class ResourceLoadProgressGui extends LoadingGui {
         
     }
 
-    public void logo() {
-        int logoOffset = 10;
-        int w = 300;
-        int h = 300;
-        int fh = 300;
-        int fw = 300;
-        int f = 10;
-       
-
-        glColor4f(1, 1, 1, 1);
-        glTranslatef(w / 2 - fw - logoOffset, 240 + h / 2 - fh - logoOffset, 0);
-        glEnable(GL_TEXTURE_2D);
-        
-
-    
-        glBegin(GL_QUADS);
-        glVertex2f(-fw, -fh);
-        glVertex2f(-fw, fh);
-        glVertex2f(fw, fh);
-        glVertex2f(fw, -fh);
-        glEnd();
-        glDisable(GL_TEXTURE_2D);
-
-    }
 
     public void renderMojangLogo(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         FontRenderer render = this.mc.fontRenderer;
@@ -325,12 +301,12 @@ public class ResourceLoadProgressGui extends LoadingGui {
 
 
     public void drawText(){
-        memorycolour[2] = ((255) & 0xFF) / 255.0f;
-        memorycolour[1] = ((255 >> 8 ) & 0xFF) / 255.0f;
+        float[] color = new float[] { 0.0f, 0.0f, 0.0f};
         memorycolour[0] = ((255 >> 16 ) & 0xFF) / 255.0f;
+        color[0] = 16776960/255.0f;
 
-        renderMessage("World Im here Yaa I Hacked MCP 1.16.5 UwU *Tail Wags in Excitement* ",memorycolour, ((mc.currentScreen.height - 15) / 10) -+ 2,  1.0f);
-        renderMessage("Place Holder for Custo Output",memorycolour, ((mc.currentScreen.height - 15) / 10) -+ 1,  1.0f);
+        renderMessage("World Im here Yaa I Hacked MCP 1.16.5 UwU *Tail Wags in Excitement* ",color, ((mc.currentScreen.height - 15) / 10) -+ 2,  1.0f);
+        renderMessage("By Nicholas Blackburn",color, ((mc.currentScreen.height - 15) / 10) -+ 1,  1.0f);
     }
 
     /**
