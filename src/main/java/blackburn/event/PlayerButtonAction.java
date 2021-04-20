@@ -26,12 +26,25 @@ public class PlayerButtonAction {
     public static void togglePlayerEsp(){
         
         if (BlackburnConst.mc.gameSettings.keybindEsphack.isPressed())
-        {
+        {   
             Config.warnblackburn("UwU going to render Player Esp");
-            BlackburnConst.esphack.onUpdate();
+            
             BlackburnConst.esphack.enableESP(true);
         }else{
             BlackburnConst.esphack.enableESP(false);
+        }
+        
+    }
+
+    public static void toggleItemEsp(){
+        
+        if (BlackburnConst.mc.gameSettings.keybindItemEspHack.isPressed())
+        {   
+            Config.warnblackburn("UwU going to render item Esp");
+            
+            BlackburnConst.itemEsp.setEnabled(true);
+        }else{
+            BlackburnConst.itemEsp.setEnabled(false);
         }
         
     }

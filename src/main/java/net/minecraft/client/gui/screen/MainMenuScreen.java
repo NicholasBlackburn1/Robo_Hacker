@@ -5,6 +5,8 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -13,6 +15,7 @@ import javax.annotation.Nullable;
 import net.minecraft.client.gui.AccessibilityScreen;
 import net.minecraft.client.gui.DialogTexts;
 import net.minecraft.client.gui.toasts.SystemToast;
+import net.minecraft.client.gui.toasts.ToastGui;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.button.ImageButton;
@@ -114,6 +117,7 @@ public class MainMenuScreen extends Screen
     protected void init() {
         if (this.splashText == null) {
            this.splashText = this.minecraft.getSplashes().getSplashText();
+           
         }
   
         this.widthCopyright = this.font.getStringWidth("Copyright Nicholas Blackburn UWU!");
@@ -192,6 +196,8 @@ public class MainMenuScreen extends Screen
         if (this.firstRenderTime == 0L && this.showFadeInAnimation) {
            this.firstRenderTime = Util.milliTime();
         }
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
 
    
   
@@ -201,12 +207,25 @@ public class MainMenuScreen extends Screen
         int i = 274;
         int j = this.width / 2 - 137;
         int k = 30;
-  
-        // this one will be for playing  between 12 am and 3 am
-        //this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/1413249501665.png"));
-        
-        //Adding Custon Image Placement into Client 
-        this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/background.png"));
+
+
+
+        // this one will be for Setting backgrounds  between 12 am and 3 am
+        if(calendar.getTime().getHours() == 0){
+            this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/60c78e0cdf42a17e71c961126d83e09c.png"));
+        }
+        if(calendar.getTime().getHours() ==2){
+         this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/UwUCuteFurryies.png"));
+        }else{
+
+            if(calendar.getTime().getMonth() == Calendar.DECEMBER && calendar.getTime().getDay() == 6){
+               this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/Bday.png"));
+
+            } else{
+            
+            this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/background.png"));
+            }
+        }
         RenderSystem.enableBlend();
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, this.showFadeInAnimation ? (float)MathHelper.ceil(MathHelper.clamp(f, 0.0F, 1.0F)) : 1.0F);

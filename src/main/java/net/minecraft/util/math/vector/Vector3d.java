@@ -310,4 +310,5 @@ public class Vector3d implements IPosition
     {
         return this.z;
     }
+
 }

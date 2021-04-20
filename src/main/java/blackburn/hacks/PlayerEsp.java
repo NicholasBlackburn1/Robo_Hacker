@@ -12,9 +12,12 @@ import blackburn.utils.RotationUtils;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.optifine.Config;
 
 public class PlayerEsp {
 	
@@ -53,9 +56,8 @@ public class PlayerEsp {
 		ClientWorld world = BlackburnConst.mc.world;
 		
 		players.clear();
-		Stream<AbstractClientPlayerEntity> stream = world.getPlayers()
-			.parallelStream().filter(e -> !e.removed && e.getHealth() > 0)
-			.filter(e -> e != player)
+		Stream<AbstractClientPlayerEntity> stream = (world.getPlayers())
+			.parallelStream().filter(e -> e.getHealth() > 0 && !e.isServerWorld())
 			.filter(e -> Math.abs(e.getPosY() - BlackburnConst.mc.player.getPosY()) <= 1e6);
 
 		players.addAll(stream.collect(Collectors.toList()));
@@ -78,14 +80,13 @@ public class PlayerEsp {
 		RenderUtils.applyRegionalRenderOffset();
 		
 		BlockPos camPos = RenderUtils.getCameraBlockPos();
-		int regionX = (camPos.getX() >> 9) * 512;
-		int regionZ = (camPos.getZ() >> 9) * 512;
+		int regionX = (camPos.getX() >> 2) * 512;
+		int regionZ = -(camPos.getZ() >> 2) * 512;
 		
 		// draw boxes
 		
 		renderBoxes(partialTicks, regionX, regionZ);
 	    renderTracers(partialTicks, regionX, regionZ);
-		
 		GL11.glPopMatrix();
 		
 		// GL resets
@@ -94,28 +95,30 @@ public class PlayerEsp {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_BLEND);
 		GL11.glDisable(GL11.GL_LINE_SMOOTH);
+		}
+
 	}
-}
+
 	
     // Renders gl boxes
 	private void renderBoxes(double partialTicks, int regionX, int regionZ)
 	{
-		int extraSize = 2;
-
+	
 		for(PlayerEntity e : players)
-		{
+		{	
+			Config.warnblackburn("Amout of Drawn players are" + players.size());
 			GL11.glPushMatrix();
 			
-			GL11.glTranslated(
-				e.prevPosX + (e.getPosX() - e.prevPosX) * partialTicks - regionX,
-				e.prevPosY + (e.getPosY() - e.prevPosY) * partialTicks,
-				e.prevPosZ + (e.getPosZ() - e.prevPosZ) * partialTicks - regionZ);
+			GL11.glTranslated( 
+				e.prevChasingPosX + (e.getPosX() - e.prevPosX) * partialTicks - regionX,
+				e.prevChasingPosY + (e.getPosY() - e.prevPosY) * partialTicks,
+				e.prevChasingPosZ + (e.getPosZ() - e.prevPosZ) * partialTicks - regionZ);
 			
-			GL11.glScaled(e.getWidth() + extraSize, e.getHeight() + extraSize,
-				e.getWidth() + extraSize);
+			GL11.glScaled(e.getBoundingBox().getXSize(), e.getBoundingBox().getYSize(),
+				e.getBoundingBox().getZSize());
 			
 		
-		    GL11.glColor4f(0, 0, 1, 0.5F);
+		    GL11.glColor4f(1, 0,0 , 0.5F);
 			
 			
 			GL11.glCallList(playerBox);
@@ -151,49 +154,6 @@ public class PlayerEsp {
 		return this.enable = enabler;
 		
 	}
-	private enum Style
-	{
-		BOXES("Boxes only", true, false),
-		LINES("Lines only", false, true),
-		LINES_AND_BOXES("Lines and boxes", true, true);
-		
-		private final String name;
-		private final boolean boxes;
-		private final boolean lines;
-		
-		private Style(String name, boolean boxes, boolean lines)
-		{
-			this.name = name;
-			this.boxes = boxes;
-			this.lines = lines;
-		}
-		
-		@Override
-		public String toString()
-		{
-			return name;
-		}
-	}
-	
-	private enum BoxSize
-	{
-		ACCURATE("Accurate", 0),
-		FANCY("Fancy", 0.1);
-		
-		private final String name;
-		private final double extraSize;
-		
-		private BoxSize(String name, double extraSize)
-		{
-			this.name = name;
-			this.extraSize = extraSize;
-		}
-		
-		@Override
-		public String toString()
-		{
-			return name;
-		}
         
 	}
-}
+

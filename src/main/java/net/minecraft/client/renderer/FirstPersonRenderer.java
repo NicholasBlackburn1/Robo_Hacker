@@ -76,6 +76,7 @@ public class FirstPersonRenderer
 
     private void renderArm(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, HandSide side)
     {
+        
         this.mc.getTextureManager().bindTexture(this.mc.player.getLocationSkin());
         PlayerRenderer playerrenderer = (PlayerRenderer)this.renderManager.<AbstractClientPlayerEntity>getRenderer(this.mc.player);
         matrixStackIn.push();

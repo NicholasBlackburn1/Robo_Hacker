@@ -125,7 +125,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunk;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.server.Ticket;
-import net.minecraftforge.eventbus.api.Event;
+
 import net.optifine.Log;
 import net.optifine.util.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
@@ -186,7 +186,6 @@ public class Reflector
     public static ReflectorMethod Event_isCanceled = new ReflectorMethod(Event, "isCanceled");
     public static ReflectorMethod Event_getResult = new ReflectorMethod(Event, "getResult");
     public static ReflectorClass EventBus = new ReflectorClass("net.minecraftforge.eventbus.api.IEventBus");
-    public static ReflectorMethod EventBus_post = new ReflectorMethod(EventBus, "post", new Class[] {Event.class});
     public static ReflectorClass Event_Result = new ReflectorClass("net.minecraftforge.eventbus.api.Event$Result");
     public static ReflectorField Event_Result_DENY = new ReflectorField(Event_Result, "DENY");
     public static ReflectorField Event_Result_ALLOW = new ReflectorField(Event_Result, "ALLOW");
@@ -1063,17 +1062,7 @@ public class Reflector
             }
             else
             {
-                Object object1 = call(object, EventBus_post, event);
-
-                if (!(object1 instanceof Boolean))
-                {
-                    return false;
-                }
-                else
-                {
-                    Boolean obool = (Boolean)object1;
-                    return obool;
-                }
+            return false;
             }
         }
     }

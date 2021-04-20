@@ -172,9 +172,12 @@ public class GameSettings
     // Custsom KeyBinding
     public final KeyBinding keybindTrajectoryHack = new KeyBinding("key.trajectoryhack", 69, "key.categories.misc");
     public final KeyBinding keybindEsphack = new KeyBinding("key.ESPHack", 69, "key.categories.misc");
+    public final KeyBinding keybindItemEspHack = new KeyBinding("key.ItemEsp", 69, "key.categories.misc");
+
+
     public final KeyBinding keyBindSaveToolbar = new KeyBinding("key.saveToolbarActivator", 67, "key.categories.creative");
     public final KeyBinding keyBindLoadToolbar = new KeyBinding("key.loadToolbarActivator", 88, "key.categories.creative");
-    public KeyBinding[] keyBindings = ArrayUtils.addAll(new KeyBinding[] {this.keyBindAttack, this.keyBindUseItem, this.keyBindForward, this.keyBindLeft, this.keyBindBack, this.keyBindRight, this.keyBindJump, this.keyBindSneak, this.keyBindSprint, this.keyBindDrop, this.keyBindInventory, this.keyBindChat, this.keyBindPlayerList, this.keyBindPickBlock, this.keyBindCommand, this.field_244602_au, this.keyBindScreenshot, this.keyBindTogglePerspective, this.keyBindSmoothCamera, this.keyBindFullscreen, this.keyBindSpectatorOutlines, this.keyBindSwapHands, this.keyBindSaveToolbar, this.keyBindLoadToolbar,keybindTrajectoryHack, keybindEsphack, this.keyBindAdvancements}, this.keyBindsHotbar);
+    public KeyBinding[] keyBindings = ArrayUtils.addAll(new KeyBinding[] {this.keyBindAttack, this.keyBindUseItem, this.keyBindForward, this.keyBindLeft, this.keyBindBack, this.keyBindRight, this.keyBindJump, this.keyBindSneak, this.keyBindSprint, this.keyBindDrop, this.keyBindInventory, this.keyBindChat, this.keyBindPlayerList, this.keyBindPickBlock, this.keyBindCommand, this.field_244602_au, this.keyBindScreenshot, this.keyBindTogglePerspective, this.keyBindSmoothCamera, this.keyBindFullscreen, this.keyBindSpectatorOutlines, this.keyBindSwapHands, this.keyBindSaveToolbar, this.keyBindLoadToolbar,keybindTrajectoryHack, keybindEsphack, keybindItemEspHack, this.keyBindAdvancements}, this.keyBindsHotbar);
     protected Minecraft mc;
     private final File optionsFile;
     public Difficulty difficulty = Difficulty.NORMAL;
