@@ -109,6 +109,27 @@ public class TextureManager implements IFutureReloadListener, ITickable, AutoClo
         }
     }
 
+    public Texture loadmodTexture(ResourceLocation textureLocation, Texture textureObj)
+    {
+        textureObj = this.func_230183_b_(textureLocation, textureObj);
+        Texture texture = this.mapTextureObjects.put(textureLocation, textureObj);
+
+        if (texture != textureObj)
+        {
+            if (texture != null && texture != MissingTextureSprite.getDynamicTexture())
+            {
+                this.listTickables.remove(texture);
+                this.func_243505_b(textureLocation, texture);
+            }
+
+            if (textureObj instanceof ITickable)
+            {
+                this.listTickables.add((ITickable)textureObj);
+            }
+        }
+        return texture;
+    }
+
     private void func_243505_b(ResourceLocation p_243505_1_, Texture p_243505_2_)
     {
         if (p_243505_2_ != MissingTextureSprite.getDynamicTexture())

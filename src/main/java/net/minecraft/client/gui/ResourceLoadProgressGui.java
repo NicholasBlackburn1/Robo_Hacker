@@ -17,6 +17,8 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.*;
 import org.lwjgl.system.MemoryUtil;
 
+import blackburn.BlackburnConst;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -64,7 +66,7 @@ import net.optifine.util.PropertiesOrdered;
 public class ResourceLoadProgressGui extends LoadingGui {
     private static final ResourceLocation MOJANG_LOGO_TEXTURE = new ResourceLocation(
             "textures/gui/title/mojangstudios.png");
-    private static final ResourceLocation forgeLoc = new ResourceLocation("textures/gui/title/mojangstudios.png");
+    private static final ResourceLocation NICKS_LOADING = new ResourceLocation("textures/gui/title/mojangstudios.png");
     private static final int field_238627_b_ = ColorHelper.PackedColor.packColor(255, 0, 0, 0);
     private static final int field_238628_c_ = field_238627_b_ & 16777215;
     private final Minecraft mc;
@@ -92,7 +94,7 @@ public class ResourceLoadProgressGui extends LoadingGui {
 
     public static void loadLogoTexture(Minecraft mc) {
         mc.getTextureManager().loadTexture(MOJANG_LOGO_TEXTURE, new ResourceLoadProgressGui.MojangLogoTexture());
-
+        forgeTexture =  mc.getTextureManager().loadmodTexture(NICKS_LOADING, new ResourceLoadProgressGui.NicksLogoTexture());
     }
 
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
@@ -175,6 +177,7 @@ public class ResourceLoadProgressGui extends LoadingGui {
         RenderSystem.defaultBlendFunc();
         RenderSystem.defaultAlphaFunc();
         RenderSystem.disableBlend();
+        renderImageLogo();
         int l1 = (int) ((double) this.mc.getMainWindow().getScaledHeight() * 0.8325D);
         float f3 = this.asyncReloader.estimateExecutionSpeed();
         this.progress = MathHelper.clamp(this.progress * 0.95F + f3 * 0.050000012F, 0.0F, 1.0F);
@@ -339,6 +342,46 @@ public class ResourceLoadProgressGui extends LoadingGui {
         MemoryUtil.memFree(charBuffer);
     }
 
+    /***
+     * This is for trying to draw an custom Image on the Loading Page of Minecraft Granted U wont see it for Long 
+     * Unless I add plugins to the Client UwU
+     */
+    @SuppressWarnings("deprecation")
+    public void renderImageLogo(){
+
+        glClear(GL_COLOR_BUFFER_BIT);
+
+                    // matrix setup
+                    int w = BlackburnConst.mc.getMainWindow().getWidth();
+                    int h = BlackburnConst.mc.getMainWindow().getHeight();
+                    glViewport(0, 0, w/1000, h/1000);
+                    glMatrixMode(GL_PROJECTION);
+                    glLoadIdentity();
+                    glOrtho(320 - w/2, 320 + w/2, 240 + h/2, 240 - h/2, -1, 1);
+                    glMatrixMode(GL_MODELVIEW);
+                    glLoadIdentity();
+
+                    glColor4f(1, 1, 1, 1);
+                    float fw = (float)forgeTexture.getWidth() / 2;
+                    float fh = (float)forgeTexture.getHeight() / 2;
+
+                    glEnable(GL_TEXTURE_2D);
+                    forgeTexture.bind();
+                    glBegin(GL_QUADS);
+                    forgeTexture.texCoord(f, 0, 0);
+                    glVertex2f(-fw, -fh);
+                    forgeTexture.texCoord(f, 0, 1);
+                    glVertex2f(-fw, fh);
+                    forgeTexture.texCoord(f, 1, 1);
+                    glVertex2f(fw, fh);
+                    forgeTexture.texCoord(f, 1, 0);
+                    glVertex2f(fw, -fh);
+                    glEnd();
+                    glDisable(GL_TEXTURE_2D);
+
+                    // mojang logo
+    }
+
     private static final float[] memorycolour = new float[] { 0.0f, 0.0f, 0.0f};
 
     /**
@@ -356,6 +399,10 @@ public class ResourceLoadProgressGui extends LoadingGui {
         memorycolour[0] = ((i >> 16 ) & 0xFF) / 255.0f;
         renderMessage(memory, memorycolour, 1, 1.0f);
     }
+
+
+
+
 
 
 
@@ -377,9 +424,9 @@ public class ResourceLoadProgressGui extends LoadingGui {
         }
     }
 
-    class LogoTexutre extends SimpleTexture {
-        public LogoTexutre() {
-            super(ResourceLoadProgressGui.forgeLoc);
+    static class NicksLogoTexture extends SimpleTexture {
+        public NicksLogoTexture() {
+            super(ResourceLoadProgressGui.NICKS_LOADING);
         }
 
         protected SimpleTexture.TextureData getTextureData(IResourceManager resourceManager) {
@@ -394,13 +441,3 @@ public class ResourceLoadProgressGui extends LoadingGui {
             }
         }
     }
-
-    private static InputStream getLogoInputStream(IResourceManager p_getLogoInputStream_0_,
-            VanillaPack p_getLogoInputStream_1_) throws IOException {
-        return p_getLogoInputStream_0_.hasResource(ResourceLoadProgressGui.MOJANG_LOGO_TEXTURE)
-                ? p_getLogoInputStream_0_.getResource(ResourceLoadProgressGui.MOJANG_LOGO_TEXTURE).getInputStream()
-                : p_getLogoInputStream_1_.getResourceStream(ResourcePackType.CLIENT_RESOURCES,
-                        ResourceLoadProgressGui.MOJANG_LOGO_TEXTURE);
-    }
-
-}
