@@ -57,6 +57,7 @@ import net.minecraft.util.ScreenShotHelper;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.Color;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.optifine.Config;
 import net.optifine.reflect.Reflector;
 import net.optifine.render.GlBlendState;
@@ -354,27 +355,28 @@ public class ResourceLoadProgressGui extends LoadingGui {
                     // matrix setup
                     int w = BlackburnConst.mc.getMainWindow().getWidth();
                     int h = BlackburnConst.mc.getMainWindow().getHeight();
+                    float fw = 200.5f;
+                    float fh = 320.4f;
                     glViewport(0, 0, w/1000, h/1000);
                     glMatrixMode(GL_PROJECTION);
                     glLoadIdentity();
                     glOrtho(320 - w/2, 320 + w/2, 240 + h/2, 240 - h/2, -1, 1);
                     glMatrixMode(GL_MODELVIEW);
                     glLoadIdentity();
-
                     glColor4f(1, 1, 1, 1);
-                    float fw = (float)forgeTexture.getWidth() / 2;
-                    float fh = (float)forgeTexture.getHeight() / 2;
+                    
 
                     glEnable(GL_TEXTURE_2D);
-                    forgeTexture.bind();
+                    forgeTexture.bindTexture();
                     glBegin(GL_QUADS);
-                    forgeTexture.texCoord(f, 0, 0);
+                    
                     glVertex2f(-fw, -fh);
-                    forgeTexture.texCoord(f, 0, 1);
+                    
+                    
                     glVertex2f(-fw, fh);
-                    forgeTexture.texCoord(f, 1, 1);
+                    
                     glVertex2f(fw, fh);
-                    forgeTexture.texCoord(f, 1, 0);
+                   
                     glVertex2f(fw, -fh);
                     glEnd();
                     glDisable(GL_TEXTURE_2D);
@@ -401,43 +403,38 @@ public class ResourceLoadProgressGui extends LoadingGui {
     }
 
 
-
-
-
-
-
-   static class MojangLogoTexture extends SimpleTexture {
+        
+    static class MojangLogoTexture extends SimpleTexture {
         public MojangLogoTexture() {
-            super(ResourceLoadProgressGui.MOJANG_LOGO_TEXTURE);
+           super(ResourceLoadProgressGui.MOJANG_LOGO_TEXTURE);
         }
-
-        protected SimpleTexture.TextureData getTextureData(IResourceManager resourceManager) {
-            Minecraft minecraft = Minecraft.getInstance();
-            VanillaPack vanillapack = minecraft.getPackFinder().getVanillaPack();
-
-            try (InputStream inputstream = getLogoInputStream(resourceManager, vanillapack)) {
-                return new SimpleTexture.TextureData(new TextureMetadataSection(true, true),
-                        NativeImage.read(inputstream));
-            } catch (IOException ioexception1) {
-                return new SimpleTexture.TextureData(ioexception1);
-            }
+  
+        protected SimpleTexture.TextureData getTextureImage(IResourceManager p_215246_1_) {
+           Minecraft minecraft = Minecraft.getInstance();
+           VanillaPack vanillapack = minecraft.getPackFinder().getVanillaPack();
+  
+           try (InputStream inputstream = vanillapack.getResourceStream(ResourcePackType.CLIENT_RESOURCES, ResourceLoadProgressGui.MOJANG_LOGO_TEXTURE)) {
+              return new SimpleTexture.TextureData(new TextureMetadataSection(true, true), NativeImage.read(inputstream));
+           } catch (IOException ioexception) {
+              return new SimpleTexture.TextureData(ioexception);
+           }
         }
     }
-
+    
     static class NicksLogoTexture extends SimpleTexture {
         public NicksLogoTexture() {
-            super(ResourceLoadProgressGui.NICKS_LOADING);
+           super(ResourceLoadProgressGui.NICKS_LOADING);
         }
-
-        protected SimpleTexture.TextureData getTextureData(IResourceManager resourceManager) {
-            Minecraft minecraft = Minecraft.getInstance();
-            VanillaPack vanillapack = minecraft.getPackFinder().getVanillaPack();
-
-            try (InputStream inputstream = getLogoInputStream(resourceManager, vanillapack)) {
-                return new SimpleTexture.TextureData(new TextureMetadataSection(true, true),
-                        NativeImage.read(inputstream));
-            } catch (IOException ioexception1) {
-                return new SimpleTexture.TextureData(ioexception1);
-            }
+  
+        protected SimpleTexture.TextureData getTextureImage(IResourceManager p_215246_1_) {
+           Minecraft minecraft = Minecraft.getInstance();
+           VanillaPack vanillapack = minecraft.getPackFinder().getVanillaPack();
+  
+           try (InputStream inputstream = vanillapack.getResourceStream(ResourcePackType.CLIENT_RESOURCES, ResourceLoadProgressGui.NICKS_LOADING)) {
+              return new SimpleTexture.TextureData(new TextureMetadataSection(true, true), NativeImage.read(inputstream));
+           } catch (IOException ioexception) {
+              return new SimpleTexture.TextureData(ioexception);
+           }
         }
     }
+}    

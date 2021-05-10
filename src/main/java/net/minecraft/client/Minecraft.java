@@ -242,7 +242,8 @@ import blackburn.BlackburnConst;
 import blackburn.event.EventHandler;
 import blackburn.event.PlayerButtonAction;
 
-public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperInfo, IWindowEventListener
+public class 
+Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperInfo, IWindowEventListener
 {
     private static Minecraft instance;
     private static final Logger LOGGER = LogManager.getLogger();
