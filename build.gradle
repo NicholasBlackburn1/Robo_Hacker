@@ -148,3 +148,29 @@ task copyAssets {
         into 'run/assets'
     }
 }
+
+
+// For each duplicate strategy we create a copy task.
+['warn', 'include', 'exclude', 'fail'].each { strategy ->
+    task "copyDuplicatesStrategy${strategy.capitalize()}"(type: Copy) {
+        from 'src/resources'
+     
+        into "$buildDir/copy"
+
+        // Only the value for this property differs for
+        // each created task.
+        duplicatesStrategy = strategy
+
+        // Print the used duplicates strategy when 
+        // the task starts.
+        doFirst {
+            println "Copying with duplicates strategy '${strategy}'."
+        }
+
+        // Print the contents of the copied file COPY.txt.
+        doLast {
+            println "Contents of COPY.txt:"
+            println file("$buildDir/copy/COPY.txt").text
+        }
+    }
+}
