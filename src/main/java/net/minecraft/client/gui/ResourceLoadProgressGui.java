@@ -152,7 +152,8 @@ public class ResourceLoadProgressGui extends LoadingGui {
         double d1 = d0 * 4.0D;
         int k1 = (int) (d1 * 0.5D);
 
-        this.mc.getTextureManager().bindTexture(MOJANG_LOGO_TEXTURE);
+        this.mc.getTextureManager().bindTexture(NICKS_LOADING);
+       
         RenderSystem.enableBlend();
         RenderSystem.blendEquation(32774);
         RenderSystem.blendFunc(770, 1);
@@ -174,11 +175,10 @@ public class ResourceLoadProgressGui extends LoadingGui {
             blit(matrixStack, j2, i1 - j1 - 50, k1, (int) d0, 0.0625F, 60.0F, 120, 60, 120, 120);
 
         }
-
+        drawBox(200,200);
         RenderSystem.defaultBlendFunc();
         RenderSystem.defaultAlphaFunc();
         RenderSystem.disableBlend();
-        renderImageLogo();
         int l1 = (int) ((double) this.mc.getMainWindow().getScaledHeight() * 0.8325D);
         float f3 = this.asyncReloader.estimateExecutionSpeed();
         this.progress = MathHelper.clamp(this.progress * 0.95F + f3 * 0.050000012F, 0.0F, 1.0F);
@@ -309,7 +309,7 @@ public class ResourceLoadProgressGui extends LoadingGui {
         memorycolour[0] = ((255 >> 16 ) & 0xFF) / 255.0f;
         color[0] = 16776960/255.0f;
 
-        renderMessage("World Im here Yaa I Hacked MCP 1.16.5 UwU *Tail Wags in Excitement* ",color, ((mc.currentScreen.height - 15) / 10) -+ 2,  1.0f);
+        renderMessage("World Im here Yaa I Hacked Minecraft 1.16.5 UwU *Tail Wags in Excitement* ",color, ((mc.currentScreen.height - 15) / 10) -+ 2,  1.0f);
         renderMessage("By Nicholas Blackburn",color, ((mc.currentScreen.height - 15) / 10) -+ 1,  1.0f);
     }
 
@@ -350,39 +350,47 @@ public class ResourceLoadProgressGui extends LoadingGui {
     @SuppressWarnings("deprecation")
     public void renderImageLogo(){
 
-        glClear(GL_COLOR_BUFFER_BIT);
+        // matrix setup
+        int w = BlackburnConst.mc.getMainWindow().getWidth();
+        int h = BlackburnConst.mc.getMainWindow().getHeight();
+        float fw = 200.5f;
+        float fh = 320.4f;
+        glLoadIdentity();
+        glOrtho(320 - w/2, 320 + w/2, 240 + h/2, 240 - h/2, -1, 1);
+        glLoadIdentity();
+        glColor4f(1, 1, 1, 1);
+        
 
-                    // matrix setup
-                    int w = BlackburnConst.mc.getMainWindow().getWidth();
-                    int h = BlackburnConst.mc.getMainWindow().getHeight();
-                    float fw = 200.5f;
-                    float fh = 320.4f;
-                    glViewport(0, 0, w/1000, h/1000);
-                    glMatrixMode(GL_PROJECTION);
-                    glLoadIdentity();
-                    glOrtho(320 - w/2, 320 + w/2, 240 + h/2, 240 - h/2, -1, 1);
-                    glMatrixMode(GL_MODELVIEW);
-                    glLoadIdentity();
-                    glColor4f(1, 1, 1, 1);
-                    
+        glEnable(GL_TEXTURE_2D);
+        forgeTexture.bindTexture();
+        glColor3f(222, 222, 222);
+        glBegin(GL_QUADS);
+        glVertex2f(-fw, -fh);
+    
+        glVertex2f(-fw, fh);
+       
+        glVertex2f(fw, fh);
 
-                    glEnable(GL_TEXTURE_2D);
-                    forgeTexture.bindTexture();
-                    glBegin(GL_QUADS);
-                    
-                    glVertex2f(-fw, -fh);
-                    
-                    
-                    glVertex2f(-fw, fh);
-                    
-                    glVertex2f(fw, fh);
-                   
-                    glVertex2f(fw, -fh);
-                    glEnd();
-                    glDisable(GL_TEXTURE_2D);
+        glVertex2f(fw, -fh);
+        glEnd();
+        glDisable(GL_TEXTURE_2D);
 
                     // mojang logo
     }
+
+
+
+    private void drawBox(int w, int h)
+    {
+        glBegin(GL_QUADS);
+        glColor3ub((byte)((100 >> 16) & 0xFF), (byte)((100 >> 8) & 0xFF), (byte)(100 & 0xFF));
+        glVertex2f(0, 0);
+        glVertex2f(0, h);
+        glVertex2f(w, h);
+        glVertex2f(w, 0);
+        glEnd();
+    }
+
 
     private static final float[] memorycolour = new float[] { 0.0f, 0.0f, 0.0f};
 

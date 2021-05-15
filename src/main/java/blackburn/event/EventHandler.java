@@ -35,4 +35,9 @@ public class EventHandler {
         BlackburnConst.itemEsp.setParticleTics(ticks);
     }
 
+    // renders graph hopefully
+    public static void RenderGraph(){
+        
+    }
+
 }

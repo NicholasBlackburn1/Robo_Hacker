@@ -1141,6 +1141,7 @@ public class GameRenderer implements IResourceManagerReloadListener, AutoCloseab
 
         if (world != null)
         {
+            Ev
             if (Config.getNewRelease() != null)
             {   
                 EventHandler.RegisterOnEnables();
