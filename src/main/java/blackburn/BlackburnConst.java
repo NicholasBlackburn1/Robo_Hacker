@@ -7,10 +7,7 @@ package blackburn;
 import java.util.Calendar;
 
 import blackburn.gui.GuiHackScreen;
-import blackburn.hacks.ItemEsp;
-import blackburn.hacks.PlayerEsp;
-import blackburn.hacks.TrajectoryTracking;
-import blackburn.utils.RotationFaker;
+
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.Minecraft;
 
@@ -24,17 +21,7 @@ public class BlackburnConst {
     public static Boolean enableTrajectory;
 
     public static Minecraft mc = Minecraft.getInstance();
-    public static RotationFaker faker = new RotationFaker();
-
-
-    public static TrajectoryTracking tracking = new TrajectoryTracking();
-    public static PlayerEsp esphack = new PlayerEsp();
-    public static ItemEsp itemEsp = new ItemEsp();
-
-
-
-
-
+  
     public static void setTrajectEnable(){
         enableTrajectory = true;
     }

@@ -250,7 +250,7 @@ public class GameRenderer implements IResourceManagerReloadListener, AutoCloseab
      */
     public void tick()
     {   
-        BlackburnConst.esphack.onUpdate();
+   
         this.updateFovModifierHand();
         this.lightmapTexture.tick();
 
