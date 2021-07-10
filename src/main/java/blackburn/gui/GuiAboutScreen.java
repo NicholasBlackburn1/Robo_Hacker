@@ -8,6 +8,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import blackburn.BlackburnConst;
+import blackburn.python.ModLoader;
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
@@ -68,6 +69,7 @@ public class GuiAboutScreen extends GuiScreenOF
     public void onClose()
     {
         this.minecraft.gameSettings.saveOptions();
+        ModLoader.loadPyFiles();
         super.onClose();
     }
 

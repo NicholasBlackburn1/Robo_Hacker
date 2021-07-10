@@ -35,6 +35,8 @@ repositories {
 
 dependencies {
     shade 'net.minecraftforge:forgespi:3.0.+'
+    shade 'org.python:jython-standalone:2.7.2'
+    implementation 'org.python:jython-standalone:2.7.2'
 //    Use the shade to add the lib to the jar
 //    or use compile if you want to load the lib from the version.json
 //    from a maven repo
