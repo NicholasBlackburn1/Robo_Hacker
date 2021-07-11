@@ -146,8 +146,8 @@ public class DebugOverlayGui extends AbstractGui
             list = this.getDebugInfoLeft();
             list.add("");
             boolean flag = this.mc.getIntegratedServer() != null;
-            list.add("Debug: Pie [shift]: " + (this.mc.gameSettings.showDebugProfilerChart ? "visible" : "hidden") + (flag ? " FPS + TPS" : " FPS") + " [alt]: " + (this.mc.gameSettings.showLagometer ? "visible" : "hidden"));
-            list.add("For help: press F3 + Q");
+            list.add("Haha u thought this is useful");
+            list.add("Nope its my foxy boi peen");
             this.debugInfoLeft = list;
             this.updateInfoLeftTimeMs = System.currentTimeMillis() + 100L;
         }
@@ -173,7 +173,7 @@ public class DebugOverlayGui extends AbstractGui
         GuiUtils.fill(p_230024_1_.getLast().getMatrix(), aguirect, -1873784752);
         this.fontRenderer.renderStrings(list, aguipoint, 14737632, p_230024_1_.getLast().getMatrix(), false, this.fontRenderer.getBidiFlag());
     }
-
+    
     protected void renderDebugInfoRight(MatrixStack p_230025_1_)
     {
         List<String> list = this.debugInfoRight;
