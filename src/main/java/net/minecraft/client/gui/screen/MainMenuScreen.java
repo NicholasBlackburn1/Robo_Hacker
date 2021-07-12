@@ -203,37 +203,50 @@ public class MainMenuScreen extends Screen
   
         float f = this.showFadeInAnimation ? (float)(Util.milliTime() - this.firstRenderTime) / 1000.0F : 1.0F;
         fill(matrixStack, 0, 0, this.width, this.height, -1);
-        this.panorama.render(partialTicks, MathHelper.clamp(f, 0.0F, 1.0F));
+        //this.panorama.render(partialTicks, MathHelper.clamp(f, 0.0F, 1.0F));
         int i = 274;
         int j = this.width / 2 - 137;
         int k = 30;
 
-
-
+        System.out.println(calendar.get(Calendar.HOUR_OF_DAY));
         // this one will be for Setting backgrounds  between 12 am and 3 am
-        if(calendar.getTime().getHours() == 0){
-            this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/60c78e0cdf42a17e71c961126d83e09c.png"));
+        if(calendar.get(Calendar.HOUR_OF_DAY) > 3){
+         this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/background.png"));
+      }
+        if(calendar.get(Calendar.HOUR_OF_DAY)==0){
+         this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/60c78e0cdf42a17e71c961126d83e09c.png"));
+
         }
-        if(calendar.getTime().getHours() ==2){
-         this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/UwUCuteFurryies.png"));
-        }else{
-
-            if(calendar.getTime().getMonth() == Calendar.DECEMBER && calendar.getTime().getDay() == 6){
-               this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/Bday.png"));
-
-            } else{
+        if(calendar.get(Calendar.HOUR_OF_DAY) ==1){
+         this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/me.png"));
+        
+         }
+         if(calendar.get(Calendar.HOUR_OF_DAY) ==2){
+            this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/UwUCuteFurryies.png"));
+           
+         }
+         
+         if(calendar.get(Calendar.HOUR_OF_DAY) ==3){
+            this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/UwUMe.png"));
+           
+         } 
+         
+         if(calendar.get(Calendar.MONTH) == Calendar.DECEMBER && calendar.get(Calendar.DATE)  == 6){
+                  this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/Bday.png"));
+               
+                  //this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/background.png"));
+         }
             
-            this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/background.png"));
-            }
-        }
+      
         RenderSystem.enableBlend();
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, this.showFadeInAnimation ? (float)MathHelper.ceil(MathHelper.clamp(f, 0.0F, 1.0F)) : 1.0F);
         blit(matrixStack, 0, 0, this.width, this.height, 0.0F, 0.0F, 16, 128, 16, 128);
         float f1 = this.showFadeInAnimation ? MathHelper.clamp(f - 1.0F, 0.0F, 1.0F) : 1.0F;
         int l = MathHelper.ceil(f1 * 255.0F) << 24;
+
         if ((l & -67108864) != 0) {
-           this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/background.png"));
+      
            RenderSystem.color4f(1.0F, 1.0F, 1.0F, f1);
            if (this.showTitleWronglySpelled) {
               
@@ -285,8 +298,9 @@ public class MainMenuScreen extends Screen
            if (this.areRealmsNotificationsEnabled() && f1 >= 1.0F) {
               this.realmsNotification.render(matrixStack, mouseX, mouseY, partialTicks);
            }
+         }
   
-        }
+        
      
   
      public boolean mouseClicked(double mouseX, double mouseY, int button) {
