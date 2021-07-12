@@ -7,6 +7,11 @@ import javax.annotation.Nullable;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.util.DeathSplashes;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
@@ -16,13 +21,16 @@ import net.minecraft.util.text.event.ClickEvent;
 
 public class DeathScreen extends Screen
 {
+    
     /**
      * The integer value containing the number of ticks that have passed since the player's death
      */
+    private String splasher;
     private int enableButtonsTimer;
     private final ITextComponent causeOfDeath;
     private final boolean isHardcoreMode;
     private ITextComponent field_243285_p;
+
 
     public DeathScreen(@Nullable ITextComponent textComponent, boolean isHardcoreMode)
     {
@@ -33,10 +41,10 @@ public class DeathScreen extends Screen
 
     protected void init()
     {
+        splasher =this.minecraft.getDeathSplashes().getSplashText();
         this.enableButtonsTimer = 0;
         this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 72, 200, 20, this.isHardcoreMode ? new TranslationTextComponent("deathScreen.spectate") : new TranslationTextComponent("deathScreen.respawn"), (p_213021_1_) ->
         {
-           
             this.minecraft.player.respawnPlayer();
             this.minecraft.displayGuiScreen((Screen)null);
         }));
@@ -105,8 +113,8 @@ public class DeathScreen extends Screen
 
         if (this.causeOfDeath != null)
         {
-            drawCenteredString(matrixStack, this.font, this.causeOfDeath, this.width / 2, 85, 16777215);
-            drawCenteredString(matrixStack, this.font, "§6UwU Hehe A least you dont have to pay Child Support like i do", this.width / 2, 120, 16777215);
+            drawCenteredString(matrixStack, this.font, this.causeOfDeath, this.width / 2, 120, 16777215);
+            drawCenteredString(matrixStack, this.font, splasher,this.width /2, 85, 16777215);
         }
 
         drawCenteredString(matrixStack, this.font, this.field_243285_p, this.width / 2, 100, 16777215);
@@ -118,6 +126,14 @@ public class DeathScreen extends Screen
         }
 
         super.render(matrixStack, mouseX, mouseY, partialTicks);
+    }
+
+    /**
+     * this Function returns custom Death Splashes
+     * @return
+     */
+    private void DeathSplash(){
+
     }
 
     @Nullable

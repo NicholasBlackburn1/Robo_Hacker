@@ -21,14 +21,14 @@ import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Session;
 
-public class Splashes extends ReloadListener<List<String>>
+public class DeathSplashes extends ReloadListener<List<String>>
 {
-    private static final ResourceLocation SPLASHES_LOCATION = new ResourceLocation("texts/splashes.txt");
+    private static final ResourceLocation SPLASHES_LOCATION = new ResourceLocation("texts/DeathSplashes.txt");
     private static final Random RANDOM = new Random();
     private final List<String> possibleSplashes = Lists.newArrayList();
     private final Session gameSession;
 
-    public Splashes(Session gameSessionIn)
+    public DeathSplashes(Session gameSessionIn)
     {
         this.gameSession = gameSessionIn;
     }
@@ -77,7 +77,7 @@ public class Splashes extends ReloadListener<List<String>>
         }
         else if (this.possibleSplashes.isEmpty())
         {
-            return null;
+            return "I am a Horny Proto, I snuck into ur house and wanked on ur couch";
         }
         else if (calendar.getTime().getMonth() == 12 && calendar.getTime().getDay() == 6){
             return "Happy BirthDay, Cute Foxy Boi XSeveredGamerx!";

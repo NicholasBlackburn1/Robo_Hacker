@@ -997,6 +997,12 @@ public class SoundEvents
     public static final SoundEvent ENTITY_ZOMBIE_VILLAGER_HURT = register("entity.zombie_villager.hurt");
     public static final SoundEvent ENTITY_ZOMBIE_VILLAGER_STEP = register("entity.zombie_villager.step");
 
+    /***
+     * THis is the custom local for the minecrafty sounds 
+     */
+
+    
+
     private static SoundEvent register(String key)
     {
         return Registry.register(Registry.SOUND_EVENT, key, new SoundEvent(new ResourceLocation(key)));

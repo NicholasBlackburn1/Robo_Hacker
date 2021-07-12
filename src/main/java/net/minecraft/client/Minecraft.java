@@ -204,6 +204,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Session;
 import net.minecraft.util.SharedConstants;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.Timer;
 import net.minecraft.util.Unit;
 import net.minecraft.util.Util;
@@ -225,6 +226,7 @@ import net.minecraft.util.text.KeybindTextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.util.DeathSplashes;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings;
 import net.minecraft.world.biome.Biome;
@@ -237,6 +239,8 @@ import net.minecraft.world.storage.SaveFormat;
 import net.minecraft.world.storage.ServerWorldInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import net.minecraft.util.SoundEvents;
 
 import blackburn.BlackburnConst;
 import blackburn.event.EventHandler;
@@ -302,6 +306,7 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
     private final MusicTicker musicTicker;
     private final FontResourceManager fontResourceMananger;
     private final Splashes splashes;
+    private final DeathSplashes splash;
     private final GPUWarning warningGPU;
     private final MinecraftSessionService sessionService;
     private final SocialInteractionsService field_244734_au;
@@ -475,7 +480,9 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
         this.soundHandler = new SoundHandler(this.resourceManager, this.gameSettings);
         this.resourceManager.addReloadListener(this.soundHandler);
         this.splashes = new Splashes(this.session);
+        this.splash = new DeathSplashes(this.session);
         this.resourceManager.addReloadListener(this.splashes);
+        this.resourceManager.addReloadListener(this.splash);
         this.musicTicker = new MusicTicker(this);
         this.fontResourceMananger = new FontResourceManager(this.textureManager);
         this.fontRenderer = this.fontResourceMananger.func_238548_a_();
@@ -975,9 +982,11 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
             guiScreenIn = new MainMenuScreen();
         }
         else if (guiScreenIn == null && this.player.getShouldBeDead())
-        {
+        {   
+            this.player.playSound(SoundEvents.ENTITY_ZOMBIE_DEATH,SoundCategory.MASTER,1.0f,1.0f);
             if (this.player.isShowDeathScreen())
             {
+               
                 guiScreenIn = new DeathScreen((ITextComponent)null, this.world.getWorldInfo().isHardcore());
             }
             else
@@ -988,7 +997,7 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
 
         if (guiScreenIn instanceof MainMenuScreen || guiScreenIn instanceof MultiplayerScreen)
         {
-            this.gameSettings.showDebugInfo = false;
+            this.gameSettings.showDebugInfo = true;
             this.ingameGUI.getChatGUI().clearChatMessages(true);
         }
 
@@ -3155,6 +3164,11 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
     public Splashes getSplashes()
     {
         return this.splashes;
+    }
+
+    public DeathSplashes getDeathSplashes()
+    {
+        return this.splash;
     }
 
     @Nullable
