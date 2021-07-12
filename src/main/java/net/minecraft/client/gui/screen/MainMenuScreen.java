@@ -208,7 +208,6 @@ public class MainMenuScreen extends Screen
         int j = this.width / 2 - 137;
         int k = 30;
 
-        System.out.println(calendar.get(Calendar.HOUR_OF_DAY));
         // this one will be for Setting backgrounds  between 12 am and 3 am
         if(calendar.get(Calendar.HOUR_OF_DAY) > 3){
          this.minecraft.getTextureManager().bindTexture(new ResourceLocation("textures/gui/title/background/background.png"));

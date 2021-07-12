@@ -146,8 +146,8 @@ public class DebugOverlayGui extends AbstractGui
             list = this.getDebugInfoLeft();
             list.add("");
             boolean flag = this.mc.getIntegratedServer() != null;
-            list.add("Foxy UwU");
-            list.add("Tast the gay ranbow foxy");
+            list.add("cU§6w§eU §9u §5t§ch§6o§eu§ag§9h§bt §ct§6h§ei§as §bw§5a§cs §eu§as§9e§bf§5u§cl§6l§e!");
+            list.add(" → §cT§6h§ei§as §bi§5s §6w§eh§aa§9t §5u §6g§ee§at §bf§5o§cr §eT§ar§9u§bs§5t§ci§6n§eg §9a §5L§ce§6w§ed§ay §bG§5a§cy §eF§ao§9x§by §6B§eo§ai ");
             this.debugInfoLeft = list;
             this.updateInfoLeftTimeMs = System.currentTimeMillis() + 100L;
         }
