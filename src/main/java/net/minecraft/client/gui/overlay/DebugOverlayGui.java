@@ -22,6 +22,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
+
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.ClientBrandRetriever;
 import net.minecraft.client.Minecraft;
@@ -121,7 +123,7 @@ public class DebugOverlayGui extends AbstractGui
         this.renderDebugInfoLeft(p_194818_1_);
         this.renderDebugInfoRight(p_194818_1_);
         RenderSystem.popMatrix();
-
+        CriteriaTriggers.SUCKS_TO_WANA_BE_INFORMED.trigger(this.mc.getIntegratedServer().getPlayerList().getPlayerByUUID(this.mc.player.getUniqueID()));
         if (this.mc.gameSettings.showLagometer)
         {
             int i = this.mc.getMainWindow().getScaledWidth();

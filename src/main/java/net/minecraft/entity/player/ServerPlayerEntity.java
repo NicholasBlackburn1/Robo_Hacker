@@ -589,7 +589,7 @@ public class ServerPlayerEntity extends PlayerEntity implements IContainerListen
     public void onDeath(DamageSource cause)
     {
         boolean flag = this.world.getGameRules().getBoolean(GameRules.SHOW_DEATH_MESSAGES);
-
+       
         if (flag)
         {
             ITextComponent itextcomponent = this.getCombatTracker().getDeathMessage();

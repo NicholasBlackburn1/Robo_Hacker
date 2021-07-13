@@ -94,6 +94,7 @@ public class CriteriaTriggers
     // Custom Advacements added for playning mc
     public static final CodeDefinedTrigger LAUNCHED_MINECRAFT_TRIGGER = register(new CodeDefinedTrigger(new ResourceLocation("launched")));
     public static final CodeDefinedTrigger SUCKS_TO_WANA_BE_INFORMED = register(new CodeDefinedTrigger(new ResourceLocation("informed")));
+    public static final CodeDefinedTrigger DEATH = register(new CodeDefinedTrigger(new ResourceLocation("death")));
     private static < T extends ICriterionTrigger<? >> T register(T criterion)
     {
         if (REGISTRY.containsKey(criterion.getId()))

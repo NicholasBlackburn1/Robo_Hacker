@@ -2,6 +2,9 @@ package net.minecraft.client.gui.screen;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+
+import blackburn.BlackburnConst;
+
 import javax.annotation.Nullable;
 
 import net.minecraft.advancements.CriteriaTriggers;
@@ -42,6 +45,7 @@ public class DeathScreen extends Screen
     protected void init()
     {
         splasher =this.minecraft.getDeathSplashes().getSplashText();
+        CriteriaTriggers.DEATH.trigger(BlackburnConst.mc.getIntegratedServer().getPlayerList().getPlayerByUUID(BlackburnConst.mc.player.getUniqueID()));
         this.enableButtonsTimer = 0;
         this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 72, 200, 20, this.isHardcoreMode ? new TranslationTextComponent("deathScreen.spectate") : new TranslationTextComponent("deathScreen.respawn"), (p_213021_1_) ->
         {
@@ -113,6 +117,7 @@ public class DeathScreen extends Screen
 
         if (this.causeOfDeath != null)
         {
+            
             drawCenteredString(matrixStack, this.font, this.causeOfDeath, this.width / 2, 120, 16777215);
             drawCenteredString(matrixStack, this.font, "§6"+splasher,this.width /2, 85, 16777215);
         }

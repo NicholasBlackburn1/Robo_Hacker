@@ -240,12 +240,13 @@ import net.minecraft.world.storage.ServerWorldInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+
 import net.minecraft.util.SoundEvents;
 
 import blackburn.BlackburnConst;
 import blackburn.event.EventHandler;
 import blackburn.event.PlayerButtonAction;
-
+import net.minecraft.advancements.CriteriaTriggers;
 
 public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperInfo, IWindowEventListener
 {
@@ -987,11 +988,13 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
         }
         else if (guiScreenIn == null && this.player.getShouldBeDead())
         {   
-            this.player.playSound(SoundEvents.ENTITY_ZOMBIE_DEATH,SoundCategory.MASTER,1.0f,1.0f);
+            CriteriaTriggers.DEATH.trigger(BlackburnConst.mc.getIntegratedServer().getPlayerList().getPlayerByUUID(BlackburnConst.mc.player.getUniqueID()));
+            
             if (this.player.isShowDeathScreen())
             {
                
                 guiScreenIn = new DeathScreen((ITextComponent)null, this.world.getWorldInfo().isHardcore());
+                this.player.playSound(SoundEvents.ENTITY_ZOMBIE_DEATH,SoundCategory.MASTER,1.0f,1.0f);
             }
             else
             {

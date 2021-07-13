@@ -1,0 +1,24 @@
+{
+  "parent": "minecraft:custom/root",
+  "display": {
+    "icon": {
+      "item": "minecraft:flint_and_steel"
+     
+    },
+    "title": {
+      "translate": "blackburn.death.title"
+    },
+    "description": {
+      "translate": "blackburn.death.desc"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "launched": {
+      "trigger": "death"
+    }
+  }
+}
