@@ -69,7 +69,7 @@ public class KeyboardListener
     {
         if (this.debugCrashKeyPressTime > 0L && this.debugCrashKeyPressTime < Util.milliTime() - 100L)
         {
-            return true;
+            return false;
         }
         else
         {

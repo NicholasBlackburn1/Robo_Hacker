@@ -11,6 +11,9 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 import javax.annotation.Nullable;
+
+import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
@@ -20,6 +23,7 @@ import net.minecraft.client.gui.ResourceLoadProgressGui;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.DownloadTerrainScreen;
 import net.minecraft.client.gui.screen.MainMenuScreen;
+import net.minecraft.client.gui.toasts.ToastGui;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.NativeImage;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -42,6 +46,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Effects;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.resources.IResourceManagerReloadListener;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.util.CachedBlockInfo;
 import net.minecraft.util.Direction;
@@ -79,6 +84,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import blackburn.BlackburnConst;
+
 import blackburn.event.EventHandler;
 
 public class GameRenderer implements IResourceManagerReloadListener, AutoCloseable
@@ -1146,9 +1152,14 @@ public class GameRenderer implements IResourceManagerReloadListener, AutoCloseab
                 EventHandler.RegisterOnEnables();
                 String s = "HD_U".replace("HD_U", "HD Ultra").replace("L", "Light");
                 String s1 = s + " " + Config.getNewRelease();
-                StringTextComponent stringtextcomponent = new StringTextComponent(I18n.format("of.message.newVersion", "\u00a7n" + s1 + "\u00a7r"));
-                stringtextcomponent.setStyle(Style.EMPTY.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://nicholasblackburn.space")));
-                this.mc.ingameGUI.getChatGUI().printChatMessage(stringtextcomponent);
+                StringTextComponent updatemsg = new StringTextComponent(I18n.format("of.message.newVersion", "\u00a7n" + s1 + "\u00a7r"));
+                updatemsg.setStyle(Style.EMPTY.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://nicholasblackburn.space")));
+                
+                StringTextComponent  msg = new StringTextComponent(I18n.format("blackburn.message.use", "\u00a7n" + s1 + "\u00a7r"));
+                this.mc.ingameGUI.getChatGUI().printChatMessage(updatemsg);
+                this.mc.ingameGUI.getChatGUI().printChatMessage(msg);
+                CriteriaTriggers.LAUNCHED_MINECRAFT_TRIGGER.trigger(this.mc.getIntegratedServer().getPlayerList().getPlayerByUUID(this.mc.player.getUniqueID()));
+              
                 Config.setNewRelease((String)null);
             }
 

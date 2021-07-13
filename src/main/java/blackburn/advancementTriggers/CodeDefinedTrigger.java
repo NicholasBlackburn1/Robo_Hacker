@@ -15,45 +15,44 @@ import net.minecraft.loot.ConditionArrayParser;
 import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 
-public class LaunchedMinecraftTrigger extends AbstractCriterionTrigger<LaunchedMinecraftTrigger.Instance> {
-    private static final ResourceLocation ID = new ResourceLocation("launched");
-    private Boolean status;
 
-    public ResourceLocation getId()
+
+public class CodeDefinedTrigger extends AbstractCriterionTrigger<CodeDefinedTrigger.Instance>
+{
+    private final ResourceLocation id;
+
+    public CodeDefinedTrigger(ResourceLocation id)
     {
-        return ID;
+        this.id = id;
     }
 
     @Override
-    protected Instance deserializeTrigger(JsonObject json, AndPredicate entityPredicate,
-            ConditionArrayParser conditionsParser) {
-        // TODO Auto-generated method stub
-        return new LaunchedMinecraftTrigger.Instance(entityPredicate);
-    
+    public ResourceLocation getId()
+    {
+        return id;
     }
-   
+
+    @Override
+    protected Instance deserializeTrigger(JsonObject json, EntityPredicate.AndPredicate entityPredicate, ConditionArrayParser conditionsParser)
+    {
+        return new Instance(this.id, entityPredicate);
+    }
+
     public void trigger(ServerPlayerEntity player)
     {
-        this.triggerListeners(player, (instance) ->
-        {
-            if(BlackburnConst.mc.getMainWindow().isFullscreen()){
-                this.status = true;
-            }
-            return this.status;
-        });
+        this.triggerListeners(player, (instance -> true));
     }
 
     public static class Instance extends CriterionInstance
     {
-       
-        public Instance(EntityPredicate.AndPredicate player)
+        public Instance(ResourceLocation id, EntityPredicate.AndPredicate playerCondition)
         {
-            super(LaunchedMinecraftTrigger.ID, player);
-            
+            super(id, playerCondition);
         }
 
+        public static Instance create(ResourceLocation id)
+        {
+            return new Instance(id, EntityPredicate.AndPredicate.ANY_AND);
+        }
     }
-
-
-    
 }

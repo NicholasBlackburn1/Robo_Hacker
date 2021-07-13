@@ -71,6 +71,11 @@ public class TutorialToast implements IToast
         this.visibility = IToast.Visibility.HIDE;
     }
 
+    public void show()
+    {
+        this.visibility = IToast.Visibility.SHOW;
+    }
+
     public void setProgress(float progress)
     {
         this.currentProgress = progress;

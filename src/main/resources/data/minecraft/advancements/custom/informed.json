@@ -2,23 +2,23 @@
   "parent": "minecraft:custom/root",
   "display": {
     "icon": {
-      "item": "minecraft:diamond"
+      "item": "minecraft:book"
      
     },
     "title": {
-      "translate": "blackburn.launched.title"
+      "translate": "blackburn.informed.title"
     },
     "description": {
-      "translate": "blackburn.launched.description"
+      "translate": "blackburn.informed.desc"
     },
     "frame": "challenge",
     "show_toast": true,
-    "announce_to_chat": false,
+    "announce_to_chat": true,
     "hidden": false
   },
   "criteria": {
     "launched": {
-      "trigger": "launched"
+      "trigger": "informed"
     }
   }
 }

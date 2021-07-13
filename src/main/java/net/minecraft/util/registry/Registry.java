@@ -371,7 +371,8 @@ public abstract class Registry<T> implements Codec<T>, Keyable, IObjectIntIterab
     }
 
     private static <T> Registry<T> createRegistry(RegistryKey <? extends Registry<T >> registryKey, Supplier<T> supplier)
-    {
+    {   
+        System.out.print(register(registryKey, Lifecycle.experimental(), supplier));
         return register(registryKey, Lifecycle.experimental(), supplier);
     }
 

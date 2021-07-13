@@ -14,8 +14,11 @@ import java.util.function.BiConsumer;
 import javax.annotation.Nullable;
 import net.minecraft.client.gui.AccessibilityScreen;
 import net.minecraft.client.gui.DialogTexts;
+import net.minecraft.client.gui.fonts.Font;
+import net.minecraft.client.gui.toasts.AdvancementToast;
 import net.minecraft.client.gui.toasts.SystemToast;
 import net.minecraft.client.gui.toasts.ToastGui;
+import net.minecraft.client.gui.toasts.TutorialToast;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.gui.widget.button.ImageButton;
@@ -30,12 +33,15 @@ import net.minecraft.util.SharedConstants;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.DynamicRegistries;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.gen.settings.DimensionGeneratorSettings;
 import net.minecraft.world.storage.SaveFormat;
 import net.minecraft.world.storage.WorldSummary;
 import net.optifine.reflect.Reflector;
 import net.optifine.reflect.ReflectorForge;
+import net.optifine.util.FontUtils;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -69,6 +75,7 @@ public class MainMenuScreen extends Screen
     private final boolean showFadeInAnimation;
     private long firstRenderTime;
     private Screen modUpdateNotification;
+    private TutorialToast toast;
 
     public MainMenuScreen()
     {

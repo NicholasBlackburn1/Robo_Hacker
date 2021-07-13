@@ -131,6 +131,8 @@ import net.minecraft.world.storage.IWorldInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import blackburn.BlackburnConst;
+
 public class ServerPlayerEntity extends PlayerEntity implements IContainerListener
 {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -207,6 +209,8 @@ public class ServerPlayerEntity extends PlayerEntity implements IContainerListen
         {
             int i = Math.max(0, this.server.getSpawnRadius(worldIn));
             int j = MathHelper.floor(worldIn.getWorldBorder().getClosestDistance((double)blockpos.getX(), (double)blockpos.getZ()));
+            
+        ;
 
             if (j < i)
             {

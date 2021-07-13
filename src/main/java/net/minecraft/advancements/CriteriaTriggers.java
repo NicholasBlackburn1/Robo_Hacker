@@ -2,8 +2,7 @@ package net.minecraft.advancements;
 
 import com.google.common.collect.Maps;
 
-import blackburn.CustomTrigger;
-import blackburn.advancementTriggers.LaunchedMinecraftTrigger;
+import blackburn.advancementTriggers.CodeDefinedTrigger;
 
 import java.util.Map;
 import javax.annotation.Nullable;
@@ -92,8 +91,9 @@ public class CriteriaTriggers
     public static final PlayerGeneratesContainerLootTrigger PLAYER_GENERATES_CONTAINER_LOOT = register(new PlayerGeneratesContainerLootTrigger());
     public static final ThrownItemPickedUpByEntityTrigger THROWN_ITEM_PICKED_UP_BY_ENTITY = register(new ThrownItemPickedUpByEntityTrigger());
     public static final PlayerEntityInteractionTrigger PLAYER_ENTITY_INTERACTION = register(new PlayerEntityInteractionTrigger());
-    public static final CustomTrigger LAUNCHED_MINECRAFT_TRIGGER = register(new CustomTrigger("launched"));
-
+    // Custom Advacements added for playning mc
+    public static final CodeDefinedTrigger LAUNCHED_MINECRAFT_TRIGGER = register(new CodeDefinedTrigger(new ResourceLocation("launched")));
+    public static final CodeDefinedTrigger SUCKS_TO_WANA_BE_INFORMED = register(new CodeDefinedTrigger(new ResourceLocation("informed")));
     private static < T extends ICriterionTrigger<? >> T register(T criterion)
     {
         if (REGISTRY.containsKey(criterion.getId()))

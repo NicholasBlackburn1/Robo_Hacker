@@ -246,6 +246,7 @@ import blackburn.BlackburnConst;
 import blackburn.event.EventHandler;
 import blackburn.event.PlayerButtonAction;
 
+
 public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperInfo, IWindowEventListener
 {
     private static Minecraft instance;
@@ -257,7 +258,7 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
     private static final CompletableFuture<Unit> RESOURCE_RELOAD_INIT_TASK = CompletableFuture.completedFuture(Unit.INSTANCE);
     private static final ITextComponent field_244596_I = new TranslationTextComponent("multiplayer.socialInteractions.not_available");
     private final File fileResourcepacks;
-
+    
     /** The player's GameProfile properties */
     private final PropertyMap profileProperties;
     private final TextureManager textureManager;
@@ -409,6 +410,7 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
         this.enableChat = !gameConfig.gameInfo.disableChat;
         this.jvm64bit = isJvm64bit();
         this.integratedServer = null;
+       
         
         String s;
         int i;
@@ -482,7 +484,9 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
         this.splashes = new Splashes(this.session);
         this.splash = new DeathSplashes(this.session);
         this.resourceManager.addReloadListener(this.splashes);
-        this.resourceManager.addReloadListener(this.splash);
+        this.resourceManager.addReloadListener(this.splash
+        );
+        
         this.musicTicker = new MusicTicker(this);
         this.fontResourceMananger = new FontResourceManager(this.textureManager);
         this.fontRenderer = this.fontResourceMananger.func_238548_a_();
@@ -997,7 +1001,7 @@ public class Minecraft extends RecursiveEventLoop<Runnable> implements ISnooperI
 
         if (guiScreenIn instanceof MainMenuScreen || guiScreenIn instanceof MultiplayerScreen)
         {
-            this.gameSettings.showDebugInfo = true;
+            this.gameSettings.showDebugInfo = false;
             this.ingameGUI.getChatGUI().clearChatMessages(true);
         }
 
