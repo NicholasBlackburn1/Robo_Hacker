@@ -43,7 +43,7 @@ public class IngameMenuScreen extends Screen
         {
             this.minecraft.displayGuiScreen(new StatsScreen(this, this.minecraft.player.getStats()));
         }));
-        String s = SharedConstants.getVersion().isStable() ? "https://aka.ms/javafeedback?ref=game" : "https://aka.ms/snapshotfeedback?ref=game";
+        String s = SharedConstants.getVersion().isStable() ? "https://nicholasblackburn.space" : "https://nicholasblackburn.space";
         this.addButton(new Button(this.width / 2 - 102, this.height / 4 + 72 + -16, 98, 20, new TranslationTextComponent("menu.sendFeedback"), (button2) ->
         {
             this.minecraft.displayGuiScreen(new ConfirmOpenLinkScreen((open) -> {
@@ -60,11 +60,11 @@ public class IngameMenuScreen extends Screen
             this.minecraft.displayGuiScreen(new ConfirmOpenLinkScreen((open) -> {
                 if (open)
                 {
-                    Util.getOSType().openURI("https://aka.ms/snapshotbugs?ref=game");
+                    Util.getOSType().openURI("https://e621.net/posts?tags=gay++male%2Fmale+anthro+nude+cum+male_penetrating");
                 }
 
                 this.minecraft.displayGuiScreen(this);
-            }, "https://aka.ms/snapshotbugs?ref=game", true));
+            }, "UwU click there for bugs", true));
         }));
         this.addButton(new Button(this.width / 2 - 102, this.height / 4 + 96 + -16, 98, 20, new TranslationTextComponent("menu.options"), (button2) ->
         {

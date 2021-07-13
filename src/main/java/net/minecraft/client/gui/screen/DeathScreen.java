@@ -46,6 +46,7 @@ public class DeathScreen extends Screen
     {
         splasher =this.minecraft.getDeathSplashes().getSplashText();
         CriteriaTriggers.DEATH.trigger(BlackburnConst.mc.getIntegratedServer().getPlayerList().getPlayerByUUID(BlackburnConst.mc.player.getUniqueID()));
+        this.minecraft.player.playSound(SoundEvents.ENTITY_CREEPER_PRIMED, SoundCategory.MASTER, 1.0f, 1.0f);
         this.enableButtonsTimer = 0;
         this.addButton(new Button(this.width / 2 - 100, this.height / 4 + 72, 200, 20, this.isHardcoreMode ? new TranslationTextComponent("deathScreen.spectate") : new TranslationTextComponent("deathScreen.respawn"), (p_213021_1_) ->
         {

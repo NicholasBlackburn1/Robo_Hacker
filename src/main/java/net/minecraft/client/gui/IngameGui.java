@@ -176,6 +176,7 @@ public class IngameGui extends AbstractGui
         this.scaledHeight = this.mc.getMainWindow().getScaledHeight();
         FontRenderer fontrenderer = this.getFontRenderer();
         RenderSystem.enableBlend();
+        //this.drawCenteredString(matrixStack, this.mc.fontRenderer, "UwU", 100, 100, 100);
 
         if (Config.isVignetteEnabled())
         {
