@@ -8,6 +8,9 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
+
+import blackburn.gui.GuiNotify;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -104,6 +107,10 @@ public class IngameGui extends AbstractGui
     private final PlayerTabOverlayGui overlayPlayerList;
     private final BossOverlayGui overlayBoss;
 
+    /** Custom Display vars by me @author Nicholas  */
+    private final GuiNotify notify;
+
+
     /** A timer for the current title and subtitle displayed */
     private int titlesTimer;
     @Nullable
@@ -145,6 +152,7 @@ public class IngameGui extends AbstractGui
         this.overlayPlayerList = new PlayerTabOverlayGui(mcIn, this);
         this.overlayBoss = new BossOverlayGui(mcIn);
         this.overlaySubtitle = new SubtitleOverlayGui(mcIn);
+        this.notify = new GuiNotify(mcIn.fontRenderer, mcIn);
 
         for (ChatType chattype : ChatType.values())
         {
@@ -175,8 +183,13 @@ public class IngameGui extends AbstractGui
         this.scaledWidth = this.mc.getMainWindow().getScaledWidth();
         this.scaledHeight = this.mc.getMainWindow().getScaledHeight();
         FontRenderer fontrenderer = this.getFontRenderer();
-        RenderSystem.enableBlend();
+
         //this.drawCenteredString(matrixStack, this.mc.fontRenderer, "UwU", 100, 100, 100);
+        this.notify.renderTextForUser(matrixStack);
+        
+        RenderSystem.enableBlend();
+        
+       
 
         if (Config.isVignetteEnabled())
         {
@@ -225,10 +238,13 @@ public class IngameGui extends AbstractGui
             this.mc.getProfiler().endSection();
             RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
             this.mc.getTextureManager().bindTexture(GUI_ICONS_LOCATION);
+          
+
 
             if (this.mc.playerController.shouldDrawHUD())
             {
                 this.func_238457_e_(matrixStack);
+               
             }
 
             this.func_238458_f_(matrixStack);
@@ -289,6 +305,10 @@ public class IngameGui extends AbstractGui
 
         if (!this.mc.gameSettings.hideGUI)
         {
+            // Trying to add and entryPoint to render my gui on the games overlay
+            //this.fill(matrixStack, 0, 0, 100, 100, 0);
+            
+    
             if (this.overlayMessage != null && this.overlayMessageTime > 0)
             {
                 this.mc.getProfiler().startSection("overlayMessage");
@@ -957,7 +977,8 @@ public class IngameGui extends AbstractGui
     }
 
     private void func_238457_e_(MatrixStack p_238457_1_)
-    {
+    {   
+       
         PlayerEntity playerentity = this.getRenderViewPlayer();
 
         if (playerentity != null)

@@ -9,7 +9,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import blackburn.BlackburnConst;
-import blackburn.python.ModLoader;
+
 import net.minecraft.client.GameSettings;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.Screen;
@@ -52,7 +52,7 @@ public class GuiHackScreen extends GuiScreenOF
         splasher = this.minecraft.getSplashes().getSplashText();
         this.addButton(new GuiButtonOF(200, this.width / 2 - 100, this.height / 6 + 200 + 11, I18n.format("gui.done")));
         this.addButton(new GuiButtonOF(10, this.width / 2 - 100, this.height / 6 + 100 + 11, I18n.format("gui.trajectory")));
-        ModLoader.loadPyFiles();
+      
     }
 
     protected void actionPerformed(Widget guiElement)
