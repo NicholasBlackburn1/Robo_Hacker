@@ -305,8 +305,8 @@ public class ResourceLoadProgressGui extends LoadingGui {
         memorycolour[0] = ((255 >> 16 ) & 0xFF) / 255.0f;
         color[0] = 16776960/255.0f;
 
-        renderMessage("World Im here Yaa I Hacked MCP 1.16.5 UwU *Tail Wags in Excitement* ",color, ((mc.currentScreen.height - 15) / 10) -+ 2,  1.0f);
-        renderMessage("By Nicholas Blackburn",color, ((mc.currentScreen.height - 15) / 10) -+ 1,  1.0f);
+        renderMessage("World Im here Yaa I Hacked Minecraft 1.16.5 UwU *Tail Wags in Excitement* ",color, ((mc.currentScreen.height - 15) / 10) -+ 2,  1.0f);
+        renderMessage("By Nicholas Blackburn The Gayest Furry Fox bois",color, ((mc.currentScreen.height - 15) / 10) -+ 1,  1.0f);
     }
 
     /**

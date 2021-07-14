@@ -186,8 +186,8 @@ public class IngameGui extends AbstractGui
         this.scaledWidth = this.mc.getMainWindow().getScaledWidth();
         this.scaledHeight = this.mc.getMainWindow().getScaledHeight();
         FontRenderer fontrenderer = this.getFontRenderer();
-
-        while(BlackburnConst.enableTrajectory){
+        
+        if(BlackburnConst.enableTrajectory){
         //this.drawCenteredString(matrixStack, this.mc.fontRenderer, "UwU", 100, 100, 100);
         this.notify.renderTextForUser(matrixStack);
     }
