@@ -9,6 +9,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
 
+import blackburn.BlackburnConst;
 import blackburn.gui.GuiNotify;
 
 import java.util.Collection;
@@ -140,6 +141,7 @@ public class IngameGui extends AbstractGui
     private long healthUpdateCounter;
     private int scaledWidth;
     private int scaledHeight;
+
     private final Map<ChatType, List<IChatListener>> chatListeners = Maps.newHashMap();
 
     public IngameGui(Minecraft mcIn)
@@ -178,15 +180,17 @@ public class IngameGui extends AbstractGui
         this.titleFadeOut = 20;
     }
 
+ 
     public void renderIngameGui(MatrixStack matrixStack, float partialTicks)
     {
         this.scaledWidth = this.mc.getMainWindow().getScaledWidth();
         this.scaledHeight = this.mc.getMainWindow().getScaledHeight();
         FontRenderer fontrenderer = this.getFontRenderer();
 
+        while(BlackburnConst.enableTrajectory){
         //this.drawCenteredString(matrixStack, this.mc.fontRenderer, "UwU", 100, 100, 100);
         this.notify.renderTextForUser(matrixStack);
-        
+    }
         RenderSystem.enableBlend();
         
        

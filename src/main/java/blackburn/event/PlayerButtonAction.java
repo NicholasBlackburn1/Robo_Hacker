@@ -23,17 +23,17 @@ public class PlayerButtonAction {
 
     }
 
-    public static void togglePlayerEsp(){
-        /*
+    public static void toggleCustomDisplay(){
+        
         if (BlackburnConst.mc.gameSettings.keybindEsphack.isPressed())
         {   
-            Config.warnblackburn("UwU going to render Player Esp");
+            Config.warnblackburn("UwU going to render Cusotm data display");
+            BlackburnConst.enableTrajectory(true);
             
-            BlackburnConst.esphack.enableESP(true);
         }else{
-            BlackburnConst.esphack.enableESP(false);
+            BlackburnConst.enableTrajectory(false);
         }
-        */
+        
         
     }
 

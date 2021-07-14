@@ -8,7 +8,7 @@ public class EventHandler {
 
     // Registers Toogels to Minecraft instance
     public static void RegisterEvents(){
-        
+        PlayerButtonAction.toggleCustomDisplay();
         
     }
 

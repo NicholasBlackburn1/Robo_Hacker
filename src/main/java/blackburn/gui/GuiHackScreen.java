@@ -69,7 +69,7 @@ public class GuiHackScreen extends GuiScreenOF
                     this.minecraft.displayGuiScreen(this.prevScreen);
                 }
                 if(guibuttonof.keyPressed(10, 10, 0)){
-                    BlackburnConst.setTrajectEnable();
+                   
                     Config.warnblackburn("PressedButton");
                 }
             }

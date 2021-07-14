@@ -22,6 +22,7 @@ public class GuiNotify{
     private Minecraft mc;
     private long updateInfoLeftTimeMs = 0L;
     private List<String> notifyData = new LinkedList<String>();
+  
 
     // This sets up method to set up diplay screen gui
     public GuiNotify(FontRenderer render, Minecraft mc){
@@ -30,6 +31,8 @@ public class GuiNotify{
       
 
     }
+
+
 
     /**
      * This Renders the display on screen for users
@@ -42,26 +45,31 @@ public class GuiNotify{
         
         GuiPoint[] aguipoint = new GuiPoint[notifyData.size()];
         GuiRect[] aguirect = new GuiRect[notifyData.size()];
-
-        for (int i = 0; i < notifyData.size(); ++i)
-        {
-            String s = notifyData.get(i);
-            System.out.print(s);
-            
-            if (!notifyData.isEmpty())
+       
+            for (int i = 0; i < notifyData.size(); ++i)
             {
-                int j = 9;
-                int k = renderer.getStringWidth(s);
-                int l = 2;
-                int i1 = 2 + j * i;
-                aguirect[i] = new GuiRect(1, i1 - 1, 2 + k + 1, i1 + j - 1);
-                aguipoint[i] = new GuiPoint(2, i1);
-            }
-        }
+            
 
-        GuiUtils.fill(stacky.getLast().getMatrix(), aguirect, -1873784752);
+                String s = notifyData.get(i);
+                //System.out.print(s);
+                
+                
+                if (!notifyData.isEmpty())
+                {
+                    int j = 9;
+                    int k = renderer.getStringWidth(s);
+                    int l = 2;
+                    int i1 = 2 + j * i;
+                    aguirect[i] = new GuiRect(1, i1 - 1, 2 + k + 1, i1 + j - 1);
+                    aguipoint[i] = new GuiPoint(2, i1);
+                }
+            
+            
+                GuiUtils.fill(stacky.getLast().getMatrix(), aguirect, -1873784752);
+                this.renderer.renderStrings(notifyData, aguipoint, 14737632, stacky.getLast().getMatrix(), false, this.renderer.getBidiFlag());
         
-        this.renderer.renderStrings(notifyData, aguipoint, 14737632, stacky.getLast().getMatrix(), false, this.renderer.getBidiFlag());
+        
+    }
     }
 
 }
